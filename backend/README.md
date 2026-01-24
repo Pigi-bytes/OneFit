@@ -46,3 +46,10 @@ Le serveur sera accessible sur `http://127.0.0.1:5000`.
 - **Ajouter un paquet** : `uv add <nom_du_paquet>`
 - **Mettre à jour** : `uv sync`
 - **Exécuter un script** : `uv run <script.py>`
+## Tests
+
+Pour lancer les tests unitaires :
+
+```bash
+uv run pytest
+```

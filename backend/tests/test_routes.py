@@ -6,9 +6,9 @@ def test_index_route(client):
     assert response.status_code == 200
 
     data = response.get_json()
-    assert "hello" in data
-    assert data["hello"] is not None
-    assert data["hello"] == "world"
+    assert "Hello" in data
+    assert data["Hello"] is not None
+    assert data["Hello"] == "world"
 
 
 def test_index_alias_route(client):
@@ -25,4 +25,4 @@ def test_index_alias_route(client):
 
     data2 = response.get_json()
 
-    assert data1 is data2
+    assert data1 == data2
