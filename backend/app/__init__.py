@@ -2,11 +2,9 @@ import click
 from config import Config
 from flask import Flask
 from flask_jwt_extended import JWTManager
-from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-ma = Marshmallow(app)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 jwt = JWTManager(app)

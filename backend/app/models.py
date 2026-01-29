@@ -2,7 +2,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from werkzeug.security import check_password_hash
 
-from app import db, ma
+from app import db
 
 
 class User(db.Model):

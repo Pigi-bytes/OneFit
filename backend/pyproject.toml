@@ -7,7 +7,6 @@ requires-python = ">=3.13"
 dependencies = [
     "flask>=3.1.2",
     "flask-jwt-extended>=4.7.1",
-    "flask-marshmallow>=1.3.0",
     "flask-sqlalchemy>=3.1.1",
     "python-dotenv>=1.2.1",
     "requests>=2.32.5",
