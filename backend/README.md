@@ -33,6 +33,17 @@ Cette commande installe automatiquement la version de Python requise et les dép
 
 ## Utilisation
 
+### Création et reset de la base de donnée
+
+```
+uv run init-db
+```
+
+```
+uv run reset-db
+```
+
+
 ### Lancement du serveur
 
 ```bash
