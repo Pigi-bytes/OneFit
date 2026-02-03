@@ -1,59 +1,72 @@
 import sqlalchemy as sa
-from flask import jsonify, request
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
-from app import app, db
+from app import db
 from app.models import User
+from app.schemas import (
+    AuthErrorResponseSchema,
+    LoginSchema,
+    MessageSchema,
+    ProtectedSchema,
+    RegisterErrorResponseSchema,
+    RegisterSchema,
+    TokenSchema,
+    ValidationErrorSchema,
+)
 
+mainBLP = Blueprint("main", __name__, description="Main")
+authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentification")
 
-@app.route("/")
-@app.route("/index")
-def index():
-    return {"Hello": "world"}
-
-
-@app.route("/login", methods=["POST"])
-def login():
-    data = request.get_json()
+@authBLP.route("/login", methods=["POST"])
+@authBLP.arguments(LoginSchema)
+@authBLP.response(200, TokenSchema)
+@authBLP.alt_response(401, schema=AuthErrorResponseSchema, description="Identifiants invalides")
+@authBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+def login(data):
+    """Connexion utilisateur"""
     username = data.get("username")
     password = data.get("password")
 
     user = db.session.scalar(sa.select(User).where(User.username == username))
 
     if user is None:
-        return jsonify({"Erreur": "L'utilisateur n'existe pas"}), 401
+        abort(401, message="Identifiants invalides")
 
     if user.checkPassword(password):
         access_token = create_access_token(identity=username)
-        return jsonify(access_token=access_token), 200
+        return {"access_token": access_token}, 200
 
-    return jsonify({"Erreur": "Le mot de passe est invalide"}), 401
+    abort(401, message="Identifiants invalides")
 
 
-@app.route("/inscription", methods=["POST"])
-def register():
-    username = request.json["username"]
-    password = request.json["password"]
+@authBLP.route("/inscription", methods=["POST"])
+@authBLP.arguments(RegisterSchema)
+@authBLP.response(201, MessageSchema)
+@authBLP.alt_response(409, schema=RegisterErrorResponseSchema, description="Username existant")
+@authBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+def register(data):
+    """Inscription d'un nouvel utilisateur"""
+    username = data["username"]
+    password = data["password"]
+    existing_user = db.session.scalar(sa.select(User).where(User.username == username))
+    if existing_user:
+        abort(409, message="Nom d'utilisateur déjà pris")
+
     user = User(username=username, password=generate_password_hash(password))  # type: ignore
 
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({"message": "User created successfully!"})
+    return {"message": "User created successfully!"}
 
 
-@app.route("/protected", methods=["GET"])
+@authBLP.route("/user", methods=["GET"])
+@authBLP.doc(security=[{"bearerAuth": []}])
+@authBLP.response(200, ProtectedSchema)
 @jwt_required()
-def protected():
+def user(data):
+    """Route protégée nécessitant un token JWT"""
     identity = get_jwt_identity()
-
-    print(identity)
-
-    return jsonify(logged_in_as=identity), 200
-
-
-# curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"tonuser\",\"password\":\"tonmdp\"}" http://127.0.0.1:5000/login
-# curl -X POST -H "Content-Type: application/json" -d "{\"username\":\"tonuser\",\"password\":\"tonmdp\"}" http://127.0.0.1:5000/inscription
-
-# curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTc2OTQzMjgzNCwianRpIjoiNjdmYjc4NGMtMTRiOS00MzgyLWFkMGMtYjY2ZTM2ZDZlZjExIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6InRvbnVzZXIiLCJuYmYiOjE3Njk0MzI4MzQsImNzcmYiOiI1YWVlNDc5Zi03YzVmLTQ4MDUtOGVjMy0xMTllMjNhMmY1NTEiLCJleHAiOjE3Njk0MzM3MzR9.hf45MgjAZx5cde6uVbouSrpDur4cGeK3cZoepKqyPdM" http://localhost:5000/protected
+    return {"logged_in_as": identity}
