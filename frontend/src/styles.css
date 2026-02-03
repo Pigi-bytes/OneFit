@@ -56,3 +56,32 @@ h2 {
     border-color: #21867a !important;
 
 }
+
+.form-group {
+        text-align: center;
+        min-width: 300px;
+}
+
+.form-group input {
+        display: block;
+        margin: 0 auto;      
+        width: 50%;
+        text-align: center;
+}
+
+.form-group input[type=submit] {
+        width: 20%;
+        text-align: center;
+        min-width: 100px;
+        box-sizing: border-box;
+} 
+
+.form-group button {
+        width:20%;
+        min-width: 100px;
+        margin: 0 auto;      
+}
+
+.form-group .btn-dark {
+    padding: 5px 10px;
+}
