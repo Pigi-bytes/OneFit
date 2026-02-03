@@ -57,9 +57,15 @@ h2 {
 
 }
 
+form {
+        display: block;
+        margin: 0 auto;      
+
+}
+
 .form-group {
         text-align: center;
-        min-width: 300px;
+        min-width: 100px;
 }
 
 form input {
