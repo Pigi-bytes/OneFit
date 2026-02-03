@@ -1,0 +1,65 @@
+/* style pour la page d'accueil */
+
+/* Faire prendre toute la hauteur de la page */
+html,
+body {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+}
+
+.main {
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        /* centrer verticalement */
+        align-items: center;
+        /* centrer horizontalement */
+        background-color: #f5f5f5;
+        text-align: center;
+        padding: 20px;
+}
+
+h1 {
+        color: #2a9d8f;
+        font-size: 48px;
+        margin-bottom: 20px;
+}
+
+h2 {
+        color: #264653;
+        font-size: 24px;
+        font-weight: normal;
+}
+
+.button-group {
+        display: flex;
+        /* met les boutons côte à côte */
+        gap: 10px;
+        /* espace entre les boutons */
+        justify-content: center;
+        /* centrer horizontalement */
+        margin-top: 20px;
+}
+
+.btn {
+        padding: 10px 20px;
+        /* taille du bouton */
+        border: none;
+        /* retire le contour par défaut */
+        border-radius: 12px;
+        /* arrondi des angles */
+        background-color: black;
+        /* couleur du bouton */
+        color: white;
+        /* texte blanc */
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+}
+
+.btn:hover {
+        background-color: #21867a;
+        /* couleur au survol */
+}
