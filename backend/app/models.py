@@ -12,7 +12,6 @@ from app import db
 class User(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     nom: so.Mapped[str] = so.mapped_column(sa.String(100))
-    username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True, unique=True)
     password: so.Mapped[str] = so.mapped_column(sa.String(256))
 
     historique_poids: so.Mapped[list["HistoriquePoids"]] = so.relationship(back_populates="user", cascade="all, delete-orphan")
