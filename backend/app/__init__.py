@@ -4,14 +4,33 @@ import click
 from config import Config
 from flask import Flask
 from flask_jwt_extended import JWTManager
+from flask_smorest import Api
 from flask_sqlalchemy import SQLAlchemy
+
+class CustomApi(Api):
+    DEFAULT_ERROR_RESPONSE_NAME = None
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
+api = CustomApi(app)
 
-from app import models, routes  # noqa: E402, F401
+api.spec.components.security_scheme( # type: ignore
+    "bearerAuth",
+    {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Entrez votre token JWT",
+    },
+)
+
+from app.routes import authBLP, mainBLP  # noqa: E402
+
+api.register_blueprint(mainBLP)
+api.register_blueprint(authBLP)
 
 
 @app.cli.command("init-db")
