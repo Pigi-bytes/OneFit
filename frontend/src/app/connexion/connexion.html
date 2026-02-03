@@ -4,23 +4,25 @@
 
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
 
-    <form id="login_form" class="d-flex flex-column gap-3 w-50">
+        <form (ngSubmit)="login()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3 w-50">
 
-        <div class="form-group">
-            <label for="pseudo">Nom d'utilisateur</label>
-            <input type="text" id="pseudo" class="form-control">
-        </div>
+                <div class="form-group">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" id="username" name="username" [(ngModel)]="username" required
+                                class="form-control" />
+                </div>
 
-        <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" class="form-control">
-        </div>
+                <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" [(ngModel)]="password" required
+                                class="form-control" /><br>
+                </div>
 
-        <input type="submit" value="Connexion" class="btn-dark">
+                <input type="submit" value="Connexion" class="btn-dark">
 
-        <button class="btn-dark" routerLink="/">Revenir</button>
+                <button class="btn-dark" routerLink="/">Revenir</button>
 
 
-    </form>
+        </form>
 
 </main>

@@ -10,8 +10,12 @@ from flask_sqlalchemy import SQLAlchemy
 class CustomApi(Api):
     DEFAULT_ERROR_RESPONSE_NAME = None
 
+from flask_cors import CORS
+
+
 
 app = Flask(__name__)
+CORS(app)  # ← autorise toutes les origines pour tester
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
