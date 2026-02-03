@@ -33,14 +33,14 @@ Cette commande installe automatiquement la version de Python requise et les dép
 
 ## Utilisation
 
-### Création et reset de la base de donnée
+### Création et reset de la base de données
 
 ```
-uv run init-db
+uv run -- flask init-db
 ```
 
 ```
-uv run reset-db
+uv run -- flask reset-db
 ```
 
 
