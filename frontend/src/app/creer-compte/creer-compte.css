@@ -8,3 +8,31 @@ body {
 form {
         text-align: center;
 }
+
+#signup_form {
+        min-width: 300px;
+}
+
+input {
+        display: block;
+        margin: 0 auto;      
+        width: 50%;
+        text-align: center;
+}
+
+input[type=submit] {
+        width: 20%;
+        text-align: center;
+        min-width: 100px;
+        box-sizing: border-box;
+} 
+
+#signup_form button {
+        width:20%;
+        min-width: 100px;
+        margin: 0 auto;      
+}
+
+.btn-dark {
+    padding: 5px 10px;
+}

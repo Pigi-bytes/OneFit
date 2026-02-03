@@ -1,1 +1,58 @@
 /* You can add global styles to this file, and also import other style files */
+/* style pour la page d'accueil */
+
+/* Faire prendre toute la hauteur de la page */
+html,
+body {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+
+}
+
+.main {
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        /* centrer verticalement */
+        align-items: center;
+        /* centrer horizontalement */
+        text-align: center;
+        padding: 20px;
+}
+
+h1 {
+        color: #2a9d8f;
+        font-size: 48px;
+        margin-bottom: 20px;
+}
+
+h2 {
+        color: #264653;
+        font-size: 24px;
+        font-weight: normal;
+}
+
+.button-group {
+        display: flex;
+        /* met les boutons côte à côte */
+        gap: 10px;
+        /* espace entre les boutons */
+        justify-content: center;
+        /* centrer horizontalement */
+        margin-top: 20px;
+}
+
+.btn-dark {
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition-duration: 0.3s;
+}
+
+.btn-dark:hover {
+    background-color: #21867a !important;
+    border-color: #21867a !important;
+
+}

@@ -2,17 +2,34 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 
-<main>
-        <button routerLink="/">Revenir</button>
-        <form>
-                <label for="fname">Mail:</label>
-                <input type="text"><br>
-                <label for="fname">Pseudo:</label>
-                <input type="text"><br>
-                <label>Password : </label>
-                <input type="password"><br>
-                <label>Confirmer password : </label>
-                <input type="password"><br>
-                <input type="submit" value="Connexion">
-        </form>
+<main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
+
+    <form id="signup_form" class="d-flex flex-column gap-3 w-50">
+        <div class="form-group">
+            <label for="mail">Adresse mail</label>
+            <input type="text" id="mail" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="pseudo">Nom d'utilisateur</label>
+            <input type="text" id="pseudo" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="confirm">Confirmer le mot de passe</label>
+            <input type="password" id="confirm" class="form-control">
+        </div>
+
+        <input type="submit" value="Inscription" class="btn-dark">
+
+        <button class="btn-dark" routerLink="/">Revenir</button>
+
+
+    </form>
+
 </main>
