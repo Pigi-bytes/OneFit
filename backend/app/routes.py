@@ -90,33 +90,37 @@ def user():
     }
 
 
-@userBLP.route("/ajouterPoids", methods=["POST"])
+@userBLP.route("/ajouterOuModifierPoids", methods=["POST"])
 @userBLP.arguments(UserAjouterPoidsSchema)
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, UserSchema)
 @userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
-@userBLP.alt_response(409, schema=MessageSchema, description="Date déjà existante")
 @jwt_required()
-def ajouter_poids(data):
-    """Ajoute un poids à l'historique de l'utilisateur connecté"""
+def ajouterOuModifierPoids(data):
+    """Ajoute ou modifie un poids dans l'historique de l'utilisateur connecté"""
     id = get_jwt_identity()
     user = db.session.scalar(sa.select(User).where(User.id == id))
     if user is None:
         abort(401, message="User not found")
 
-    poids_date = data.get("date", date.today())  # Recupere la date donnée en parametre OU La date d'aujourdh'ui
+    poids_date = data.get("date", date.today())
 
-    # Si la date existe deja, ne pas y toucher.
-    if db.session.scalar(
+    # Cherche si une entrée existe pour cette date
+    poids_existant = db.session.scalar(
         sa.select(HistoriquePoids).where((HistoriquePoids.user_id == user.id) & (HistoriquePoids.date == poids_date))
-    ):
-        abort(409, message="Une entrée existe déjà pour cette date")
+    )
 
-    nouveau_poids = HistoriquePoids(user_id=user.id, poids=data["poids"], date=poids_date, note=data.get("note"))  # type: ignore
-    db.session.add(nouveau_poids)
+    if poids_existant:
+        # Modifie l'entrée existante
+        poids_existant.poids = data["poids"]
+        poids_existant.note = data.get("note")
+    else:
+        # Crée une nouvelle entrée
+        poids_existant = HistoriquePoids(user_id=user.id, poids=data["poids"], date=poids_date, note=data.get("note"))  # type: ignore
+        db.session.add(poids_existant)
+
     db.session.commit()
-
     db.session.refresh(user)
     dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None
     return {
