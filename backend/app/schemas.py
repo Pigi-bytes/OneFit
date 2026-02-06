@@ -91,3 +91,8 @@ class UserAjouterPoidsSchema(Schema):
     date = fields.Date(required=True)
     poids = fields.Float(required=True, validate=validate.Range(min=20, max=500))
     note = fields.Str(allow_none=True)
+
+
+class UserConfigurer(Schema):
+    date_naissance = fields.Date(required=False)
+    taille = fields.Int(required=False)

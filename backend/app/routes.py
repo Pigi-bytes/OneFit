@@ -15,6 +15,7 @@ from app.schemas import (
     RegisterSchema,
     TokenSchema,
     UserAjouterPoidsSchema,
+    UserConfigurer,
     UserNotFoundErrorSchema,
     UserSchema,
     ValidationErrorSchema,
@@ -115,6 +116,42 @@ def ajouter_poids(data):
     nouveau_poids = HistoriquePoids(user_id=user.id, poids=data["poids"], date=poids_date, note=data.get("note"))  # type: ignore
     db.session.add(nouveau_poids)
     db.session.commit()
+
+    db.session.refresh(user)
+    dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None
+    return {
+        "username": user.username,
+        "date_naissance": user.date_naissance,
+        "taille": user.taille,
+        "dernierPoids": dernier_poids,
+    }
+
+
+@userBLP.route("/configurer", methods=["POST"])
+@userBLP.arguments(UserConfigurer)
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, UserSchema)
+@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
+@jwt_required()
+def configurerUser(data):
+    """Configure la date de naissance et la taille de l'utilisateur"""
+    id = get_jwt_identity()
+    user = db.session.scalar(sa.select(User).where(User.id == id))
+    if user is None:
+        abort(401, message="User not found")
+
+    date_naissance = data.get("date_naissance")  # Recupere la nouvelle date de naissance
+    taille = data.get("taille")  # Recupere la nouvelle date de naissance
+
+    # Si la date existe deja, ne pas y toucher.
+    if date_naissance:
+        user.date_naissance = date_naissance
+    if taille:
+        user.taille = taille
+
+    db.session.commit()
+    db.session.refresh(user)
 
     db.session.refresh(user)
     dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None
