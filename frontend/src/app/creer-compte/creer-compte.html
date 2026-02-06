@@ -18,13 +18,12 @@
 
                 <div class="form-group">
                         <label for="password">Confirmer password:</label>
-                        <input type="password" id="password" name="password"
-                                class="form-control" />
+                        <input type="password" id="password" name="password" class="form-control" />
                 </div>
 
                 <button type="submit" class="btn-dark">Créer Compte</button>
 
-                <button class="btn-dark" routerLink="/">Revenir</button>
+                <button type="button" class="btn-dark" routerLink="/">Revenir</button>
         </form>
 
         <div *ngIf="backendResponse" class="mt-2 alert alert-info">

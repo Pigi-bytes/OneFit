@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class CreerCompte {
   password = '';
   backendResponse = '';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
 
   creer() {
     this.http.post('http://127.0.0.1:5000/auth/inscription', {
@@ -26,12 +27,16 @@ export class CreerCompte {
       password: this.password
     }).subscribe({
       next: (res: any) => {
+        console.log('RESPONSE OK', res);
         this.backendResponse = res.message;
+        this.cdr.detectChanges();
       },
+
       error: (err: any) => {
         // erreurs HTTP (400, 409, 500…)
         if (err.error && err.error.message) {
           this.backendResponse = err.error.message; // <- message du backend
+          this.cdr.detectChanges();
         } else {
           this.backendResponse = 'Erreur serveur';
         }
