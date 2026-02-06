@@ -141,14 +141,10 @@ def configurerUser(data):
     if user is None:
         abort(401, message="User not found")
 
-    date_naissance = data.get("date_naissance")  # Recupere la nouvelle date de naissance
-    taille = data.get("taille")  # Recupere la nouvelle date de naissance
-
-    # Si la date existe deja, ne pas y toucher.
-    if date_naissance:
-        user.date_naissance = date_naissance
-    if taille:
-        user.taille = taille
+    if "date_naissance" in data and data.get("date_naissance"):
+        user.date_naissance = data.get("date_naissance")
+    if "taille" in data and data.get("taille"):
+        user.taille = data.get("taille")
 
     db.session.commit()
     db.session.refresh(user)
