@@ -21,11 +21,15 @@ export class Connexion {
       password: this.password
     }).subscribe((res: any) => {
       console.log('Réponse du backend:', res);
-      if (res.success) {
+
+      if (res.access_token) {
+
+        localStorage.setItem('access_token', res.access_token);
+
         alert('Connexion réussie !');
         this.router.navigate(['/']);
       } else {
-        alert('Réponse reçue');
+        alert('Erreur de connexion');
       }
     });
   }
