@@ -7,12 +7,12 @@ from flask_jwt_extended import JWTManager
 from flask_smorest import Api
 from flask_sqlalchemy import SQLAlchemy
 
+
 class CustomApi(Api):
     DEFAULT_ERROR_RESPONSE_NAME = None
 
+
 from flask_cors import CORS  # noqa: E402
-
-
 
 app = Flask(__name__)
 CORS(app)  # ← autorise toutes les origines pour tester
@@ -21,7 +21,7 @@ db = SQLAlchemy(app)
 jwt = JWTManager(app)
 api = CustomApi(app)
 
-api.spec.components.security_scheme( # type: ignore
+api.spec.components.security_scheme(  # type: ignore
     "bearerAuth",
     {
         "type": "http",
@@ -31,10 +31,10 @@ api.spec.components.security_scheme( # type: ignore
     },
 )
 
-from app.routes import authBLP, mainBLP  # noqa: E402
+from app.routes import authBLP, userBLP  # noqa: E402
 
-api.register_blueprint(mainBLP)
 api.register_blueprint(authBLP)
+api.register_blueprint(userBLP)
 
 
 @app.cli.command("init-db")
@@ -45,7 +45,7 @@ def init_db_command():
         db_dir = os.path.dirname(db_path)
         if db_dir and not os.path.exists(db_dir):
             os.makedirs(db_dir, exist_ok=True)
-            
+
     db.create_all()
     click.echo("bd initialisée.")
 
