@@ -3,48 +3,37 @@ import { HttpClient } from '@angular/common/http';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef } from '@angular/core';
-
 
 @Component({
-  selector: 'app-creer-compte',
-  standalone: true,
+  selector: 'app-configurer-compte',
   imports: [RouterModule, FormsModule, CommonModule],
-  templateUrl: './creer-compte.html',
-  styleUrl: './creer-compte.css',
+  templateUrl: './configurer-compte.html',
+  styleUrl: './configurer-compte.css',
 })
-export class CreerCompte {
-
-  username = '';
-  password = '';
+export class ConfigurerCompte {
+  
+  height = '';
+  birthDate = '';
   backendResponse = '';
 
-  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
-  creer() {
-    this.http.post('http://127.0.0.1:5000/auth/inscription', {
-      username: this.username,
-      password: this.password
+  configurer() {
+    this.http.post('http://127.0.0.1:5000/auth/configurer', {
+      taille: this.height,
+      date_naissance: this.birthDate
     }).subscribe({
       next: (res: any) => {
-        console.log('RESPONSE OK', res);
         this.backendResponse = res.message;
-        this.cdr.detectChanges();
-        this.router.navigate(['/configurer-compte']); 
-        
       },
-
       error: (err: any) => {
         // erreurs HTTP (400, 409, 500…)
         if (err.error && err.error.message) {
           this.backendResponse = err.error.message; // <- message du backend
-          this.cdr.detectChanges();
         } else {
           this.backendResponse = 'Erreur serveur';
         }
       }
     });
-
   }
-
 }
