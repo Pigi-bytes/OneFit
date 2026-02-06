@@ -1,3 +1,5 @@
+from datetime import date
+
 import sqlalchemy as sa
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_smorest import Blueprint, abort
@@ -13,11 +15,13 @@ from app.schemas import (
     RegisterErrorResponseSchema,
     RegisterSchema,
     TokenSchema,
+    UserNotFoundErrorSchema,
     ValidationErrorSchema,
 )
 
-mainBLP = Blueprint("main", __name__, description="Main")
 authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentification")
+userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion utilisateur")
+
 
 @authBLP.route("/login", methods=["POST"])
 @authBLP.arguments(LoginSchema)
@@ -35,7 +39,7 @@ def login(data):
         abort(401, message="Identifiants invalides")
 
     if user.checkPassword(password):
-        access_token = create_access_token(identity=username)
+        access_token = create_access_token(identity=str(user.id))
         return {"access_token": access_token}, 200
 
     abort(401, message="Identifiants invalides")
@@ -54,7 +58,7 @@ def register(data):
     if existing_user:
         abort(409, message="Nom d'utilisateur déjà pris")
 
-    user = User(username=username, password=generate_password_hash(password))  # type: ignore
+    user = User(username=username, password=generate_password_hash(password), date_naissance=date.today(), taille=160)  # type: ignore # TODO CHANGER LES VALEURS DE BASE PLUS TARD
 
     db.session.add(user)
     db.session.commit()
@@ -62,11 +66,23 @@ def register(data):
     return {"message": "User created successfully!"}
 
 
-@authBLP.route("/user", methods=["GET"])
-@authBLP.doc(security=[{"bearerAuth": []}])
-@authBLP.response(200, ProtectedSchema)
+@userBLP.route("/user", methods=["GET"])
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, ProtectedSchema)
+@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
 @jwt_required()
-def user(data):
+def user():
     """Route protégée nécessitant un token JWT"""
-    identity = get_jwt_identity()
-    return {"logged_in_as": identity}
+    id = get_jwt_identity()
+    user = db.session.scalar(sa.select(User).where(User.id == id))
+    if user is None:
+        abort(401, message="User not found")
+
+    dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None
+    return {
+        "username": user.username,
+        "date_naissance": user.date_naissance,
+        "taille": user.taille,
+        "dernierPoids": dernier_poids,
+    }

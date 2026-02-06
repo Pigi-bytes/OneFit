@@ -53,6 +53,12 @@ class ValidationErrorSchema(BaseErrorSchema):
         metadata={"example": {"USERnAmES": ["Unknown field."]}},
     )
 
+class UserNotFoundErrorSchema(BaseErrorSchema):
+    """Erreur lorsque l'utilisateur n'est pas trouvé (404)"""
+
+    code = fields.Int(metadata={"example": 404})
+    message = fields.Str(metadata={"example": "Utilisateur non trouvé"})
+    status = fields.Str(metadata={"example": "Not Found"})
 
 class LoginSchema(Schema):
     username = USERNAME
@@ -73,4 +79,7 @@ class MessageSchema(Schema):
 
 
 class ProtectedSchema(Schema):
-    logged_in_as = fields.Str()
+    username = fields.Str()
+    date_naissance = fields.Date()
+    taille = fields.Int()
+    dernierPoids = fields.Float()

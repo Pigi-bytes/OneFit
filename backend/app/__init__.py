@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 class CustomApi(Api):
     DEFAULT_ERROR_RESPONSE_NAME = None
 
-from flask_cors import CORS
+from flask_cors import CORS  # noqa: E402
 
 
 
