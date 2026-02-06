@@ -1,18 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
 /* style pour la page d'accueil */
 
+/* 1 est la teinte la plus foncée, 3 la plus claire*/
+:root {
+  --red1: #b83100ff;
+  --red2: #E03C00;
+  --red3: #FF4B0A;
+
+  --white1: #D7D8EA;
+  --white2: #F0F1FD;
+  --white3: #f9f9ffff;
+
+  --silver1: #aba3a3ff;
+  --silver2: #c5bfbfff;
+  --silver3: #d8d4d4ff;
+
+  --blue1: #1c364cff;
+  --blue2: #31485cff;
+  --blue3: #44596bff;
+}
+
+
 /* Faire prendre toute la hauteur de la page */
 html,
 body {
         height: 100%;
         margin: 0;
         font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
-
 }
 
 .main {
         min-height: 90vh;
+        background-color: var(--white3);
+        height: 100%;
+
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -24,13 +45,13 @@ body {
 }
 
 h1 {
-        color: #2a9d8f;
+        color: var(--red1);
         font-size: 48px;
         margin-bottom: 20px;
 }
 
 h2 {
-        color: #264653;
+        color: var(--blue1);
         font-size: 24px;
         font-weight: normal;
 }
@@ -48,12 +69,14 @@ h2 {
 .btn-dark {
     padding: 10px 20px;
     border-radius: 12px;
+    background-color: var(--blue1) !important;
+    border-color: var(--blue1) !important;
     transition-duration: 0.3s;
 }
 
 .btn-dark:hover {
-    background-color: #21867a !important;
-    border-color: #21867a !important;
+    background-color: var(--blue3) !important;
+    border-color: var(--blue3) !important;
 
 }
 
