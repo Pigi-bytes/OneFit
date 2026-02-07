@@ -18,20 +18,28 @@ export class CreerCompte {
   username = '';
   password = '';
   backendResponse = '';
+  confirmPassword = '';
 
   constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
 
   creer() {
+
+    if (this.password !== this.confirmPassword.trim()) {
+      this.backendResponse = 'Les mots de passe ne correspondent pas';
+      return;
+    }
+
     this.http.post('http://127.0.0.1:5000/auth/inscription', {
       username: this.username,
       password: this.password
+
     }).subscribe({
       next: (res: any) => {
         console.log('RESPONSE OK', res);
         this.backendResponse = res.message;
         this.cdr.detectChanges();
-        this.router.navigate(['/configurer-compte']); 
-        
+        this.router.navigate(['/configurer-compte']);
+
       },
 
       error: (err: any) => {

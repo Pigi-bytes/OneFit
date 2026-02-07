@@ -26,7 +26,15 @@ export class Connexion {
 
         localStorage.setItem('access_token', res.access_token);
 
-        alert('Connexion réussie !');
+        this.http.get('http://127.0.0.1:5000/user/user').subscribe(res => {
+          console.log('User:', res);
+        });
+
+        if (res.success) {
+          alert('Connexion réussie !');
+        }
+
+
         this.router.navigate(['/']);
       } else {
         alert('Erreur de connexion');
