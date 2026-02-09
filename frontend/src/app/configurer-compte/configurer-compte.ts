@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './configurer-compte.css',
 })
 export class ConfigurerCompte {
-  
+
   height = '';
   birthDate = '';
   backendResponse = '';
@@ -25,6 +25,8 @@ export class ConfigurerCompte {
     }).subscribe({
       next: (res: any) => {
         this.backendResponse = res.message;
+
+        this.router.navigate(['/accueil']);
       },
       error: (err: any) => {
         // erreurs HTTP (400, 409, 500…)
