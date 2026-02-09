@@ -34,12 +34,20 @@ export class CreerCompte {
       password: this.password
 
     }).subscribe({
+
       next: (res: any) => {
         console.log('RESPONSE OK', res);
         this.backendResponse = res.message;
         this.cdr.detectChanges();
-        this.router.navigate(['/configurer-compte']);
 
+        // connexion auto après l'inscription
+        this.http.post('http://127.0.0.1:5000/auth/login', {
+        username: this.username,
+        password: this.password
+        }).subscribe((res: any) => {
+          localStorage.setItem('access_token', res.access_token);
+          this.router.navigate(['/configurer-compte']);
+        });
       },
 
       error: (err: any) => {

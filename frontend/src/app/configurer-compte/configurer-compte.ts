@@ -19,7 +19,7 @@ export class ConfigurerCompte {
   constructor(private http: HttpClient, private router: Router) { }
 
   configurer() {
-    this.http.post('http://127.0.0.1:5000/auth/configurer', {
+    this.http.post('http://127.0.0.1:5000/user/configurer', {
       taille: this.height,
       date_naissance: this.birthDate
     }).subscribe({
