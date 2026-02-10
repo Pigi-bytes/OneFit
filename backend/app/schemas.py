@@ -1,101 +1,100 @@
 from marshmallow import Schema, fields, validate
 
-USERNAME = fields.Str(
-    required=True,
-    validate=validate.Length(min=1, max=255),
-    metadata={"description": "Nom d'utilisateur"},
-)
 
-PASSWORD = fields.Str(
-    required=True,
-    load_only=True,
-    validate=validate.Length(min=1, max=255),
-    metadata={"description": "Mot de passe"},
-)
+def _username(**kw):
+    d = {"required": True, "validate": validate.Length(1, 64), "metadata": {"description": "Pseudo"}}
+    return fields.Str(**{**d, **kw})
 
 
-# Classe mère pour les schémas d'erreur
+def _password(**kw):
+    d = {"required": True, "load_only": True, "validate": validate.Length(6, 255), "metadata": {"description": "MDP"}}
+    return fields.Str(**{**d, **kw})
+
+
+def _poids(**kw):
+    d = {"required": True, "validate": validate.Range(20, 500), "metadata": {"description": "Poids (kg)"}}
+    return fields.Float(**{**d, **kw})
+
+
+def _date(**kw):
+    d = {"required": True, "metadata": {"description": "Date (YYYY-MM-DD)"}}
+    return fields.Date(**{**d, **kw})
+
+
+def _taille(**kw):
+    d = {"required": True, "validate": validate.Range(50, 300), "metadata": {"description": "Taille (cm)"}}
+    return fields.Int(**{**d, **kw})
+
+
+def _note(**kw):
+    d = {"allow_none": True, "load_default": None, "metadata": {"description": "Note"}}
+    return fields.Str(**{**d, **kw})
+
+
+# Erreur
 class BaseErrorSchema(Schema):
-    code = fields.Int()
-    message = fields.Str()
-    status = fields.Str()
+    code = fields.Int(metadata={"example": 400})
+    message = fields.Str(metadata={"example": "Erreur"})
+    status = fields.Str(metadata={"example": "Bad Request"})
 
     class Meta:
         unknown = "EXCLUDE"
 
 
-# Spécialisations pour chaque type d'erreur
-class AuthErrorResponseSchema(BaseErrorSchema):
-    """Erreur d'authentification (format API)"""
-
-    code = fields.Int(metadata={"example": 401})
-    message = fields.Str(metadata={"example": "Identifiants invalides"})
-    status = fields.Str(metadata={"example": "Unauthorized"})
-
-
-class RegisterErrorResponseSchema(BaseErrorSchema):
-    """Erreur d'inscription (format API)"""
-
-    code = fields.Int(metadata={"example": 409})
-    message = fields.Str(metadata={"example": "Nom d'utilisateur déjà pris"})
-    status = fields.Str(metadata={"example": "Conflict"})
-
-
 class ValidationErrorSchema(BaseErrorSchema):
     """Erreur de validation des données (422)"""
 
-    code = fields.Int(metadata={"example": 422})
-    message = fields.Str(metadata={"example": "Unprocessable Entity"})
-    status = fields.Str(metadata={"example": "Unprocessable Entity"})
     errors = fields.Dict(
         keys=fields.Str(),
         values=fields.List(fields.Str()),
-        metadata={"example": {"USERnAmES": ["Unknown field."]}},
+        metadata={"example": {"field": ["Unknown field."]}},
     )
 
 
-class UserNotFoundErrorSchema(BaseErrorSchema):
-    """Erreur lorsque l'utilisateur n'est pas trouvé (404)"""
-
-    code = fields.Int(metadata={"example": 404})
-    message = fields.Str(metadata={"example": "Utilisateur non trouvé"})
-    status = fields.Str(metadata={"example": "Not Found"})
-
-
-class LoginSchema(Schema):
-    username = USERNAME
-    password = PASSWORD
-
-
-class RegisterSchema(Schema):
-    username = USERNAME
-    password = PASSWORD
-
-
-class TokenSchema(Schema):
-    access_token = fields.Str()
+# Message générique
 
 
 class MessageSchema(Schema):
-    message = fields.Str()
+    message = fields.Str(metadata={"example": "Opération réussie"})
+
+
+# Auth
+class LoginSchema(Schema):
+    username = _username(required=True)
+    password = _password(required=True)
+
+
+class RegisterSchema(Schema):
+    username = _username(required=True)
+    password = _password(required=True)
+
+
+class TokenSchema(Schema):
+    access_token = fields.Str(metadata={"description": "JWT d'accès"})
+
+
+# Utilisateur
 
 
 class UserSchema(Schema):
-    username = fields.Str()
-    date_naissance = fields.Date()
-    taille = fields.Int()
-    dernierPoids = fields.Float()
+    username = _username()
+    date_naissance = _date()
+    taille = _taille()
+    dernierPoids = _poids()
 
 
-class UserAjouterPoidsSchema(Schema):
-    date = fields.Date(required=True)
-    poids = fields.Float(required=True, validate=validate.Range(min=20, max=500))
-    note = fields.Str(allow_none=True)
+class UserConfigurerSchema(Schema):
+    date_naissance = _date(required=False, load_default=None)
+    taille = _taille(required=False, load_default=None)
 
 
-class UserConfigurer(Schema):
-    date_naissance = fields.Date(required=False)
-    taille = fields.Int(required=False)
+class UserChangementMdpSchema(Schema):
+    password = _password(metadata={"description": "Mot de passe actuel"})
+    new_password = _password(metadata={"description": "Nouveau mot de passe"})
+
+
+class UserChangementUsernameSchema(Schema):
+    username = _username()
 
 
 class UserHistoriqueItem(Schema):
@@ -104,36 +103,17 @@ class UserHistoriqueItem(Schema):
     note = fields.Str(allow_none=True)
 
 
-class UserHistoriqueResponse(Schema):
-    historique = fields.List(fields.Nested(UserHistoriqueItem), required=True)
+class UserAjouterPoidsSchema(Schema):
+    date = _date()
+    poids = _poids()
+    note = _note()
 
 
-class UserChangementMdp(Schema):
-    password = PASSWORD
-    new_password = PASSWORD
+class UserHistoriqueItemSchema(Schema):
+    poids = _poids()
+    date = _date()
+    note = _note()
 
 
-class ChangementMdpInvalideSchema(BaseErrorSchema):
-    """Erreur lors du changement de mot de passe"""
-
-    code = fields.Int(metadata={"example": 401})
-    message = fields.Str(metadata={"example": "Mot de passe actuel invalide"})
-    status = fields.Str(metadata={"example": "Unauthorized"})
-
-
-class ChangementMdpReussiSchema(Schema):
-    """Réponse succès pour changement de mot de passe"""
-
-    message = fields.Str(metadata={"example": "Mot de passe changé avec succès"})
-
-
-class UserChangementUsername(Schema):
-    """Réponse succès pour changement de mot de passe"""
-
-    username = USERNAME
-
-
-class ChangementUsernameReussiSchema(Schema):
-    """Réponse succès pour changement de nom d'utilisateur"""
-
-    message = fields.Str(metadata={"example": "Nom d'utilisateur changé avec succès"})
+class UserHistoriqueResponseSchema(Schema):
+    historique = fields.List(fields.Nested(UserHistoriqueItemSchema), required=True)

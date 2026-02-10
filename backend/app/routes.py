@@ -8,21 +8,16 @@ from werkzeug.security import generate_password_hash
 from app import db
 from app.models import HistoriquePoids, User
 from app.schemas import (
-    AuthErrorResponseSchema,
-    ChangementMdpInvalideSchema,
-    ChangementMdpReussiSchema,
-    ChangementUsernameReussiSchema,
+    BaseErrorSchema,
     LoginSchema,
     MessageSchema,
-    RegisterErrorResponseSchema,
     RegisterSchema,
     TokenSchema,
     UserAjouterPoidsSchema,
-    UserChangementMdp,
-    UserChangementUsername,
-    UserConfigurer,
-    UserHistoriqueResponse,
-    UserNotFoundErrorSchema,
+    UserChangementMdpSchema,
+    UserChangementUsernameSchema,
+    UserConfigurerSchema,
+    UserHistoriqueResponseSchema,
     UserSchema,
     ValidationErrorSchema,
 )
@@ -32,10 +27,30 @@ userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion u
 userOptionBLP = Blueprint("option", __name__, url_prefix="/user/option", description="Option utilisateur")
 
 
+def getCurrentUserOrAbort401() -> User:
+    """Récupère l'utilisateur courant via le JWT ou abort 401"""
+    user_id = get_jwt_identity()
+    user = db.session.scalar(sa.select(User).where(User.id == user_id))
+    if user is None:
+        abort(401, message="Utilisateur non trouvé")
+    return user
+
+
+def userResponse(user: User) -> dict:
+    """Construit le dict de réponse standard pour un utilisateur"""
+    dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None
+    return {
+        "username": user.username,
+        "date_naissance": user.date_naissance,
+        "taille": user.taille,
+        "dernierPoids": dernier_poids,
+    }
+
+
 @authBLP.route("/login", methods=["POST"])
 @authBLP.arguments(LoginSchema)
 @authBLP.response(200, TokenSchema)
-@authBLP.alt_response(401, schema=AuthErrorResponseSchema, description="Identifiants invalides")
+@authBLP.alt_response(401, schema=BaseErrorSchema, description="Identifiants invalides")
 @authBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 def login(data):
     """Connexion utilisateur"""
@@ -57,7 +72,7 @@ def login(data):
 @authBLP.route("/inscription", methods=["POST"])
 @authBLP.arguments(RegisterSchema)
 @authBLP.response(201, MessageSchema)
-@authBLP.alt_response(409, schema=RegisterErrorResponseSchema, description="Username existant")
+@authBLP.alt_response(409, schema=BaseErrorSchema, description="Nom d'utilisateur déjà pris")
 @authBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 def inscription(data):
     """Inscription d'un nouvel utilisateur"""
@@ -78,31 +93,19 @@ def inscription(data):
 @userBLP.route("/user", methods=["GET"])
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, UserSchema)
-@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
-@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
 @jwt_required()
 def user():
-    """Route protégée nécessitant un token JWT"""
-    id = get_jwt_identity()
-    user = db.session.scalar(sa.select(User).where(User.id == id))
-    if user is None:
-        abort(401, message="User not found")
-
-    dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None
-    return {
-        "username": user.username,
-        "date_naissance": user.date_naissance,
-        "taille": user.taille,
-        "dernierPoids": dernier_poids,
-    }
+    """Récupère le profil de l'utilisateur connecté"""
+    return userResponse(getCurrentUserOrAbort401())
 
 
 @userBLP.route("/ajouterOuModifierPoids", methods=["POST"])
 @userBLP.arguments(UserAjouterPoidsSchema)
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, UserSchema)
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
 @userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
-@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
 @jwt_required()
 def ajouterOuModifierPoids(data):
     """Ajoute ou modifie un poids dans l'historique de l'utilisateur connecté"""
@@ -129,28 +132,44 @@ def ajouterOuModifierPoids(data):
 
     db.session.commit()
     db.session.refresh(user)
-    dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None
-    return {
-        "username": user.username,
-        "date_naissance": user.date_naissance,
-        "taille": user.taille,
-        "dernierPoids": dernier_poids,
-    }
+    return userResponse(user)
 
+
+@userBLP.route("/getAllPoids", methods=["GET"])
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, UserHistoriqueResponseSchema)
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@jwt_required()
+def getAllPoids():
+    """Récupère tout l'historique des poids de l'utilisateur connecté"""
+    user = getCurrentUserOrAbort401()
+    df = user.getHistoriquePoidsPanda()
+    historique = df.to_dict(orient="records") if not df.empty else []
+    return {"historique": historique}
+
+
+@userBLP.route("/supprimer", methods=["DELETE"])
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, MessageSchema)
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@jwt_required()
+def supprimer_utilisateur():
+    """Supprime l'utilisateur connecté et son historique"""
+    user = getCurrentUserOrAbort401()
+    db.session.delete(user)
+    db.session.commit()
+    return {"message": "Utilisateur supprimé avec succès"}
 
 @userOptionBLP.route("/configurer", methods=["POST"])
-@userOptionBLP.arguments(UserConfigurer)
+@userOptionBLP.arguments(UserConfigurerSchema)
 @userOptionBLP.doc(security=[{"bearerAuth": []}])
 @userOptionBLP.response(200, UserSchema)
+@userOptionBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
 @userOptionBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
-@userOptionBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
 @jwt_required()
 def configurerUser(data):
     """Configure la date de naissance et la taille de l'utilisateur"""
-    id = get_jwt_identity()
-    user = db.session.scalar(sa.select(User).where(User.id == id))
-    if user is None:
-        abort(401, message="User not found")
+    user = getCurrentUserOrAbort401()
 
     if "date_naissance" in data and data.get("date_naissance"):
         user.date_naissance = data.get("date_naissance")
@@ -159,23 +178,15 @@ def configurerUser(data):
 
     db.session.commit()
     db.session.refresh(user)
-
-    dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None
-    return {
-        "username": user.username,
-        "date_naissance": user.date_naissance,
-        "taille": user.taille,
-        "dernierPoids": dernier_poids,
-    }
+    return userResponse(user)
 
 
 @userOptionBLP.route("/modifierMDP", methods=["POST"])
-@userOptionBLP.arguments(UserChangementMdp)
+@userOptionBLP.arguments(UserChangementMdpSchema)
 @userOptionBLP.doc(security=[{"bearerAuth": []}])
-@userOptionBLP.response(200, ChangementMdpReussiSchema)
+@userOptionBLP.response(200, MessageSchema)
+@userOptionBLP.alt_response(401, schema=BaseErrorSchema, description="Non authentifié ou mot de passe invalide")
 @userOptionBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
-@userOptionBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
-@userOptionBLP.alt_response(401, schema=ChangementMdpInvalideSchema, description="Mot de passe invalide")
 @jwt_required()
 def modifierMDP(data):
     "Changer le mot de passe de l'utilisateur"
@@ -192,65 +203,24 @@ def modifierMDP(data):
         db.session.refresh(user)
         return {"message": "Mot de passe changé avec succès"}
 
-    abort(401, message="Mot de passe actuel invalide")
-
 
 @userOptionBLP.route("/modifierUsername", methods=["POST"])
-@userOptionBLP.arguments(UserChangementUsername)
+@userOptionBLP.arguments(UserChangementUsernameSchema)
 @userOptionBLP.doc(security=[{"bearerAuth": []}])
-@userOptionBLP.response(200, ChangementUsernameReussiSchema)
+@userOptionBLP.response(200, MessageSchema)
+@userOptionBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userOptionBLP.alt_response(409, schema=BaseErrorSchema, description="Nom d'utilisateur déjà pris")
 @userOptionBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
-@userOptionBLP.alt_response(409, schema=RegisterErrorResponseSchema, description="Username existant")
-@userOptionBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
 @jwt_required()
 def modifierUsername(data):
-    "Changer le nom de l'utilisateur"
+    """Changer le nom de l'utilisateur"""
+    user = getCurrentUserOrAbort401()
+    new_username = data["username"]
 
-    id = get_jwt_identity()
-    user = db.session.scalar(sa.select(User).where(User.id == id))
-    if user is None:
-        abort(401, message="User not found")
-
-    new_username = data.get("username")
-    existing_user = db.session.scalar(sa.select(User).where(User.username == new_username))
-    if existing_user:
+    existing = db.session.scalar(sa.select(User).where(User.username == new_username))
+    if existing:
         abort(409, message="Nom d'utilisateur déjà pris")
 
     user.username = new_username
-
     db.session.commit()
-    db.session.refresh(user)
-
     return {"message": "Nom d'utilisateur changé avec succès"}
-
-@userBLP.route("/supprimer", methods=["DELETE"])
-@userBLP.doc(security=[{"bearerAuth": []}])
-@userBLP.response(200, MessageSchema)
-@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
-@jwt_required()
-def supprimer_utilisateur():
-    """Supprime l'utilisateur connecté et son historique"""
-    id = get_jwt_identity()
-    user = db.session.scalar(sa.select(User).where(User.id == id))
-    if user is None:
-        abort(401, message="User not found")
-    db.session.delete(user)
-    db.session.commit()
-    return {"message": "Utilisateur supprimé avec succès"}
-
-@userBLP.route("/getAllPoids", methods=["GET"])
-@userBLP.doc(security=[{"bearerAuth": []}])
-@userBLP.response(200, schema=UserHistoriqueResponse)
-@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
-@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
-@jwt_required()
-def getAllPoids():
-    """Récupère tout l'historique des poids de l'utilisateur connecté"""
-    id = get_jwt_identity()
-    user = db.session.scalar(sa.select(User).where(User.id == id))
-    if user is None:
-        abort(401, message="User not found")
-
-    df = user.getHistoriquePoidsPanda()
-    historique = df.to_dict(orient="records") if not df.empty else []
-    return {"historique": historique}
