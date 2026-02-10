@@ -97,7 +97,7 @@ def user():
 @userBLP.route("/ajouterOuModifierPoids", methods=["POST"])
 @userBLP.arguments(UserAjouterPoidsSchema)
 @userBLP.doc(security=[{"bearerAuth": []}])
-@userBLP.response(200, UserSchema)
+@userBLP.response(200, MessageSchema)
 @userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
 @userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
@@ -125,7 +125,7 @@ def ajouterOuModifierPoids(data):
 
     db.session.commit()
     db.session.refresh(user)
-    return userResponse(user)
+    return {"message": "Poids ajouter ou modifier correctement!"}
 
 
 @userBLP.route("/getAllPoids", methods=["GET"])
