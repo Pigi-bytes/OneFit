@@ -31,3 +31,5 @@ yarn-error.log*
 .vscode
 .pyc
 __pycache__
+
+.db
