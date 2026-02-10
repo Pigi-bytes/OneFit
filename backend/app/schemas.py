@@ -96,3 +96,13 @@ class UserAjouterPoidsSchema(Schema):
 class UserConfigurer(Schema):
     date_naissance = fields.Date(required=False)
     taille = fields.Int(required=False)
+
+
+class UserHistoriqueItem(Schema):
+    poids = fields.Float(required=True)
+    date = fields.Str(required=True)
+    note = fields.Str(allow_none=True)
+
+
+class UserHistoriqueResponse(Schema):
+    historique = fields.List(fields.Nested(UserHistoriqueItem), required=True)

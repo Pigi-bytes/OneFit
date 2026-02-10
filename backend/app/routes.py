@@ -16,6 +16,7 @@ from app.schemas import (
     TokenSchema,
     UserAjouterPoidsSchema,
     UserConfigurer,
+    UserHistoriqueResponse,
     UserNotFoundErrorSchema,
     UserSchema,
     ValidationErrorSchema,
@@ -153,7 +154,6 @@ def configurerUser(data):
     db.session.commit()
     db.session.refresh(user)
 
-    db.session.refresh(user)
     dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None
     return {
         "username": user.username,
@@ -161,3 +161,21 @@ def configurerUser(data):
         "taille": user.taille,
         "dernierPoids": dernier_poids,
     }
+
+
+@userBLP.route("/getAllPoids", methods=["GET"])
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, schema=UserHistoriqueResponse)
+@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
+@jwt_required()
+def get_all_weight():
+    """Récupère tout l'historique des poids de l'utilisateur connecté"""
+    id = get_jwt_identity()
+    user = db.session.scalar(sa.select(User).where(User.id == id))
+    if user is None:
+        abort(401, message="User not found")
+
+    df = user.getHistoriquePoidsPanda()
+    historique = df.to_dict(orient="records") if not df.empty else []
+    return {"historique": historique}
