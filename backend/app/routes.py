@@ -223,6 +223,20 @@ def modifierUsername(data):
 
     return {"message": "Nom d'utilisateur changé avec succès"}
 
+@userBLP.route("/supprimer", methods=["DELETE"])
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, MessageSchema)
+@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
+@jwt_required()
+def supprimer_utilisateur():
+    """Supprime l'utilisateur connecté et son historique"""
+    id = get_jwt_identity()
+    user = db.session.scalar(sa.select(User).where(User.id == id))
+    if user is None:
+        abort(401, message="User not found")
+    db.session.delete(user)
+    db.session.commit()
+    return {"message": "Utilisateur supprimé avec succès"}
 
 @userBLP.route("/getAllPoids", methods=["GET"])
 @userBLP.doc(security=[{"bearerAuth": []}])
