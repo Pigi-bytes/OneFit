@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-configurer-compte',
@@ -16,7 +17,7 @@ export class ConfigurerCompte {
   birthDate = '';
   backendResponse = '';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
 
   configurer() {
     this.http.post('http://127.0.0.1:5000/user/option/configurer', {
@@ -35,6 +36,7 @@ export class ConfigurerCompte {
         } else {
           this.backendResponse = 'Erreur serveur';
         }
+        this.cdr.detectChanges();
       }
     });
   }
