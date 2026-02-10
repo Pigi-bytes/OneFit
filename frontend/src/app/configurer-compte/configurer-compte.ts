@@ -26,12 +26,32 @@ export class ConfigurerCompte {
     }).subscribe({
       next: (res: any) => {
         this.backendResponse = res.message;
-
+        this.cdr.detectChanges();
         this.router.navigate(['/accueil']);
       },
       error: (err: any) => {
+        //erreur 422
+        if (err.error.code == 422 && err.error?.errors) {
+
+          const errorsObj = err.error.errors;
+          const messages: string[] = [];
+
+
+
+          for (const key in errorsObj) {
+
+            const value = errorsObj[key];
+            Object.values(value).forEach(v => {
+              if (Array.isArray(v)) messages.push(...v);
+              else if (typeof v === 'string') messages.push(v);
+              messages.push("\n");
+            });
+          }
+
+          this.backendResponse = messages.join('\n');
+        }
         // erreurs HTTP (400, 409, 500…)
-        if (err.error && err.error.message) {
+        else if (err.error && err.error.message) {
           this.backendResponse = err.error.message; // <- message du backend
         } else {
           this.backendResponse = 'Erreur serveur';
