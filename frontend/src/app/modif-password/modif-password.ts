@@ -52,10 +52,10 @@ export class ModifPassword {
         // erreurs HTTP (400, 409, 500…)
         if (err.error && err.error.message) {
           this.backendResponse = err.error.message; // <- message du backend
-          this.cdr.detectChanges();
         } else {
           this.backendResponse = 'Erreur serveur';
         }
+        this.cdr.detectChanges();
       }
     });
 

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -17,6 +17,7 @@ export class Utilisateur {
 
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
+  private router = inject(Router);
 
   username = '';
   backendResponse = '';
@@ -102,6 +103,34 @@ export class Utilisateur {
   afficheModif() {
     this.backendResponse = "Modifications appliquées";
     this.cdr.detectChanges();
+  }
+
+  supprimer() {
+    const confirmAction = confirm("Voulez-vous vraiment continuer ?");
+
+    if (confirmAction) {
+
+      this.http.delete('http://127.0.0.1:5000/user/supprimer', {})
+        .subscribe({
+
+          next: (res: any) => {
+            console.log('RESPONSE OK', res);
+            this.router.navigate(['']);
+          },
+
+          error: (err: any) => {
+            // erreurs HTTP (400, 409, 500…)
+            if (err.error && err.error.message) {
+              this.backendResponse = err.error.message; // <- message du backend
+            } else {
+              this.backendResponse = 'Erreur serveur';
+            }
+
+            this.cdr.detectChanges();
+          }
+        });
+    }
+
   }
 }
 

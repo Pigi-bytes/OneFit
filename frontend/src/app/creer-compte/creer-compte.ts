@@ -42,8 +42,8 @@ export class CreerCompte {
 
         // connexion auto après l'inscription
         this.http.post('http://127.0.0.1:5000/auth/login', {
-        username: this.username,
-        password: this.password
+          username: this.username,
+          password: this.password
         }).subscribe((res: any) => {
           localStorage.setItem('access_token', res.access_token);
           this.router.navigate(['/configurer-compte']);
@@ -54,10 +54,10 @@ export class CreerCompte {
         // erreurs HTTP (400, 409, 500…)
         if (err.error && err.error.message) {
           this.backendResponse = err.error.message; // <- message du backend
-          this.cdr.detectChanges();
         } else {
           this.backendResponse = 'Erreur serveur';
         }
+        this.cdr.detectChanges();
       }
     });
 
