@@ -125,3 +125,15 @@ class ChangementMdpReussiSchema(Schema):
     """Réponse succès pour changement de mot de passe"""
 
     message = fields.Str(metadata={"example": "Mot de passe changé avec succès"})
+
+
+class UserChangementUsername(Schema):
+    """Réponse succès pour changement de mot de passe"""
+
+    username = USERNAME
+
+
+class ChangementUsernameReussiSchema(Schema):
+    """Réponse succès pour changement de nom d'utilisateur"""
+
+    message = fields.Str(metadata={"example": "Nom d'utilisateur changé avec succès"})

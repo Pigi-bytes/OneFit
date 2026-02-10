@@ -11,6 +11,7 @@ from app.schemas import (
     AuthErrorResponseSchema,
     ChangementMdpInvalideSchema,
     ChangementMdpReussiSchema,
+    ChangementUsernameReussiSchema,
     LoginSchema,
     MessageSchema,
     RegisterErrorResponseSchema,
@@ -18,6 +19,7 @@ from app.schemas import (
     TokenSchema,
     UserAjouterPoidsSchema,
     UserChangementMdp,
+    UserChangementUsername,
     UserConfigurer,
     UserHistoriqueResponse,
     UserNotFoundErrorSchema,
@@ -191,6 +193,35 @@ def modifierMDP(data):
         return {"message": "Mot de passe changé avec succès"}
 
     abort(401, message="Mot de passe actuel invalide")
+
+
+@userOptionBLP.route("/modifierUsername", methods=["POST"])
+@userOptionBLP.arguments(UserChangementUsername)
+@userOptionBLP.doc(security=[{"bearerAuth": []}])
+@userOptionBLP.response(200, ChangementUsernameReussiSchema)
+@userOptionBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@userOptionBLP.alt_response(409, schema=RegisterErrorResponseSchema, description="Username existant")
+@userOptionBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
+@jwt_required()
+def modifierUsername(data):
+    "Changer le nom de l'utilisateur"
+
+    id = get_jwt_identity()
+    user = db.session.scalar(sa.select(User).where(User.id == id))
+    if user is None:
+        abort(401, message="User not found")
+
+    new_username = data.get("username")
+    existing_user = db.session.scalar(sa.select(User).where(User.username == new_username))
+    if existing_user:
+        abort(409, message="Nom d'utilisateur déjà pris")
+
+    user.username = new_username
+
+    db.session.commit()
+    db.session.refresh(user)
+
+    return {"message": "Nom d'utilisateur changé avec succès"}
 
 
 @userBLP.route("/getAllPoids", methods=["GET"])
