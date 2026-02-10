@@ -35,7 +35,7 @@ export class Utilisateur {
     this.http.get<any>('http://127.0.0.1:5000/user/user').pipe(take(1)).subscribe(res => {
       this.Busername = res.username;
       this.Btaille = res.taille;
-      this.BbirthDate = res.date_naissance;
+      this.birthDate = res.date_naissance;
       console.log('User:', res);
 
     });
