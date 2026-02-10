@@ -1,6 +1,9 @@
 from marshmallow import Schema, fields, validate
 
 
+# ---------------------------------------------------------------------------
+# Champs
+# ---------------------------------------------------------------------------
 def _username(**kw):
     d = {"required": True, "validate": validate.Length(1, 64), "metadata": {"description": "Pseudo"}}
     return fields.Str(**{**d, **kw})
@@ -31,7 +34,9 @@ def _note(**kw):
     return fields.Str(**{**d, **kw})
 
 
-# Erreur
+# ---------------------------------------------------------------------------
+# Erreurs
+# ---------------------------------------------------------------------------
 class BaseErrorSchema(Schema):
     code = fields.Int(metadata={"example": 400})
     message = fields.Str(metadata={"example": "Erreur"})
@@ -51,14 +56,13 @@ class ValidationErrorSchema(BaseErrorSchema):
     )
 
 
-# Message générique
-
-
+# ---------------------------------------------------------------------------
+# Schémas de Auth / Messages
+# ---------------------------------------------------------------------------
 class MessageSchema(Schema):
     message = fields.Str(metadata={"example": "Opération réussie"})
 
 
-# Auth
 class LoginSchema(Schema):
     username = _username(required=True)
     password = _password(required=True)
@@ -73,9 +77,9 @@ class TokenSchema(Schema):
     access_token = fields.Str(metadata={"description": "JWT d'accès"})
 
 
-# Utilisateur
-
-
+# ---------------------------------------------------------------------------
+# Schéma de Utilisateur
+# ---------------------------------------------------------------------------
 class UserSchema(Schema):
     username = _username()
     date_naissance = _date()
@@ -97,6 +101,9 @@ class UserChangementUsernameSchema(Schema):
     username = _username()
 
 
+# ---------------------------------------------------------------------------
+# Poids / Historique
+# ---------------------------------------------------------------------------
 class UserHistoriqueItem(Schema):
     poids = fields.Float(required=True)
     date = fields.Str(required=True)
