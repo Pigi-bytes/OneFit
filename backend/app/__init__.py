@@ -31,10 +31,11 @@ api.spec.components.security_scheme(  # type: ignore
     },
 )
 
-from app.routes import authBLP, userBLP  # noqa: E402
+from app.routes import authBLP, userBLP, userOptionBLP  # noqa: E402
 
 api.register_blueprint(authBLP)
 api.register_blueprint(userBLP)
+api.register_blueprint(userOptionBLP)
 
 
 @app.cli.command("init-db")

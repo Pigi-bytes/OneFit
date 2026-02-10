@@ -27,6 +27,7 @@ from app.schemas import (
 
 authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentification")
 userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion utilisateur")
+userOptionBLP = Blueprint("option", __name__, url_prefix="/user/option", description="Option utilisateur")
 
 
 @authBLP.route("/login", methods=["POST"])
@@ -135,12 +136,12 @@ def ajouterOuModifierPoids(data):
     }
 
 
-@userBLP.route("/configurer", methods=["POST"])
-@userBLP.arguments(UserConfigurer)
-@userBLP.doc(security=[{"bearerAuth": []}])
-@userBLP.response(200, UserSchema)
-@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
-@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
+@userOptionBLP.route("/configurer", methods=["POST"])
+@userOptionBLP.arguments(UserConfigurer)
+@userOptionBLP.doc(security=[{"bearerAuth": []}])
+@userOptionBLP.response(200, UserSchema)
+@userOptionBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@userOptionBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
 @jwt_required()
 def configurerUser(data):
     """Configure la date de naissance et la taille de l'utilisateur"""
@@ -166,13 +167,13 @@ def configurerUser(data):
     }
 
 
-@userBLP.route("/modifierMDP", methods=["POST"])
-@userBLP.arguments(UserChangementMdp)
-@userBLP.doc(security=[{"bearerAuth": []}])
-@userBLP.response(200, ChangementMdpReussiSchema)
-@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
-@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
-@userBLP.alt_response(401, schema=ChangementMdpInvalideSchema, description="Mot de passe invalide")
+@userOptionBLP.route("/modifierMDP", methods=["POST"])
+@userOptionBLP.arguments(UserChangementMdp)
+@userOptionBLP.doc(security=[{"bearerAuth": []}])
+@userOptionBLP.response(200, ChangementMdpReussiSchema)
+@userOptionBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@userOptionBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
+@userOptionBLP.alt_response(401, schema=ChangementMdpInvalideSchema, description="Mot de passe invalide")
 @jwt_required()
 def modifierMDP(data):
     "Changer le mot de passe de l'utilisateur"
