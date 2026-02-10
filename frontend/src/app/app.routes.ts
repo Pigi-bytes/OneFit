@@ -6,6 +6,7 @@ import { ConfigurerCompte } from './configurer-compte/configurer-compte';
 import { Accueil } from './accueil/accueil';
 import { Utilisateur } from './utilisateur/utilisateur';
 import { ModifPassword } from './modif-password/modif-password';
+import { MenuPoid } from './menu-poid/menu-poid';
 
 export const routes: Routes = [
         { path: '', component: Home },
@@ -15,4 +16,5 @@ export const routes: Routes = [
         { path: "accueil", component: Accueil },
         { path: "utilisateur", component: Utilisateur },
         { path: "modif-password", component: ModifPassword },
+        { path: "menu-poid", component: MenuPoid },
 ];
