@@ -80,6 +80,21 @@ h2 {
 
 }
 
+.btn-red {
+        padding: 10px 20px;
+        border-radius: 12px;
+        background-color: var(--red1) !important;
+        border-color: var(--red1) !important;
+        color: #fff !important;
+        transition-duration: 0.3s;
+}
+
+.btn-red:hover {
+        background-color: var(--red2) !important;
+        border-color: var(--red2) !important;
+        color: #fff !important;
+}
+
 form {
         display: block;
         margin: 0 auto;
