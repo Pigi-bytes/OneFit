@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -28,7 +28,7 @@ export class Utilisateur {
   private oldDate = '';
   private oldTaille = '';
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -52,9 +52,6 @@ export class Utilisateur {
   }
 
   modif() {
-
-    var motif = false;
-
     if ((this.oldTaille != this.taille) || (this.oldDate != this.birthDate)) {
       this.http.post('http://127.0.0.1:5000/user/option/configurer', {
         date_naissance: this.birthDate,

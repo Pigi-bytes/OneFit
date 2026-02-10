@@ -5,6 +5,7 @@ import { CreerCompte } from './creer-compte/creer-compte';
 import { ConfigurerCompte } from './configurer-compte/configurer-compte';
 import { Accueil } from './accueil/accueil';
 import { Utilisateur } from './utilisateur/utilisateur';
+import { ModifPassword } from './modif-password/modif-password';
 
 export const routes: Routes = [
         { path: '', component: Home },
@@ -13,4 +14,5 @@ export const routes: Routes = [
         { path: "configurer-compte", component: ConfigurerCompte },
         { path: "accueil", component: Accueil },
         { path: "utilisateur", component: Utilisateur },
+        { path: "modif-password", component: ModifPassword },
 ];
