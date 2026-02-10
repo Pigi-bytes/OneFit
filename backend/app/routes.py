@@ -54,19 +54,13 @@ def userResponse(user: User) -> dict:
 @authBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 def login(data):
     """Connexion utilisateur"""
-    username = data.get("username")
-    password = data.get("password")
+    user = db.session.scalar(sa.select(User).where(User.username == data["username"]))
 
-    user = db.session.scalar(sa.select(User).where(User.username == username))
-
-    if user is None:
+    if user is None or not user.checkPassword(data["password"]):
         abort(401, message="Identifiants invalides")
 
-    if user.checkPassword(password):
-        access_token = create_access_token(identity=str(user.id))
-        return {"access_token": access_token}, 200
-
-    abort(401, message="Identifiants invalides")
+    access_token = create_access_token(identity=str(user.id))
+    return {"access_token": access_token}
 
 
 @authBLP.route("/inscription", methods=["POST"])
@@ -109,16 +103,15 @@ def user():
 @jwt_required()
 def ajouterOuModifierPoids(data):
     """Ajoute ou modifie un poids dans l'historique de l'utilisateur connecté"""
-    id = get_jwt_identity()
-    user = db.session.scalar(sa.select(User).where(User.id == id))
-    if user is None:
-        abort(401, message="User not found")
-
+    user = getCurrentUserOrAbort401()
     poids_date = data.get("date", date.today())
 
     # Cherche si une entrée existe pour cette date
     poids_existant = db.session.scalar(
-        sa.select(HistoriquePoids).where((HistoriquePoids.user_id == user.id) & (HistoriquePoids.date == poids_date))
+        sa.select(HistoriquePoids).where(
+            HistoriquePoids.user_id == user.id,
+            HistoriquePoids.date == poids_date,
+        )
     )
 
     if poids_existant:
@@ -160,6 +153,7 @@ def supprimer_utilisateur():
     db.session.commit()
     return {"message": "Utilisateur supprimé avec succès"}
 
+
 @userOptionBLP.route("/configurer", methods=["POST"])
 @userOptionBLP.arguments(UserConfigurerSchema)
 @userOptionBLP.doc(security=[{"bearerAuth": []}])
@@ -171,10 +165,10 @@ def configurerUser(data):
     """Configure la date de naissance et la taille de l'utilisateur"""
     user = getCurrentUserOrAbort401()
 
-    if "date_naissance" in data and data.get("date_naissance"):
-        user.date_naissance = data.get("date_naissance")
-    if "taille" in data and data.get("taille"):
-        user.taille = data.get("taille")
+    if data.get("date_naissance") is not None:
+        user.date_naissance = data["date_naissance"]
+    if data.get("taille") is not None:
+        user.taille = data["taille"]
 
     db.session.commit()
     db.session.refresh(user)
@@ -189,19 +183,15 @@ def configurerUser(data):
 @userOptionBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def modifierMDP(data):
-    "Changer le mot de passe de l'utilisateur"
-    id = get_jwt_identity()
-    user = db.session.scalar(sa.select(User).where(User.id == id))
-    if user is None:
-        abort(401, message="User not found")
+    """Changer le mot de passe de l'utilisateur"""
+    user = getCurrentUserOrAbort401()
 
-    password = data.get("password")
-    newPassword = data.get("new_password")
-    if user.checkPassword(password):
-        user.password = generate_password_hash(newPassword)
-        db.session.commit()
-        db.session.refresh(user)
-        return {"message": "Mot de passe changé avec succès"}
+    if not user.checkPassword(data["password"]):
+        abort(401, message="Mot de passe actuel invalide")
+
+    user.password = generate_password_hash(data["new_password"])
+    db.session.commit()
+    return {"message": "Mot de passe changé avec succès"}
 
 
 @userOptionBLP.route("/modifierUsername", methods=["POST"])
