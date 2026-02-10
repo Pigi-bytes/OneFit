@@ -9,12 +9,15 @@ from app import db
 from app.models import HistoriquePoids, User
 from app.schemas import (
     AuthErrorResponseSchema,
+    ChangementMdpInvalideSchema,
+    ChangementMdpReussiSchema,
     LoginSchema,
     MessageSchema,
     RegisterErrorResponseSchema,
     RegisterSchema,
     TokenSchema,
     UserAjouterPoidsSchema,
+    UserChangementMdp,
     UserConfigurer,
     UserHistoriqueResponse,
     UserNotFoundErrorSchema,
@@ -163,13 +166,39 @@ def configurerUser(data):
     }
 
 
+@userBLP.route("/modifierMDP", methods=["POST"])
+@userBLP.arguments(UserChangementMdp)
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, ChangementMdpReussiSchema)
+@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=ChangementMdpInvalideSchema, description="Mot de passe invalide")
+@jwt_required()
+def modifierMDP(data):
+    "Changer le mot de passe de l'utilisateur"
+    id = get_jwt_identity()
+    user = db.session.scalar(sa.select(User).where(User.id == id))
+    if user is None:
+        abort(401, message="User not found")
+
+    password = data.get("password")
+    newPassword = data.get("new_password")
+    if user.checkPassword(password):
+        user.password = generate_password_hash(newPassword)
+        db.session.commit()
+        db.session.refresh(user)
+        return {"message": "Mot de passe changé avec succès"}
+
+    abort(401, message="Mot de passe actuel invalide")
+
+
 @userBLP.route("/getAllPoids", methods=["GET"])
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, schema=UserHistoriqueResponse)
 @userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @userBLP.alt_response(401, schema=UserNotFoundErrorSchema, description="Utilisateur non trouvé")
 @jwt_required()
-def get_all_weight():
+def getAllPoids():
     """Récupère tout l'historique des poids de l'utilisateur connecté"""
     id = get_jwt_identity()
     user = db.session.scalar(sa.select(User).where(User.id == id))

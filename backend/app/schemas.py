@@ -106,3 +106,22 @@ class UserHistoriqueItem(Schema):
 
 class UserHistoriqueResponse(Schema):
     historique = fields.List(fields.Nested(UserHistoriqueItem), required=True)
+
+
+class UserChangementMdp(Schema):
+    password = PASSWORD
+    new_password = PASSWORD
+
+
+class ChangementMdpInvalideSchema(BaseErrorSchema):
+    """Erreur lors du changement de mot de passe"""
+
+    code = fields.Int(metadata={"example": 401})
+    message = fields.Str(metadata={"example": "Mot de passe actuel invalide"})
+    status = fields.Str(metadata={"example": "Unauthorized"})
+
+
+class ChangementMdpReussiSchema(Schema):
+    """Réponse succès pour changement de mot de passe"""
+
+    message = fields.Str(metadata={"example": "Mot de passe changé avec succès"})
