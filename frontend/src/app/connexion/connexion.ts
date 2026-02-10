@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
+import { error } from 'console';
 
 @Component({
   selector: 'app-connexion',
@@ -33,7 +34,26 @@ export class Connexion {
       },
 
       error: (err: any) => {
-        if (err.error && err.error.message) {
+        if (err.error.code == 422 && err.error?.errors) {
+
+          const errorsObj = err.error.errors;
+          const messages: string[] = [];
+
+
+
+          for (const key in errorsObj) {
+
+            const value = errorsObj[key];
+            Object.values(value).forEach(v => {
+              if (Array.isArray(v)) messages.push(...v);
+              else if (typeof v === 'string') messages.push(v);
+              messages.push("\n");
+            });
+          }
+
+          this.backendResponse = messages.join('\n');
+        }
+        else if (err.error && err.error.message) {
           this.backendResponse = err.error.message; // message backend
         } else {
           this.backendResponse = 'Erreur serveur';
