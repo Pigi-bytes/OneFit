@@ -8,29 +8,26 @@
                 <div class="form-group">
                         <label for="username">username</label>
                         <input type="text" id="username" name="username" [(ngModel)]="username" required
-                                class="form-control" value={{Busername}} />
+                                class="form-control" />
                 </div>
 
                 <div class="form-group">
                         <label for="taille">taille</label>
-                        <input type="text" id="taille" name="taille" [(ngModel)]="taille" required class="form-control"
-                                value={{Btaille}} />
+                        <input type="text" id="taille" name="taille" [(ngModel)]="taille" required
+                                class="form-control" />
                 </div>
 
                 <div class="form-group">
                         <label for="birthDate">Date de naissance:</label>
                         <input type="date" id="birthDate" name="birthDate" [(ngModel)]="birthDate" required
-                                class="form-control" value="BbirthDate" />
+                                class="form-control" />
                 </div>
 
 
-                <div class="form-group">
-                        <label for="password">Mot de passe</label>
-                        <input type="password" id="password" name="password" [(ngModel)]="password" required
-                                class="form-control" value="***********" /><br>
-                </div>
 
                 <input type="submit" value="modifier" class="btn-dark">
+
+                <button class="btn-dark" routerLink="/accueil">modifier Mot de passe</button>
 
                 <button class="btn-dark" routerLink="/accueil">Revenir</button>
 

@@ -19,13 +19,14 @@ export class Utilisateur {
   private platformId = inject(PLATFORM_ID);
 
   username = '';
-  password = '';
   backendResponse = '';
   taille = '';
   Busername = '';
-  Btaille = '';
   birthDate = '';
-  BbirthDate = '';
+
+  private oldUsername = '';
+  private oldDate = '';
+  private oldTaille = '';
 
   constructor(private router: Router, private cdr: ChangeDetectorRef) { }
 
@@ -37,9 +38,13 @@ export class Utilisateur {
 
   getAllinformation() {
     this.http.get<any>('http://127.0.0.1:5000/user/user').pipe(take(1)).subscribe(res => {
-      this.Busername = res.username;
-      this.Btaille = res.taille;
+      this.username = res.username;
+      this.taille = res.taille;
       this.birthDate = res.date_naissance;
+
+      this.oldUsername = this.username;
+      this.oldDate = this.birthDate;
+      this.oldTaille = this.taille
       console.log('User:', res);
 
     });
@@ -47,33 +52,60 @@ export class Utilisateur {
   }
 
   modif() {
-    this.http.post('http://127.0.0.1:5000/user/option/configurer', {
-      date_naissance: this.birthDate,
-      taille: this.taille
 
-    }).subscribe({
+    var motif = false;
 
-      next: (res: any) => {
-        console.log('RESPONSE OK', res);
-        this.backendResponse = "modifications appliquées";
-        this.cdr.detectChanges();
-      },
+    if ((this.oldTaille != this.taille) || (this.oldDate != this.birthDate)) {
+      this.http.post('http://127.0.0.1:5000/user/option/configurer', {
+        date_naissance: this.birthDate,
+        taille: this.taille
 
-      error: (err: any) => {
-        // erreurs HTTP (400, 409, 500…)
-        if (err.error && err.error.message) {
-          this.backendResponse = err.error.message; // <- message du backend
-          this.cdr.detectChanges();
-        } else {
-          this.backendResponse = 'Erreur serveur';
+      }).subscribe({
+
+        next: (res: any) => {
+          console.log('RESPONSE OK', res);
+          this.afficheModif();
+        },
+
+        error: (err: any) => {
+          // erreurs HTTP (400, 409, 500…)
+          if (err.error && err.error.message) {
+            this.backendResponse = err.error.message; // <- message du backend
+            this.cdr.detectChanges();
+          } else {
+            this.backendResponse = 'Erreur serveur';
+          }
         }
-      }
-    });
+      });
+    }
+    if (this.oldUsername != this.username) {
+      this.http.post('http://127.0.0.1:5000//user/option/modifierUsername', {
+        username: this.username
+      }).subscribe({
 
+        next: (res: any) => {
+          console.log('RESPONSE OK', res);
+          this.afficheModif();
 
+        },
 
-
+        error: (err: any) => {
+          // erreurs HTTP (400, 409, 500…)
+          if (err.error && err.error.message) {
+            this.backendResponse = err.error.message; // <- message du backend
+            this.cdr.detectChanges();
+          } else {
+            this.backendResponse = 'Erreur serveur';
+          }
+        }
+      });
+    }
   }
 
-
+  afficheModif() {
+    this.backendResponse = "Modifications appliquées";
+    this.cdr.detectChanges();
+  }
 }
+
+
