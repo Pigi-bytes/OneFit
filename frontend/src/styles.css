@@ -3,21 +3,21 @@
 
 /* 1 est la teinte la plus foncée, 3 la plus claire*/
 :root {
-  --red1: #b83100ff;
-  --red2: #E03C00;
-  --red3: #FF4B0A;
+        --red1: #b83100ff;
+        --red2: #E03C00;
+        --red3: #FF4B0A;
 
-  --white1: #D7D8EA;
-  --white2: #F0F1FD;
-  --white3: #f9f9ffff;
+        --white1: #D7D8EA;
+        --white2: #F0F1FD;
+        --white3: #f9f9ffff;
 
-  --silver1: #aba3a3ff;
-  --silver2: #c5bfbfff;
-  --silver3: #d8d4d4ff;
+        --silver1: #aba3a3ff;
+        --silver2: #c5bfbfff;
+        --silver3: #d8d4d4ff;
 
-  --blue1: #1c364cff;
-  --blue2: #31485cff;
-  --blue3: #44596bff;
+        --blue1: #1c364cff;
+        --blue2: #31485cff;
+        --blue3: #44596bff;
 }
 
 
@@ -67,22 +67,22 @@ h2 {
 }
 
 .btn-dark {
-    padding: 10px 20px;
-    border-radius: 12px;
-    background-color: var(--blue1) !important;
-    border-color: var(--blue1) !important;
-    transition-duration: 0.3s;
+        padding: 10px 20px;
+        border-radius: 12px;
+        background-color: var(--blue1) !important;
+        border-color: var(--blue1) !important;
+        transition-duration: 0.3s;
 }
 
 .btn-dark:hover {
-    background-color: var(--blue3) !important;
-    border-color: var(--blue3) !important;
+        background-color: var(--blue3) !important;
+        border-color: var(--blue3) !important;
 
 }
 
 form {
         display: block;
-        margin: 0 auto;      
+        margin: 0 auto;
 
 }
 
@@ -93,7 +93,7 @@ form {
 
 form input {
         display: block;
-        margin: 0 auto;      
+        margin: 0 auto;
         width: 50%;
         text-align: center;
 }
@@ -103,14 +103,18 @@ form input[type=submit] {
         text-align: center;
         min-width: 100px;
         box-sizing: border-box;
-} 
+}
 
 form button {
-        width:20%;
+        width: 20%;
         min-width: 100px;
-        margin: 0 auto;      
+        margin: 0 auto;
 }
 
 form .btn-dark {
-    padding: 5px 10px;
+        padding: 5px 10px;
+}
+
+.imgLogo {
+        height: 150px;
 }
