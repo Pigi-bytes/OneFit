@@ -3,29 +3,47 @@ import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-accueil',
-  imports: [RouterModule],
-  templateUrl: './accueil.html',
-  styleUrl: './accueil.css',
+  selector: 'app-utilisateur',
+  imports: [FormsModule, RouterModule],
+  templateUrl: './utilisateur.html',
+  styleUrl: './utilisateur.css',
 })
-export class Accueil {
+export class Utilisateur {
+
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
 
-  name = "";
+  username = '';
+  password = '';
+  backendResponse = '';
+  taille = '';
+  Busername = '';
+  Btaille = '';
+  birthDate = '';
+  BbirthDate = '';
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.getUserName();
+      this.getAllinformation();
     }
   }
 
-  getUserName() {
+  getAllinformation() {
     this.http.get<any>('http://127.0.0.1:5000/user/user').pipe(take(1)).subscribe(res => {
-      this.name = res.username;
+      this.Busername = res.username;
+      this.Btaille = res.taille;
+      this.BbirthDate = res.date_naissance;
       console.log('User:', res);
+
     });
   }
+
+  modif() {
+
+  }
+
+
 }
