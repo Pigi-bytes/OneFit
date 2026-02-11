@@ -5,7 +5,7 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
-from app import db
+from app import Config, db
 from app.models import HistoriquePoids, User
 from app.schemas import (
     BaseErrorSchema,
@@ -21,6 +21,7 @@ from app.schemas import (
     UserSchema,
     ValidationErrorSchema,
 )
+from app.smart_client import SmartApiClient
 
 authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentification")
 userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion utilisateur")
@@ -214,3 +215,15 @@ def modifierUsername(data):
     user.username = new_username
     db.session.commit()
     return {"message": "Nom d'utilisateur changé avec succès"}
+
+@userOptionBLP.route("/liveness", methods=["GET"])
+@userOptionBLP.doc(security=[{"bearerAuth": []}])
+@userOptionBLP.response(200)
+def liveness():
+    "Check si l'api de sport est en ligne"
+    headers = {"x-rapidapi-host": Config.X_RAPID_API_HOST, "x-rapidapi-key": Config.X_RAPID_API_KEY}
+
+    client = SmartApiClient()
+    response = client.get("https://edb-with-videos-and-images-by-ascendapi.p.rapidapi.com/api/v1/liveness", headers=headers)
+
+    return response

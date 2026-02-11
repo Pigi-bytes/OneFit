@@ -9,10 +9,10 @@ load_dotenv(Path(__file__).parent / ".env")
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "c une application super secrete"
-    SQLALCHEMY_DATABASE_URI = (
-        os.environ.get("DATABASE_URL")
-        or f"sqlite:///{Path(__file__).parent / 'database' / 'app.db'}"
-    )
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or f"sqlite:///{Path(__file__).parent / 'database' / 'app.db'}"
+
+    X_RAPID_API_HOST = os.environ.get("X_RAPID_API_HOST")
+    X_RAPID_API_KEY = os.environ.get("X_RAPID_API_KEY")
 
     API_TITLE = "OneFit API"
     API_VERSION = "v1"

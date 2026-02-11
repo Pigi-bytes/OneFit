@@ -60,3 +60,11 @@ def reset_db_command(yes):
     db.drop_all()
     db.create_all()
     click.echo("bd supprimé")
+
+
+@app.cli.command("drop-requestlog")
+def drop_requestlog():
+    from app.models import RequestLog
+
+    RequestLog.__table__.drop(db.engine) # type: ignore
+    click.echo("Table RequestLog supprimée.")
