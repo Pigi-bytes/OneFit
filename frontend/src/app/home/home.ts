@@ -25,12 +25,4 @@ export class Home implements OnInit {
     }
   }
 
-  toggleTheme(){
-    this.theme.toggleDark();
-    this.isDark = document.body.classList.contains('dark');
-
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('darkMode', String(this.isDark));
-    }
-  }
 }

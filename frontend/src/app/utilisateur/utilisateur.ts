@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
+import { Theme } from '../theme';
 
 @Component({
   selector: 'app-utilisateur',
@@ -29,7 +30,8 @@ export class Utilisateur {
   private oldDate = '';
   private oldTaille = '';
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef, private theme: Theme) { }
+  isDark = false;
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
@@ -42,6 +44,17 @@ export class Utilisateur {
       this.getAllinformation();
     }
   }
+
+
+  toggleTheme(){
+    this.theme.toggleDark();
+    this.isDark = document.body.classList.contains('dark');
+
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('darkMode', String(this.isDark));
+    }
+  }
+
 
   getAllinformation() {
     this.http.get<any>('http://127.0.0.1:5000/user/user').pipe(take(1)).subscribe(res => {
