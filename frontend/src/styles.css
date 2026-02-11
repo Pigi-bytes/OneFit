@@ -54,18 +54,13 @@ h1 {
         margin-bottom: 20px;
 }
 
-body.dark h1 {
-        color: var(--white3);
-}
-
-
 h2 {
         color: var(--blue1);
         font-size: 24px;
         font-weight: normal;
 }
 
-body.dark h2 {
+body.dark h1, body.dark h2, body.dark label {
         color: var(--white3);
 }
 
@@ -86,26 +81,34 @@ button, input {
 
 }
 
-.btn-dark {
-        background-color: var(--blue1) !important;
-        border-color: var(--blue1) !important;
+.btn-principal {
+        background-color: var(--blue1);
+        border-color: var(--blue1);
+        color: var(--white3);
 }
 
-.btn-dark dark {
-        background-color: var(--silver3) !important;
-        border-color: var(--silver3) !important;
+body.dark .btn-principal {
+        background-color: var(--white3);
+        border-color: var(--white3);
+        color: var(--blue1);
 }
 
-.btn-dark:hover {
-        background-color: var(--blue3) !important;
-        border-color: var(--blue3) !important;
+.btn-principal:hover {
+        background-color: var(--blue3);
+        border-color: var(--blue3);
 
+}
+
+body.dark .btn-principal:hover {
+        background-color: var(--silver3);
+        border-color: var(--silver3);
+        color: var(--blue1);
 }
 
 .btn-red {
         background-color: var(--red1);
         border-color: var(--red1);
-        color: #fff !important;
+        color: var(--white3);
 }
 
 .btn-red:hover {
@@ -145,10 +148,22 @@ form button {
         margin: 0 auto;
 }
 
-form .btn-dark {
+form .btn-principal {
         padding: 5px 10px;
 }
 
 .imgLogo {
         height: 150px;
+}
+
+canvas {
+        width: 800px;
+        height: 500px;
+        align-items: right;
+}
+
+body.dark canvas {
+        width: 800px;
+        height: 500px;
+        align-items: right;
 }
