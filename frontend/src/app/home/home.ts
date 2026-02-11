@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { Theme } from '../theme';
 
 @Component({
   selector: 'app-home',
@@ -9,4 +10,10 @@ import { RouterModule } from '@angular/router';
   styleUrl: './home.css',
 })
 export class Home {
+
+  constructor (private theme: Theme){}
+
+  toggleTheme(){
+    this.theme.toggleDark();
+  }
 }
