@@ -18,6 +18,7 @@ from app.schemas import (
     UserChangementUsernameSchema,
     UserConfigurerSchema,
     UserHistoriqueResponseSchema,
+    UserSuppPoidSchema,
     UserSchema,
     ValidationErrorSchema,
 )
@@ -126,6 +127,38 @@ def ajouterOuModifierPoids(data):
     db.session.commit()
     db.session.refresh(user)
     return {"message": "Poids ajouter ou modifier correctement!"}
+
+@userBLP.route("/suprimerPoid", methods=["DELETE"])
+@userBLP.arguments(UserSuppPoidSchema)
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, MessageSchema)
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@userBLP.alt_response(404, schema=BaseErrorSchema, description="Donnée non présente")
+@jwt_required()
+def suprimerPoid(data):
+    """Ajoute ou modifie un poids dans l'historique de l'utilisateur connecté"""
+    user = getCurrentUserOrAbort401()
+    date = data.get("date")
+
+    # Cherche si une entrée existe pour cette date
+    poids_existant = db.session.scalar(
+        sa.select(HistoriquePoids).where(
+            HistoriquePoids.user_id == user.id,
+            HistoriquePoids.date == date,
+        )
+    )
+
+    if poids_existant:
+        db.session.delete(poids_existant)
+        db.session.commit()
+        return {"message": "Poids supprimé correctement!"}
+    else:
+        abort(404, message="Poid non présent")
+
+    db.session.refresh(user)
+    return {"message": "Poids ajouter ou modifier correctement!"}
+
 
 
 @userBLP.route("/getAllPoids", methods=["GET"])
