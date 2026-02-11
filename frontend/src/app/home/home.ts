@@ -17,6 +17,8 @@ export class Home implements OnInit {
     if (typeof localStorage !== 'undefined') {
       if(localStorage.getItem('darkMode') === 'true'){
         document.body.classList.add('dark');
+        this.isDark = true;
+        
       }
     }
   }

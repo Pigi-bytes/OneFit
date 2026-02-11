@@ -54,10 +54,19 @@ h1 {
         margin-bottom: 20px;
 }
 
+body.dark h1 {
+        color: var(--white3);
+}
+
+
 h2 {
         color: var(--blue1);
         font-size: 24px;
         font-weight: normal;
+}
+
+body.dark h2 {
+        color: var(--white3);
 }
 
 .button-group {
@@ -70,12 +79,21 @@ h2 {
         margin-top: 20px;
 }
 
-.btn-dark {
+button, input {
         padding: 10px 20px;
-        border-radius: 12px;
+        border-radius: 12px !important;
+        transition-duration: 0.3s;
+
+}
+
+.btn-dark {
         background-color: var(--blue1) !important;
         border-color: var(--blue1) !important;
-        transition-duration: 0.3s;
+}
+
+.btn-dark dark {
+        background-color: var(--silver3) !important;
+        border-color: var(--silver3) !important;
 }
 
 .btn-dark:hover {
@@ -85,12 +103,9 @@ h2 {
 }
 
 .btn-red {
-        padding: 10px 20px;
-        border-radius: 12px;
-        background-color: var(--red1) !important;
-        border-color: var(--red1) !important;
+        background-color: var(--red1);
+        border-color: var(--red1);
         color: #fff !important;
-        transition-duration: 0.3s;
 }
 
 .btn-red:hover {
