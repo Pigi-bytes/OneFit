@@ -33,6 +33,12 @@ export class Utilisateur {
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        this.router.navigate(['']);
+        alert("veuillez vous connecter")
+        return;
+      }
       this.getAllinformation();
     }
   }
@@ -106,7 +112,7 @@ export class Utilisateur {
   }
 
   supprimer() {
-    const confirmAction = confirm("Voulez-vous vraiment continuer ?");
+    const confirmAction = confirm("Voulez-vous vraiment supprimer votre compte ?");
 
     if (confirmAction) {
 
@@ -115,6 +121,7 @@ export class Utilisateur {
 
           next: (res: any) => {
             console.log('RESPONSE OK', res);
+            localStorage.removeItem("access_token");
             this.router.navigate(['']);
           },
 
