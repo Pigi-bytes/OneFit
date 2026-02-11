@@ -6,7 +6,10 @@ import { Injectable } from '@angular/core';
 export class Theme {
 
   isItDark() {
-    return localStorage.getItem('darkMode') === 'true';
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('darkMode') === 'true';
+    }
+    return false;
   }
 
   toggleDark() {
