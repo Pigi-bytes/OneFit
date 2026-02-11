@@ -21,9 +21,6 @@ export class MenuPoid {
   backendResponse = '';
   note: string | null = null;
 
-  @ViewChild('child') graph!: GraphPoid;
-
-
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private ser: poidUpdate) { }
 
   ajouterPoid() {
