@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
+import { GraphPoid } from '../graph-poid/graph-poid';
+import { poidUpdate } from '../../poidUpdate'
+
 
 @Component({
   selector: 'app-menu-poid',
@@ -18,8 +21,10 @@ export class MenuPoid {
   backendResponse = '';
   note: string | null = null;
 
+  @ViewChild('child') graph!: GraphPoid;
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
+
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private ser: poidUpdate) { }
 
   ajouterPoid() {
 
@@ -35,6 +40,7 @@ export class MenuPoid {
       next: (res: any) => {
         console.log('RESPONSE OK', res);
         this.backendResponse = res.message;
+        this.ser.triggerRefresh();
         this.cdr.detectChanges();
 
       },
@@ -54,6 +60,8 @@ export class MenuPoid {
               messages.push("\n");
             });
           }
+
+
 
           this.backendResponse = messages.join('\n');
         }
