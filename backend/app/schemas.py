@@ -115,6 +115,8 @@ class UserAjouterPoidsSchema(Schema):
     poids = _poids()
     note = _note()
 
+class UserSuppPoidSchema(Schema):
+    date = _date()
 
 class UserHistoriqueItemSchema(Schema):
     poids = _poids()
