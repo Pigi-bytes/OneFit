@@ -3,10 +3,6 @@ import { Chart, registerables } from 'chart.js';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs/operators';
-import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef } from '@angular/core';
 import { poidUpdate } from "../../poidUpdate"
 import { Subscription } from 'rxjs';
 
@@ -15,7 +11,7 @@ Chart.register(...registerables);
 
 @Component({
   selector: 'app-graph-poid',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './graph-poid.html',
   styleUrl: './graph-poid.css',
 })

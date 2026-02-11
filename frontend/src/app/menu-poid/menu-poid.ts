@@ -76,6 +76,11 @@ export class MenuPoid {
     });
   }
 
+  resetNotif() {
+    this.backendResponse = '';
+    this.cdr.detectChanges();
+  }
+
 }
 
 
