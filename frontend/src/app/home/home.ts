@@ -10,10 +10,12 @@ import { Theme } from '../theme';
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  isDark = false;
   constructor (private theme: Theme){}
 
+  isDark = false;
+
   ngOnInit() {
+    this.isDark = this.theme.isItDark();
     if (typeof localStorage !== 'undefined') {
       if(localStorage.getItem('darkMode') === 'true'){
         document.body.classList.add('dark');
