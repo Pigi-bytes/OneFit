@@ -2,7 +2,7 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 <main>
-        <img src="/img/onefit_logo_couleurs.png" class="imgLogo" alt="OneFit">
+        <img [src]="isDark ? '/img/onefit_logo_clair.png' : '/img/onefit_logo_couleurs.png'" class="imgLogo" alt="OneFit">
         <br>
         <h2>Atteignez vos objectifs en One Day</h2>
 
@@ -11,5 +11,5 @@
                 <button class="btn-dark" routerLink="/creer-compte">Créer un compte</button>
         </div>
 
-        <button (click) = "toggleTheme()">dark mode</button>
+        <button class="btn-dark" (click) = "toggleTheme()">dark mode</button>
 </main>
