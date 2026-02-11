@@ -25,6 +25,7 @@ class User(db.Model):
         df = pd.DataFrame([{"poids": p.poids, "date": p.date, "note": p.note} for p in self.historique_poids])
         if not df.empty:
             df["date"] = pd.to_datetime(df["date"])
+        df = df.sort_values("date")
         return df
 
 
