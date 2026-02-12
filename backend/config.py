@@ -14,6 +14,9 @@ class Config:
     X_RAPID_API_HOST = os.environ.get("X_RAPID_API_HOST")
     X_RAPID_API_KEY = os.environ.get("X_RAPID_API_KEY")
 
+    DAILY_LIMIT = 500
+    MONTHLY_LIMIT = 2000
+
     API_TITLE = "OneFit API"
     API_VERSION = "v1"
     OPENAPI_VERSION = "3.0.3"

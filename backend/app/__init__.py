@@ -1,11 +1,15 @@
+import logging
 import os
+import time
 
 import click
 from config import Config
-from flask import Flask
+from flask import Flask, g, request
 from flask_jwt_extended import JWTManager
 from flask_smorest import Api
 from flask_sqlalchemy import SQLAlchemy
+
+from .utils.logger import logger
 
 
 class CustomApi(Api):
@@ -15,7 +19,8 @@ class CustomApi(Api):
 from flask_cors import CORS  # noqa: E402
 
 app = Flask(__name__)
-CORS(app)  # ← autorise toutes les origines pour tester
+logger.info("Application Flask initialisée !")
+CORS(app)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
@@ -36,6 +41,36 @@ from app.routes import authBLP, userBLP, userOptionBLP  # noqa: E402
 api.register_blueprint(authBLP)
 api.register_blueprint(userBLP)
 api.register_blueprint(userOptionBLP)
+
+
+@app.errorhandler(422)
+def handle_marshmallow_error(err):
+    messages = err.data.get("messages", ["Invalid request"])
+    logger.error(f"Erreur de validation Marshmallow : {messages}")
+
+    return {"errors": messages}, 422
+
+
+@app.before_request
+def start_timer():
+    g.start = time.perf_counter()
+
+
+@app.after_request
+def log_request(response):
+    if request.path == "/favicon.ico":  # On ignore le favicon
+        return response
+
+    now = time.perf_counter()
+    duration = now - g.start
+
+    if duration > 0.5:
+        log_level = logging.WARNING
+    else:
+        log_level = logging.INFO
+
+    logger.log(log_level, f"REQ {request.method} {request.path} | Status: {response.status_code} | Time: {duration:.4f}s")
+    return response
 
 
 @app.cli.command("init-db")
@@ -66,5 +101,5 @@ def reset_db_command(yes):
 def drop_requestlog():
     from app.models import RequestLog
 
-    RequestLog.__table__.drop(db.engine) # type: ignore
+    RequestLog.__table__.drop(db.engine)  # type: ignore
     click.echo("Table RequestLog supprimée.")
