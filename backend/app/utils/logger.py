@@ -30,7 +30,7 @@ class ColorFormatter(logging.Formatter):
 
 
 root_logger = logging.getLogger()
-root_logger.setLevel(logging.)
+root_logger.setLevel(logging.DEBUG)
 
 if not os.path.exists("logs"):
     os.makedirs("logs")
