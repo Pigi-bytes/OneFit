@@ -43,26 +43,27 @@ class HistoriquePoids(db.Model):
     def __repr__(self) -> str:
         return f"<HistoriquePoids {self.poids}kg @ {self.date.strftime('%d/%m/%Y')}>"
 
-# class Exercise(db.Model):
-#     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-#     id_api: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64), unique=True, index=True)
+class Exercise(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    id_api: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64), unique=True, index=True)
 
-#     name: so.Mapped[str] = so.mapped_column(sa.String(120), unique=True)
+    name: so.Mapped[str] = so.mapped_column(sa.String(120), unique=True)
 
-#     img_url: so.Mapped[str] = so.mapped_column(sa.String)
-#     video_url: so.Mapped[str] = so.mapped_column(sa.String)
+    img_url: so.Mapped[str] = so.mapped_column(sa.String)
+    video_url: so.Mapped[str] = so.mapped_column(sa.String)
 
-#     overview: so.Mapped[Optional[str]] = so.mapped_column(sa.Text, nullable=True)
-#     instructions: so.Mapped[Optional[str]] = so.mapped_column(sa.Text, nullable=True)
-#     body_part: so.Mapped[Optional[str]] = so.mapped_column(sa.String(128))
+    overview: so.Mapped[Optional[str]] = so.mapped_column(sa.Text, nullable=True)
+    instructions: so.Mapped[Optional[str]] = so.mapped_column(sa.Text, nullable=True)
+    body_part: so.Mapped[Optional[str]] = so.mapped_column(sa.String(128))
 
 
 class RequestLog(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
 
-    url: so.Mapped[str] = so.mapped_column(sa.String(256))
+    cache_key: so.Mapped[Optional[str]] = so.mapped_column(sa.String(64), nullable=True, index=True)
     status_code: so.Mapped[int] = so.mapped_column()
 
+    cache_hits: so.Mapped[int] = so.mapped_column(sa.Integer, default=0)
     timestamp: so.Mapped["datetime"] = so.mapped_column(sa.DateTime, server_default=sa.func.now())
 
     response_body: so.Mapped[Optional[str]] = so.mapped_column(sa.Text, nullable=True)
