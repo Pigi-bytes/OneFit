@@ -24,7 +24,7 @@ from app.schemas import (
     ValidationErrorSchema,
 )
 from app.smart_client import SmartApiClient
-from app.utils.logger import QueryTimer, auth_logger, db_logger, route_logger, security_logger
+from app.utils.logger import QueryTimer, auth_logger, db_logger, route_logger
 
 authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentification")
 userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion utilisateur")
@@ -236,7 +236,6 @@ def supprimer_utilisateur():
     username = user.username
 
     route_logger.warning(f"USER DELETE | Suppression du compte | user_id={user_id} username={username}")
-    security_logger.warning(f"ACCOUNT DELETED | user_id={user_id} username={username}")
 
     with QueryTimer("deleteUser"):
         db.session.delete(user)
@@ -300,7 +299,6 @@ def modifierMDP(data):
         db.session.commit()
 
     auth_logger.info(f"PASSWORD CHANGER | user_id={user.id} | IP={request.remote_addr}")
-    security_logger.info(f"PASSWORD CHANGER | user_id={user.id} | IP={request.remote_addr}")
     return {"message": "Mot de passe changé avec succès"}
 
 
@@ -332,7 +330,6 @@ def modifierUsername(data):
         db.session.commit()
 
     route_logger.info(f"USERNAME CHANGED | user_id={user.id} | {old_username} -> {new_username}")
-    security_logger.info(f"USERNAME CHANGED | user_id={user.id} | {old_username} -> {new_username} | IP={request.remote_addr}")
     return {"message": "Nom d'utilisateur changé avec succès"}
 
 
