@@ -35,4 +35,4 @@ __pycache__
 *.db
 /backend/database/
 /logs/
-
+*/log
