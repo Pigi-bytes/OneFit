@@ -37,3 +37,17 @@ class Config:
     API_SPEC_OPTIONS = {}
     HTTP_ERROR_RESPONSE_SCHEMAS = {}
     DEFAULT_RESPONSE_SCHEMA = None
+
+    LOG_LEVEL_CONSOLE = os.environ.get("LOG_LEVEL_CONSOLE", "INFO").upper()
+    LOG_LEVEL_FILE = os.environ.get("LOG_LEVEL_FILE", "DEBUG").upper()
+
+    LOG_LEVEL_ONEFIT = os.environ.get("LOG_LEVEL_ONEFIT", "DEBUG").upper()
+    LOG_LEVEL_ONEFIT_AUTH = os.environ.get("LOG_LEVEL_ONEFIT_AUTH", "DEBUG").upper()
+    LOG_LEVEL_ONEFIT_DATABASE = os.environ.get("LOG_LEVEL_ONEFIT_DATABASE", "DEBUG").upper()
+    LOG_LEVEL_ONEFIT_APICACHE = os.environ.get("LOG_LEVEL_ONEFIT_APICACHE", "DEBUG").upper()
+    LOG_LEVEL_ONEFIT_PERFORMANCE = os.environ.get("LOG_LEVEL_ONEFIT_PERFORMANCE", "DEBUG").upper()
+    LOG_LEVEL_ONEFIT_ROUTES = os.environ.get("LOG_LEVEL_ONEFIT_ROUTES", "DEBUG").upper()
+
+    LOG_LEVEL_SQLALCHEMY = os.environ.get("LOG_LEVEL_SQLALCHEMY", "WARNING").upper()
+    LOG_LEVEL_WERKZEUG = os.environ.get("LOG_LEVEL_WERKZEUG", "WARNING").upper()
+    LOG_LEVEL_URLLIB3 = os.environ.get("LOG_LEVEL_URLLIB3", "WARNING").upper()

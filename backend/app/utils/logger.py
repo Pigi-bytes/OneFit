@@ -3,14 +3,7 @@ import os
 import time
 from logging.handlers import RotatingFileHandler
 
-LOG_LEVEL_CONSOLE = os.environ.get("LOG_LEVEL_CONSOLE", "INFO").upper()
-LOG_LEVEL_FILE = os.environ.get("LOG_LEVEL_FILE", "DEBUG").upper()
-
-# Control logging of external libraries via ENV
-LOG_SQLALCHEMY = os.environ.get("LOG_SQLALCHEMY", "0") == "1"
-LOG_WERKZEUG = os.environ.get("LOG_WERKZEUG", "0") == "1"
-LOG_URLLIB3 = os.environ.get("LOG_URLLIB3", "0") == "1"
-LOG_DB_POOL = os.environ.get("LOG_DB_POOL", "0") == "1"
+from app import Config
 
 
 class Colors:
@@ -57,30 +50,40 @@ if not root_logger.handlers:
     file_handler.setFormatter(
         logging.Formatter("%(asctime)s | %(levelname)-8s | %(name)s | %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
     )
-    file_handler.setLevel(logging.DEBUG)
+    file_handler.setLevel(getattr(logging, Config.LOG_LEVEL_FILE, logging.DEBUG))
 
     # Console
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(ColorFormatter())
-    console_handler.setLevel(logging.INFO)  # Pas de pollution de la console
+    console_handler.setLevel(getattr(logging, Config.LOG_LEVEL_CONSOLE, logging.INFO))
 
     # On rajoute
     root_logger.addHandler(console_handler)
     root_logger.addHandler(file_handler)
 
 
-logging.getLogger("werkzeug").setLevel(logging.DEBUG if LOG_WERKZEUG else logging.WARNING)
-logging.getLogger("urllib3").setLevel(logging.DEBUG if LOG_URLLIB3 else logging.WARNING)
-logging.getLogger("sqlalchemy.engine").setLevel(logging.DEBUG if LOG_SQLALCHEMY else logging.WARNING)
-logging.getLogger("sqlalchemy.pool").setLevel(logging.DEBUG if LOG_DB_POOL else logging.WARNING)
+logging.getLogger("werkzeug").setLevel(getattr(logging, Config.LOG_LEVEL_WERKZEUG, logging.WARNING))
+logging.getLogger("urllib3").setLevel(getattr(logging, Config.LOG_LEVEL_URLLIB3, logging.WARNING))
+logging.getLogger("sqlalchemy.engine").setLevel(getattr(logging, Config.LOG_LEVEL_SQLALCHEMY, logging.WARNING))
 
 
 logger = logging.getLogger("OneFit")
+logger.setLevel(getattr(logging, Config.LOG_LEVEL_ONEFIT, logging.INFO))
+
 auth_logger = logging.getLogger("OneFit.Auth")
+auth_logger.setLevel(getattr(logging, Config.LOG_LEVEL_ONEFIT_AUTH, logging.INFO))
+
 db_logger = logging.getLogger("OneFit.Database")
+db_logger.setLevel(getattr(logging, Config.LOG_LEVEL_ONEFIT_DATABASE, logging.INFO))
+
 api_logger = logging.getLogger("OneFit.ApiCache")
+api_logger.setLevel(getattr(logging, Config.LOG_LEVEL_ONEFIT_APICACHE, logging.INFO))
+
 perf_logger = logging.getLogger("OneFit.Performance")
+perf_logger.setLevel(getattr(logging, Config.LOG_LEVEL_ONEFIT_PERFORMANCE, logging.INFO))
+
 route_logger = logging.getLogger("OneFit.Routes")
+route_logger.setLevel(getattr(logging, Config.LOG_LEVEL_ONEFIT_ROUTES, logging.INFO))
 
 
 class QueryTimer:
