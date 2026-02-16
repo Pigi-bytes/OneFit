@@ -30,6 +30,13 @@ authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentif
 userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion utilisateur")
 userOptionBLP = Blueprint("option", __name__, url_prefix="/user/option", description="Option utilisateur")
 
+headers = {"x-rapidapi-host": Config.X_RAPID_API_HOST, "x-rapidapi-key": Config.X_RAPID_API_KEY}
+
+APISPORT = SmartApiClient(
+    "https://edb-with-videos-and-images-by-ascendapi.p.rapidapi.com/api/v1/",
+    headers=headers,
+)
+
 
 def getCurrentUserOrAbort401() -> User:
     """Récupère l'utilisateur courant via le JWT ou abort 401"""
@@ -338,9 +345,6 @@ def modifierUsername(data):
 @userOptionBLP.response(200)
 def liveness():
     "Check si l'api de sport est en ligne"
-    headers = {"x-rapidapi-host": Config.X_RAPID_API_HOST, "x-rapidapi-key": Config.X_RAPID_API_KEY}
-
-    client = SmartApiClient()
-    response = client.get("https://edb-with-videos-and-images-by-ascendapi.p.rapidapi.com/api/v1/liveness", headers=headers)
+    response = APISPORT.get("/liveness", useCache=False)
 
     return response

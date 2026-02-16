@@ -20,8 +20,9 @@ db_logger = logging.getLogger("OneFit.Database")
 
 
 class SmartApiClient:
-    def __init__(self):
-        pass
+    def __init__(self, base_url: str, headers: dict):
+        self.base_url = base_url.rstrip("/")
+        self.headers = headers or {}
 
     def getUsageStats(self):
         """Récupère les statistiques d'utilisation de l'api"""
@@ -31,10 +32,14 @@ class SmartApiClient:
         api_logger.debug(f"Calcul des stats pour {today} et {firstDayOfTheMonth}")
         thisDay = db.session.query(RequestLog).filter(func.date(RequestLog.timestamp) == today).count()
         thisMonth = db.session.query(RequestLog).filter(func.date(RequestLog.timestamp) >= firstDayOfTheMonth).count()
-        api_logger.info(f"Stats: Jour {thisDay}, Mois {thisMonth}")
+        api_logger.info(f"Stats requetes: Jour {thisDay}, Mois {thisMonth}")
         return thisDay, thisMonth
 
-    def get(self, url, params={}, headers={}, **kwargs):
+    def get(self, endpoint: str, params=None, headers=None, useCache=True, **kwargs):
+        params = params or {}
+        headers = {**self.headers, **(headers or {})}
+
+        url = f"{self.base_url}/{endpoint.lstrip('/')}"
         api_logger.info(f"Tentative d'accès à l'URL : {url}")
         # Construction de l'URL
         try:
@@ -48,30 +53,31 @@ class SmartApiClient:
             api_logger.error(f"Erreur lors de la construction de l'URL: {e}")
             return None
 
-        # Vérification dans la base de donnée
-        with QueryTimer("check si cache est présent"):
-            cached_entry = (
-                db.session.query(RequestLog)
-                .filter(RequestLog.cache_key == cache_key, RequestLog.status_code == 200)
-                .order_by(RequestLog.timestamp.desc())
-                .first()
-            )
+        if useCache:
+            # Vérification dans la base de donnée
+            with QueryTimer("check si cache est présent"):
+                cached_entry = (
+                    db.session.query(RequestLog)
+                    .filter(RequestLog.cache_key == cache_key, RequestLog.status_code == 200)
+                    .order_by(RequestLog.timestamp.desc())
+                    .first()
+                )
 
-        if cached_entry and cached_entry.response_body:
-            db_logger.info(f"Données récupérées depuis la BDD pour {cache_key}")
-            cached_entry.cache_hits += 1
-            db.session.commit()
-            api_logger.info(f"cache_hits incrémenté à {cached_entry.cache_hits}")
-            try:
-                data = json.loads(cached_entry.response_body)
-                api_logger.debug(f"Réponse: {data}")
-                if isinstance(data, dict) and "data" in data:
-                    api_logger.info("Retourne data['data']")
-                    return data["data"]
-                return data
-            except json.JSONDecodeError:
-                api_logger.warning("Impossible de décoder le JSON du cache. Ignoré.")
-                pass
+            if cached_entry and cached_entry.response_body:
+                db_logger.info(f"Données récupérées depuis la BDD pour {cache_key}")
+                cached_entry.cache_hits += 1
+                db.session.commit()
+                api_logger.info(f"cache_hits incrémenté à {cached_entry.cache_hits}")
+                try:
+                    data = json.loads(cached_entry.response_body)
+                    api_logger.debug(f"Réponse: {data}")
+                    if isinstance(data, dict) and "data" in data:
+                        api_logger.info("Retourne data['data']")
+                        return data["data"]
+                    return data
+                except json.JSONDecodeError:
+                    api_logger.warning("Impossible de décoder le JSON du cache. Ignoré.")
+                    pass
 
         today, month = self.getUsageStats()
         if today >= DAILY_LIMIT or month >= MONTHLY_LIMIT:
@@ -83,10 +89,10 @@ class SmartApiClient:
             start = time.perf_counter()
             response = requests.get(url, params=params, headers=headers, **kwargs)
             duration = time.perf_counter() - start
-            api_logger.info(f"Status: {response.status_code} | {duration:.3f}s | URL: {full_url}")
+            api_logger.info(f"Status: {response.status_code} | {(duration * 1000):.1f}ms | URL: {full_url}")
 
             if duration > 2.0:
-                perf_logger.warning(f"Apelle lent : {full_url} | {duration:.3f}s")
+                perf_logger.warning(f"Apelle lent : {full_url} | {(duration * 1000):.1f}ms")
 
             log_entry = RequestLog(
                 cache_key=cache_key,  # type: ignore
