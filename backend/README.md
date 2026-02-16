@@ -31,36 +31,38 @@ uv sync
 
 Cette commande installe automatiquement la version de Python requise et les dépendances dans un environnement virtuel (`.venv`).
 
+### 3. Configuration des variables d'environnement
+
+Copiez le fichier `.envdummy` (fourni dans le dépôt) en `.env` à la racine du dossier `backend` :
+
+```bash
+cp .envdummy .env
+```
+
+Puis remplissez les valeurs nécessaires dans `.env`
+
+
 ## Utilisation
 
 ### Création et reset de la base de données
 
 ```
-uv run -- flask init-db
+uv run flask init-db
 ```
 
 ```
-uv run -- flask reset-db
+uv run flask reset-db
+```
+
+```
+uv run flask drop-requestlog
 ```
 
 
 ### Lancement du serveur
 
 ```bash
-uv run -- flask run --debug
+uv run flask run --debug
 ```
 
 Le serveur sera accessible sur `http://127.0.0.1:5000`.
-
-### Gestion des dépendances
-
-- **Ajouter un paquet** : `uv add <nom_du_paquet>`
-- **Mettre à jour** : `uv sync`
-- **Exécuter un script** : `uv run <script.py>`
-## Tests
-
-Pour lancer les tests unitaires :
-
-```bash
-uv run pytest
-```
