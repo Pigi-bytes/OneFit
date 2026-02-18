@@ -77,6 +77,46 @@ export class MenuPoid {
         this.not.reset(this, this.cdr);
     }
 
+    supprimer() {
+        if (!this.pDate || this.pDate.trim() === '') {
+            this.backendResponse = "Veuillez rentrer une date";
+            this.cdr.detectChanges();
+            return;
+        }
+        const confirmAction = confirm("Voulez-vous vraiment supprimer votre enregistrement du " + this.pDate + "?");
+
+        if (confirmAction) {
+
+            this.http.delete('http://127.0.0.1:5000/user/suprimerPoid', {
+                body: {
+                    date: this.pDate
+                }
+            })
+                .subscribe({
+
+                    next: (res: any) => {
+                        console.log('RESPONSE OK', res);
+                        this.backendResponse = res.message;
+                        this.cdr.detectChanges();
+
+                    },
+
+                    error: (err: any) => {
+                        // erreurs HTTP (400, 409, 500…)
+                        if (err.error && err.error.message) {
+                            this.backendResponse = err.error.message; // <- message du backend
+                        } else {
+                            this.backendResponse = 'Erreur serveur';
+                        }
+
+                        this.cdr.detectChanges();
+                    }
+                });
+        }
+
+    }
+
+
 }
 
 
