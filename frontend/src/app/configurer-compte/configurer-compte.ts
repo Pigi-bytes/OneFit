@@ -4,60 +4,65 @@ import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
+import { Notification } from '../notification';
 
 @Component({
-  selector: 'app-configurer-compte',
-  imports: [RouterModule, FormsModule, CommonModule],
-  templateUrl: './configurer-compte.html',
-  styleUrl: './configurer-compte.css',
+    selector: 'app-configurer-compte',
+    imports: [RouterModule, FormsModule, CommonModule],
+    templateUrl: './configurer-compte.html',
+    styleUrl: './configurer-compte.css',
 })
 export class ConfigurerCompte {
 
-  height = '';
-  birthDate = '';
-  backendResponse = '';
+    height = '';
+    birthDate = '';
+    backendResponse = '';
 
-  constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef) { }
+    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification) { }
 
-  configurer() {
-    this.http.post('http://127.0.0.1:5000/user/option/configurer', {
-      taille: this.height,
-      date_naissance: this.birthDate
-    }).subscribe({
-      next: (res: any) => {
-        this.backendResponse = res.message;
-        this.cdr.detectChanges();
-        this.router.navigate(['/accueil']);
-      },
-      error: (err: any) => {
-        //erreur 422
-        if (err.error.code == 422 && err.error?.errors) {
+    configurer() {
+        this.http.post('http://127.0.0.1:5000/user/option/configurer', {
+            taille: this.height,
+            date_naissance: this.birthDate
+        }).subscribe({
+            next: (res: any) => {
+                this.backendResponse = res.message;
+                this.cdr.detectChanges();
+                this.router.navigate(['/accueil']);
+            },
+            error: (err: any) => {
+                //erreur 422
+                if (err.error.code == 422 && err.error?.errors) {
 
-          const errorsObj = err.error.errors;
-          const messages: string[] = [];
+                    const errorsObj = err.error.errors;
+                    const messages: string[] = [];
 
 
 
-          for (const key in errorsObj) {
+                    for (const key in errorsObj) {
 
-            const value = errorsObj[key];
-            Object.values(value).forEach(v => {
-              if (Array.isArray(v)) messages.push(...v);
-              else if (typeof v === 'string') messages.push(v);
-              messages.push("\n");
-            });
-          }
+                        const value = errorsObj[key];
+                        Object.values(value).forEach(v => {
+                            if (Array.isArray(v)) messages.push(...v);
+                            else if (typeof v === 'string') messages.push(v);
+                            messages.push("\n");
+                        });
+                    }
 
-          this.backendResponse = messages.join('\n');
-        }
-        // erreurs HTTP (400, 409, 500…)
-        else if (err.error && err.error.message) {
-          this.backendResponse = err.error.message; // <- message du backend
-        } else {
-          this.backendResponse = 'Erreur serveur';
-        }
-        this.cdr.detectChanges();
-      }
-    });
-  }
+                    this.backendResponse = messages.join('\n');
+                }
+                // erreurs HTTP (400, 409, 500…)
+                else if (err.error && err.error.message) {
+                    this.backendResponse = err.error.message; // <- message du backend
+                } else {
+                    this.backendResponse = 'Erreur serveur';
+                }
+                this.cdr.detectChanges();
+            }
+        });
+    }
+
+    resetNotif() {
+        this.not.reset(this, this.cdr);
+    }
 }
