@@ -1,18 +1,27 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class Theme {
 
-  isItDark() {
-    if (typeof localStorage !== 'undefined') {
-      return localStorage.getItem('darkMode') === 'true';
-    }
-    return false;
-  }
+    private platformId = inject(PLATFORM_ID);
 
-  toggleDark() {
-    document.body.classList.toggle('dark');
-  }
+    isItDark() {
+        if (!isPlatformBrowser(this.platformId)) {
+            return false;
+        }
+
+        return localStorage.getItem('darkMode') === 'true';
+    }
+
+    toggleDark() {
+        if (!isPlatformBrowser(this.platformId)) return;
+
+        document.body.classList.toggle('dark');
+
+        const isDark = document.body.classList.contains('dark');
+        localStorage.setItem('darkMode', String(isDark));
+    }
 }

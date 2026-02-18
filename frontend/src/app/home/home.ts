@@ -3,26 +3,20 @@ import { RouterModule } from '@angular/router';
 import { Theme } from '../theme';
 
 @Component({
-  selector: 'app-home',
-  imports: [RouterModule],
-  standalone: true,
-  templateUrl: './home.html',
-  styleUrl: './home.css',
+    selector: 'app-home',
+    imports: [RouterModule],
+    standalone: true,
+    templateUrl: './home.html',
+    styleUrl: './home.css',
 })
 export class Home implements OnInit {
-  constructor (private theme: Theme){}
 
-  isDark = false;
+    constructor(private theme: Theme) { }
 
-  ngOnInit() {
-    this.isDark = this.theme.isItDark();
-    if (typeof localStorage !== 'undefined') {
-      if(localStorage.getItem('darkMode') === 'true'){
-        document.body.classList.add('dark');
-        this.isDark = true;
-        
-      }
+    isDark = false;
+
+    ngOnInit() {
+        this.isDark = this.theme.isItDark();
     }
-  }
 
 }
