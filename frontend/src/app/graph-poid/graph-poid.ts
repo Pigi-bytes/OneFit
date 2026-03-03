@@ -10,104 +10,131 @@ import { Subscription } from 'rxjs';
 Chart.register(...registerables);
 
 @Component({
-  selector: 'app-graph-poid',
-  imports: [],
-  templateUrl: './graph-poid.html',
-  styleUrl: './graph-poid.css',
+    selector: 'app-graph-poid',
+    imports: [],
+    templateUrl: './graph-poid.html',
+    styleUrl: './graph-poid.css',
 })
 export class GraphPoid implements AfterViewInit, OnDestroy {
 
-  chart!: Chart;
-  private subscription?: Subscription;
-
-
-  poid: any[] = [];
-  dates: string[] = [];
-  weights: number[] = [];
-  notes: (number | 'nan')[] = [];
-
-
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private ser: poidUpdate) { }
-  @ViewChild('myChart', { static: false }) myChart!: ElementRef<HTMLCanvasElement>;
-
-  ngOnInit() {
-    this.subscription = this.ser.refreshGraph$.subscribe(() => {
-      this.getInformation();
-    });
-  }
+    chart!: Chart;
+    private subscription?: Subscription;
 
 
 
-  public getInformation() {
-    this.http.get<any>('http://127.0.0.1:5000/user/getAllPoids').pipe(take(1)).subscribe(res => {
 
-      this.poid = res.historique;
+    poid: any[] = [];
+    dates: string[] = [];
+    weights: number[] = [];
+    notes: (number | 'nan')[] = [];
 
-      this.dates = this.poid.map(item => item.date);
-      this.weights = this.poid.map(item => item.poids);
-      this.notes = this.poid.map(item => item.note);
 
-      if (this.chart) {
-        this.chart.destroy();
-      }
+    constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private ser: poidUpdate) { }
+    @ViewChild('myChart', { static: false }) myChart!: ElementRef<HTMLCanvasElement>;
 
-      this.chart = new Chart(this.myChart.nativeElement, {
-        type: 'line',
-        data: {
-          labels: this.dates,
-          datasets: [
-            {
-              label: 'Poids',
-              data: this.weights,
-              backgroundColor: '#676767',
-              borderColor: '#333',
-              fill: false,
+    ngOnInit() {
+        this.subscription = this.ser.refreshGraph$.subscribe(() => {
+            this.getInformation();
+        });
+    }
+
+
+
+    public getInformation() {
+        const isDark = localStorage.getItem('darkMode') === 'true';
+
+        this.http.get<any>('http://127.0.0.1:5000/user/getAllPoids').pipe(take(1)).subscribe(res => {
+
+            this.poid = res.historique;
+
+            this.dates = this.poid.map(item => item.date);
+            this.weights = this.poid.map(item => item.poids);
+            this.notes = this.poid.map(item => item.note);
+
+            if (this.chart) {
+                this.chart.destroy();
             }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: (ctx) => {
-                  const note = this.notes[ctx.dataIndex];
-                  if (note !== 'nan') {
-                    return [
-                      `Poids: ${ctx.raw}`,
-                      `Note: ${note}`
-                    ];
-                  }
-                  return `Poids: ${ctx.raw}`;
+
+            this.chart = new Chart(this.myChart.nativeElement, {
+                type: 'line',
+                data: {
+                    labels: this.dates,
+                    datasets: [
+                        {
+                            label: 'Poids',
+                            data: this.weights,
+                            backgroundColor: '#676767',
+                            borderColor: isDark ? '#4ade80' : '#2563eb',
+                            pointBackgroundColor: isDark ? '#ffffff' : '#333333',
+                            fill: false,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    const note = this.notes[ctx.dataIndex];
+                                    if (note !== 'nan') {
+                                        return [
+                                            `Poids: ${ctx.raw}`,
+                                            `Note: ${note}`
+                                        ];
+                                    }
+                                    return `Poids: ${ctx.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: isDark
+                                    ? 'rgba(255,255,255,0.15)'
+                                    : 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                color: isDark ? '#ffffff' : '#333333'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: isDark
+                                    ? 'rgba(255,255,255,0.15)'
+                                    : 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                color: isDark ? '#ffffff' : '#333333'
+                            }
+                        }
+                    }
                 }
-              }
-            }
-          }
+            });
+
+
+
+        });
+    }
+    ngOnDestroy() {
+        this.subscription?.unsubscribe();
+        if (this.chart) {
+            this.chart.destroy();
         }
-      });
-
-
-
-    });
-  }
-  ngOnDestroy() {
-    this.subscription?.unsubscribe();
-    if (this.chart) {
-      this.chart.destroy();
-    }
-  }
-
-
-
-
-  ngAfterViewInit(): void {
-
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
     }
 
-    this.getInformation();
-  }
+
+
+
+    ngAfterViewInit(): void {
+
+        if (!isPlatformBrowser(this.platformId)) {
+            return;
+        }
+
+        this.getInformation();
+    }
 
 }
