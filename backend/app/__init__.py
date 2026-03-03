@@ -8,6 +8,7 @@ from flask import Flask, g, request
 from flask_jwt_extended import JWTManager
 from flask_smorest import Api
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.pool import NullPool
 
 from .utils.logger import auth_logger, db_logger, logger
 
@@ -26,7 +27,7 @@ logger.debug("CORS activé")
 app.config.from_object(Config)
 logger.debug("Configuration chargée depuis Config")
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, engine_options={"poolclass": NullPool, "pool_pre_ping": True})
 db_logger.info("SQLAlchemy initialisé")
 jwt = JWTManager(app)
 auth_logger.info("JWTManager initialisé")

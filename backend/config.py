@@ -9,7 +9,14 @@ load_dotenv(Path(__file__).parent / ".env")
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "c une application super secrete"
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or f"sqlite:///{Path(__file__).parent / 'database' / 'app.db'}"
+
+    USER: str = os.getenv("user", "user")
+    PASSWORD: str = os.getenv("password", "password")
+    HOST: str = os.getenv("host", "host")
+    PORT: str = os.getenv("port", "port")
+    DBNAME: str = os.getenv("dbname", "dbname")
+
+    SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
 
     X_RAPID_API_HOST = os.environ.get("X_RAPID_API_HOST")
     X_RAPID_API_KEY = os.environ.get("X_RAPID_API_KEY")
