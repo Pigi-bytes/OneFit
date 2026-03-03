@@ -51,15 +51,12 @@ export class ModifPassword {
 
             error: (err: any) => {
                 //erreur 422
-                if (err.error.code == 422 && err.error?.errors) {
+                if (err.status == 422 && err.error.errors) {
 
                     const errorsObj = err.error.errors;
                     const messages: string[] = [];
 
-
-
                     for (const key in errorsObj) {
-
                         const value = errorsObj[key];
                         Object.values(value).forEach(v => {
                             if (Array.isArray(v)) messages.push(...v);

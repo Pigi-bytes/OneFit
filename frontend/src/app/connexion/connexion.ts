@@ -34,7 +34,7 @@ export class Connexion {
             },
 
             error: (err: any) => {
-                if (err.error.code == 422 && err.error?.errors) {
+                if (err.status == 422 && err.error.errors) {
 
                     const errorsObj = err.error.errors;
                     const messages: string[] = [];
