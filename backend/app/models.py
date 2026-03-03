@@ -41,7 +41,7 @@ class User(db.Model):
 
 class HistoriquePoids(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("user.id"))
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("users.id"))
 
     poids: so.Mapped[float] = so.mapped_column()
     date: so.Mapped["date"] = so.mapped_column(sa.Date, default=date.today)
