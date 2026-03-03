@@ -53,7 +53,7 @@ export class CreerCompte {
 
             error: (err: any) => {
                 //erreur 422
-                if (err.error.code == 422 && err.error?.errors) {
+                if (err.status == 422 && err.error.errors) {
 
                     const errorsObj = err.error.errors;
                     const messages: string[] = [];
