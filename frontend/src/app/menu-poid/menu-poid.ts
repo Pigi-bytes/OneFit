@@ -98,6 +98,7 @@ export class MenuPoid {
                         console.log('RESPONSE OK', res);
                         this.backendResponse = res.message;
                         this.cdr.detectChanges();
+                        this.ser.triggerRefresh();
 
                     },
 
