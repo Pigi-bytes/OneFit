@@ -78,7 +78,6 @@ button, input {
         padding: 10px 20px;
         border-radius: 12px !important;
         transition-duration: 0.3s;
-
 }
 
 .btn-principal {
@@ -104,6 +103,7 @@ body.dark .btn-principal:hover {
         border-color: var(--silver3);
         color: var(--blue1);
 }
+
 
 .btn-red {
         background-color: var(--red1);
@@ -148,7 +148,7 @@ form button {
         margin: 0 auto;
 }
 
-form .btn-principal {
+form .btn-principal, form .btn-red {
         padding: 5px 10px;
 }
 
