@@ -7,6 +7,7 @@ import { Accueil } from './accueil/accueil';
 import { Utilisateur } from './utilisateur/utilisateur';
 import { ModifPassword } from './modif-password/modif-password';
 import { Poid } from './poid/poid';
+import { Carte } from './carte/carte';
 
 export const routes: Routes = [
         { path: '', component: Home },
@@ -17,4 +18,5 @@ export const routes: Routes = [
         { path: "utilisateur", component: Utilisateur },
         { path: "modif-password", component: ModifPassword },
         { path: "poid", component: Poid },
+        { path: "carte", component: Carte },
 ];

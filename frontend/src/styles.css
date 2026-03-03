@@ -48,6 +48,7 @@ body.dark main {
         background-color: var(--blue1);
 }
 
+
 h1 {
         color: var(--red1);
         font-size: 48px;
@@ -60,7 +61,7 @@ h2 {
         font-weight: normal;
 }
 
-body.dark h1, body.dark h2, body.dark label {
+body.dark h1, body.dark h2, body.dark label, body.dark p {
         color: var(--white3);
 }
 
