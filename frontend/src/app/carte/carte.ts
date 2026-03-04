@@ -29,6 +29,12 @@ export class Carte implements AfterViewInit {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
 
+/* GEOLOCALISATION, WIP
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position: Position) => console.log(position));
+      }
+*/
+
       const triggerTabList = document.querySelectorAll('[data-bs-toggle="tab"]');
 
     }
