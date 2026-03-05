@@ -8,6 +8,7 @@ import { Utilisateur } from './utilisateur/utilisateur';
 import { ModifPassword } from './modif-password/modif-password';
 import { Poid } from './poid/poid';
 import { Carte } from './carte/carte';
+import { SideMenu } from './side-menu/side-menu';
 
 export const routes: Routes = [
         { path: '', component: Home },
@@ -19,4 +20,5 @@ export const routes: Routes = [
         { path: "modif-password", component: ModifPassword },
         { path: "poid", component: Poid },
         { path: "carte", component: Carte },
+        { path: "side-menu", component: SideMenu },
 ];

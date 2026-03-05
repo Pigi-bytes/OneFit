@@ -28,6 +28,14 @@ def _taille(**kw):
     d = {"required": True, "validate": validate.Range(50, 300), "metadata": {"description": "Taille (cm)"}}
     return fields.Int(**{**d, **kw})
 
+def _ville(**kw):
+    d = {
+        "required": True,
+        "validate": validate.Length(min=2, max=100), 
+        "metadata": {"description": "nom de la ville"}
+    }
+    return fields.String(**{**d, **kw})
+
 
 def _note(**kw):
     d = {"allow_none": True, "load_default": None, "metadata": {"description": "Note"}}
@@ -66,6 +74,7 @@ class MessageSchema(Schema):
 class LoginSchema(Schema):
     username = _username(required=True)
     password = _password(required=True)
+
 
 
 class RegisterSchema(Schema):
@@ -126,3 +135,10 @@ class UserHistoriqueItemSchema(Schema):
 
 class UserHistoriqueResponseSchema(Schema):
     historique = fields.List(fields.Nested(UserHistoriqueItemSchema), required=True)
+
+
+# ---------------------------------------------------------------------------
+# API Salle de sport
+# ---------------------------------------------------------------------------
+class SalleSchema(Schema):
+    ville = _ville()
