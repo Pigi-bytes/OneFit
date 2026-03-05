@@ -6,8 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { title } from 'process';
-import { icon } from 'leaflet';
+
 
 @Component({
     selector: 'app-carte',
@@ -64,16 +63,26 @@ export class Carte implements AfterViewInit {
                 res.results.forEach((salle: any) => {
                     const lat = salle.latitude;
                     const lng = salle.longitude;
-                    const name = salle.name;
+                    const name = salle.name || 'N/A';
+                    const adresse = salle.location.address || 'N/A';
+                    const tel = salle.tel || 'N/A';
+                    const mail = salle.mail || 'N/A';
+                    const webSite = salle.website || 'N/A';
                     const customIcon = this.L.icon({
                         iconUrl: `${salle.categories[0].icon.prefix}64${salle.categories[0].icon.suffix}`,
-                        iconSize: [32, 32], // taille de l'icône
+                        iconSize: [64, 64], // taille de l'icône
                         iconAnchor: [16, 32], // point de l'icône qui correspond à la position du marker
                         popupAnchor: [0, -32] // point d'où le popup s'ouvre
                     });
 
 
-                    this.L.marker([lat, lng], { icon: customIcon, alt: name }).addTo(this.map);
+                    this.L.marker([lat, lng], { icon: customIcon }).addTo(this.map).bindPopup(`<ul>
+                        <li>nom : ${name}</li>
+                        <li>adresse :${adresse}</li>
+                        <li>téléphone :${tel}</li>
+                        <li>mail : ${mail}</li>
+                        <li>site : ${webSite}</li>
+                        </ul>`);
                 });
 
                 const group = this.L.featureGroup(
