@@ -6,6 +6,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { title } from 'process';
+import { icon } from 'leaflet';
 
 @Component({
     selector: 'app-carte',
@@ -20,6 +22,7 @@ import { CommonModule } from '@angular/common';
 export class Carte implements AfterViewInit {
 
     private map!: L.Map;
+    private L!: typeof import('leaflet');
 
     ville = "";
     backendResponse = "";
@@ -29,13 +32,13 @@ export class Carte implements AfterViewInit {
     async ngAfterViewInit(): Promise<void> {
         if (isPlatformBrowser(this.platformId)) {
 
-            const L = await import('leaflet');
+            this.L = await import('leaflet');
 
-            const map = L.map('map').setView([47.988, 0.160], 13);
+            this.map = this.L.map('map').setView([47.988, 0.160], 13);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
+            }).addTo(this.map);
 
             /* GEOLOCALISATION, WIP
                   if (navigator.geolocation) {
@@ -54,17 +57,30 @@ export class Carte implements AfterViewInit {
             ville: this.ville,
         }).subscribe({
 
-            next: (res: any) => {
+            next: async (res: any) => {
                 console.log('RESPONSE OK', res);
 
-                // Extraire latitude et longitude
-                const coords = res.results.map((salle: any) => ({
-                    name: salle.categories[0]?.name || 'Salle',
-                    lat: salle.latitude,
-                    lng: salle.longitude
-                }));
 
-                console.log('Coordonnées:', coords);
+                res.results.forEach((salle: any) => {
+                    const lat = salle.latitude;
+                    const lng = salle.longitude;
+                    const name = salle.name;
+                    const customIcon = this.L.icon({
+                        iconUrl: `${salle.categories[0].icon.prefix}64${salle.categories[0].icon.suffix}`,
+                        iconSize: [32, 32], // taille de l'icône
+                        iconAnchor: [16, 32], // point de l'icône qui correspond à la position du marker
+                        popupAnchor: [0, -32] // point d'où le popup s'ouvre
+                    });
+
+
+                    this.L.marker([lat, lng], { icon: customIcon, alt: name }).addTo(this.map);
+                });
+
+                const group = this.L.featureGroup(
+                    res.results.map((salle: any) => this.L.marker([salle.latitude, salle.longitude]))
+                );
+                this.map.fitBounds(group.getBounds(), { padding: [50, 50] });
+
                 this.cdr.detectChanges();
             },
 
