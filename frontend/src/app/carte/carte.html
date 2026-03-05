@@ -3,10 +3,33 @@
 
 
 <main>
-        <div id="map"></div>
-    
-        <div class="button-group">
-            <button type="button" class="btn-principal" routerLink="/accueil">Revenir</button>
+
+    <div class="hbox">
+        <div>
+            <div id="map"></div>
         </div>
+
+        <div>
+
+            <form (ngSubmit)="trouverLoc()" #loginForm="ngForm" id="signup_form" class="d-flex flex-column gap-3 w-50">
+                <div class="form-group">
+                    <label for="ville">Ville:</label>
+                    <input type="text" id="ville" name="ville" [(ngModel)]="ville" required class="form-control"
+                        (click)="resetNotif()" />
+                </div>
+
+                <button type="submit" class="btn-principal">trouver Lieu</button>
+                <button type="button" class="btn-principal" routerLink="/accueil">Revenir</button>
+
+
+
+            </form>
+            <div *ngIf="backendResponse" class="mt-2 alert alert-info">
+                {{ backendResponse }}
+            </div>
+
+
+        </div>
+    </div>
 
 </main>
