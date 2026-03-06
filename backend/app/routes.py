@@ -16,9 +16,9 @@ from app.schemas import (
     MessageSchema,
     RegisterSchema,
     SalleSchema,
+    SalleSchemaByLoc,
     SearchExoRequestSchema,
     SearchExoResponseSchema,
-    SalleSchemaByLoc,
     TokenSchema,
     UserAjouterPoidsSchema,
     UserChangementMdpSchema,
@@ -361,17 +361,17 @@ def getSalle(data):
 
     return response
 
+
 @externeBLP.route("/salleByLoc", methods=["POST"])
 @externeBLP.arguments(SalleSchemaByLoc)
 @externeBLP.doc(security=[{"bearerAuth": []}])
 @externeBLP.response(200)
-def getSalle(data):
+def getSalleLoc(data):
     "trouve les salles en fonction d'un nom de ville"
-    params = {"ll": f"{data['lat']},{data['lng']}","query": "gym"}
+    params = {"ll": f"{data['lat']},{data['lng']}", "query": "gym"}
     response = APISALLE.get("search", params=params, useCache=True)
 
     return response
-
 
 
 @externeBLP.route("/getExo", methods=["POST"])
@@ -437,17 +437,14 @@ def getExo(data):
 def searchExo(data):
     """Recherche des exercices par nom (fuzzy matching) et retourne les n plus proches."""
 
-    search_string = data["q"]
+    recherche = data["recherche"]
     n = int(data["limit"])
 
-    params = {"name": search_string, "limit": n}
+    params = {"name": recherche, "limit": n}
     response = APISPORT.get("exercises", params=params)
 
     if not response:
         abort(400, message="Erreur")
 
-    liste_resultats = [(exo.get("name"), exo.get("exerciseId")) for exo in response]
-
-    print(liste_resultats)
-
-    return {"resultats": liste_resultats}
+    resultat = [(exo["name"], exo["exerciseId"], exo["imageUrl"]) for exo in response]
+    return {"resultats": resultat}

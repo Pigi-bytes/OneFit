@@ -38,17 +38,19 @@ def _note(**kw):
     d = {"allow_none": True, "load_default": None, "metadata": {"description": "Note"}}
     return fields.Str(**{**d, **kw})
 
+
 def _lat(**kw):
     d = {"required": True, "validate": validate.Range(-90, 90), "metadata": {"description": "Latitude"}}
     return fields.Float(**{**d, **kw})
 
+
 def _lng(**kw):
-    d = {"required": True, "validate": validate.Range(-180,180), "metadata": {"description": "Longitude"}}
+    d = {"required": True, "validate": validate.Range(-180, 180), "metadata": {"description": "Longitude"}}
     return fields.Float(**{**d, **kw})
 
 
 def _exo(**kw):
-    d = {"required": True, "metadata": {"description": "ID de l'exercice externe"}}
+    d = {"metadata": {"description": "ID de l'exercice externe"}}
     return fields.Str(**{**d, **kw})
 
 
@@ -173,7 +175,7 @@ class ExerciceResponseSchema(Schema):
 
 
 class SearchExoRequestSchema(Schema):
-    q = fields.Str(required=True, metadata={"description": "Chaîne de recherche"})
+    recherche = fields.Str(required=True, metadata={"description": "Chaîne de recherche"})
     limit = fields.Int(
         required=False,
         load_default=25,
@@ -183,10 +185,11 @@ class SearchExoRequestSchema(Schema):
 
 
 class SearchExoResponseSchema(Schema):
-    # Tuple attend deux éléments : le nom (Str) et l'ID de l'exo (Str)
     resultats = fields.List(
-        fields.Tuple((fields.Str(), fields.Str())), required=True, metadata={"description": "Liste de tuples [(nom, idExo)]"}
+        fields.Tuple((_exo(), fields.Str(), fields.Str())),
+        metadata={"description": "Liste de tuples [(nom, idExo, img)]"},
     )
+
 
 class SalleSchemaByLoc(Schema):
     lat = _lat()
