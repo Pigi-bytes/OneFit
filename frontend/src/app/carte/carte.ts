@@ -82,54 +82,7 @@ export class Carte implements AfterViewInit {
             next: async (res: any) => {
                 console.log('RESPONSE OK', res);
 
-                this.markers.forEach(m => { m.remove() })
-                this.markers = [];
-
-
-                res.results.forEach((salle: any) => {
-                    const lat = Number(salle.latitude);
-                    const lng = Number(salle.longitude);
-                    const name = salle.name || 'N/A';
-                    const adresse = salle.location.address || 'N/A';
-                    const tel = salle.tel || 'N/A';
-                    const mail = salle.mail || 'N/A';
-                    const webSite = salle.website || 'N/A';
-                    const customIcon = this.L.divIcon({
-                        className: '',
-                        html: `<div style="
-                            width: 64px; height: 64px; 
-                            background-color: ${this.couleur};
-                            -webkit-mask-image: url('${salle.categories[0].icon.prefix}64${salle.categories[0].icon.suffix}');
-                            mask-image: url('${salle.categories[0].icon.prefix}64${salle.categories[0].icon.suffix}');
-                            background-size: cover;
-                        "></div>`,
-                        iconSize: [64, 64],
-                        iconAnchor: [16, 32],
-                        popupAnchor: [0, -32]
-                    });
-
-
-                    const marker = this.L.marker([lat, lng], { icon: customIcon }).addTo(this.map).bindPopup(`<ul>
-                        <li>nom : ${name} </li>
-                        <li> adresse :${adresse} </li>
-                        <li> téléphone :${tel} </li>
-                        <li> mail : ${mail} </li>
-                        <li> site : ${webSite} </li>
-                         </ul>`);
-
-                    this.markers.push(marker);
-                });
-
-                if (this.markers.length === 1) {
-                    this.map.setView(this.markers[0].getLatLng(), 14);
-                } else {
-                    const bounds = this.L.latLngBounds([]);
-                    this.markers.forEach(m => bounds.extend(m.getLatLng()));
-                    this.map.fitBounds(bounds, { padding: [50, 50] });
-                }
-
-
-
+                this.afficherPoint(res);
 
                 this.cdr.detectChanges();
             },
@@ -165,9 +118,101 @@ export class Carte implements AfterViewInit {
             }
         });
     }
-    test() {
-        const center = this.map.getCenter(); // L.LatLng
-        console.log(center.lat, center.lng);
+    findByLoc() {
+        const center = this.map.getCenter();
+
+        this.http.post('http://127.0.0.1:5000/externe/salleByLoc', {
+            lat: center.lat,
+            lng: center.lng
+        }).subscribe({
+
+            next: async (res: any) => {
+                console.log('RESPONSE OK', res);
+
+
+
+                this.afficherPoint(res);
+
+                this.cdr.detectChanges();
+            },
+
+            error: (err: any) => {
+                //erreur 422
+                if (err.status == 422 && err.error.errors) {
+
+                    const errorsObj = err.error.errors;
+                    const messages: string[] = [];
+
+
+
+                    for (const key in errorsObj) {
+
+                        const value = errorsObj[key];
+                        Object.values(value).forEach(v => {
+                            if (Array.isArray(v)) messages.push(...v);
+                            else if (typeof v === 'string') messages.push(v);
+                        });
+                    }
+
+                    this.backendResponse = messages.join('\n');
+                }
+                // erreurs HTTP (400, 409, 500…)
+                else if (err.error && err.error.message) {
+                    this.backendResponse = err.error.message; // <- message du backend
+                } else {
+                    this.backendResponse = 'Erreur serveur';
+                }
+                this.cdr.detectChanges();
+            }
+        });
+    }
+
+    afficherPoint(res: any) {
+        this.markers.forEach(m => { m.remove() })
+        this.markers = [];
+
+        res.results.forEach((salle: any) => {
+            const lat = Number(salle.latitude);
+            const lng = Number(salle.longitude);
+            const name = salle.name || 'N/A';
+            const adresse = salle.location.address || 'N/A';
+            const tel = salle.tel || 'N/A';
+            const mail = salle.mail || 'N/A';
+            const webSite = salle.website || 'N/A';
+            const customIcon = this.L.divIcon({
+                className: '',
+                html: `<div style="
+                            width: 64px; height: 64px; 
+                            background-color: ${this.couleur};
+                            -webkit-mask-image: url('${salle.categories[0].icon.prefix}64${salle.categories[0].icon.suffix}');
+                            mask-image: url('${salle.categories[0].icon.prefix}64${salle.categories[0].icon.suffix}');
+                            background-size: cover;
+                        "></div>`,
+                iconSize: [64, 64],
+                iconAnchor: [16, 32],
+                popupAnchor: [0, -32]
+            });
+
+
+            const marker = this.L.marker([lat, lng], { icon: customIcon }).addTo(this.map).bindPopup(`<ul>
+                        <li>nom : ${name} </li>
+                        <li> adresse :${adresse} </li>
+                        <li> téléphone :${tel} </li>
+                        <li> mail : ${mail} </li>
+                        <li> site : ${webSite} </li>
+                         </ul>`);
+
+            this.markers.push(marker);
+        });
+
+        if (this.markers.length === 1) {
+            this.map.setView(this.markers[0].getLatLng(), 14);
+        } else {
+            const bounds = this.L.latLngBounds([]);
+            this.markers.forEach(m => bounds.extend(m.getLatLng()));
+            this.map.fitBounds(bounds, { padding: [50, 50] });
+        }
+
     }
 
     resetNotif() {
