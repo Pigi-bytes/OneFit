@@ -28,17 +28,19 @@ def _taille(**kw):
     d = {"required": True, "validate": validate.Range(50, 300), "metadata": {"description": "Taille (cm)"}}
     return fields.Int(**{**d, **kw})
 
+
 def _ville(**kw):
-    d = {
-        "required": True,
-        "validate": validate.Length(min=2, max=100), 
-        "metadata": {"description": "nom de la ville"}
-    }
+    d = {"required": True, "validate": validate.Length(min=2, max=100), "metadata": {"description": "nom de la ville"}}
     return fields.String(**{**d, **kw})
 
 
 def _note(**kw):
     d = {"allow_none": True, "load_default": None, "metadata": {"description": "Note"}}
+    return fields.Str(**{**d, **kw})
+
+
+def _exo(**kw):
+    d = {"required": True, "metadata": {"description": "ID de l'exercice externe"}}
     return fields.Str(**{**d, **kw})
 
 
@@ -74,7 +76,6 @@ class MessageSchema(Schema):
 class LoginSchema(Schema):
     username = _username(required=True)
     password = _password(required=True)
-
 
 
 class RegisterSchema(Schema):
@@ -124,8 +125,10 @@ class UserAjouterPoidsSchema(Schema):
     poids = _poids()
     note = _note()
 
+
 class UserSuppPoidSchema(Schema):
     date = _date()
+
 
 class UserHistoriqueItemSchema(Schema):
     poids = _poids()
@@ -142,3 +145,37 @@ class UserHistoriqueResponseSchema(Schema):
 # ---------------------------------------------------------------------------
 class SalleSchema(Schema):
     ville = _ville()
+
+
+# ---------------------------------------------------------------------------
+# API Exo
+# ---------------------------------------------------------------------------
+class ExerciceRequestSchema(Schema):
+    exoId = _exo()
+
+
+class ExerciceResponseSchema(Schema):
+    exoId = fields.Str()
+    name = fields.Str()
+    img_url = fields.Str()
+    video_url = fields.Str()
+    overview = fields.Str(allow_none=True)
+    instructions = fields.Str()
+    body_part = fields.Str()
+
+
+class SearchExoRequestSchema(Schema):
+    q = fields.Str(required=True, metadata={"description": "Chaîne de recherche"})
+    limit = fields.Int(
+        required=False,
+        load_default=25,
+        validate=validate.Range(min=1, max=25),
+        metadata={"description": "Nombre de résultats (1-25)"},
+    )
+
+
+class SearchExoResponseSchema(Schema):
+    # Tuple attend deux éléments : le nom (Str) et l'ID de l'exo (Str)
+    resultats = fields.List(
+        fields.Tuple((fields.Str(), fields.Str())), required=True, metadata={"description": "Liste de tuples [(nom, idExo)]"}
+    )

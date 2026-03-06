@@ -7,13 +7,17 @@ from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
 from app import Config, db
-from app.models import HistoriquePoids, User
+from app.models import Exercise, HistoriquePoids, User
 from app.schemas import (
     BaseErrorSchema,
+    ExerciceRequestSchema,
+    ExerciceResponseSchema,
     LoginSchema,
     MessageSchema,
     RegisterSchema,
     SalleSchema,
+    SearchExoRequestSchema,
+    SearchExoResponseSchema,
     TokenSchema,
     UserAjouterPoidsSchema,
     UserChangementMdpSchema,
@@ -32,21 +36,14 @@ userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion u
 userOptionBLP = Blueprint("option", __name__, url_prefix="/user/option", description="Option utilisateur")
 externeBLP = Blueprint("externe", __name__, url_prefix="/externe", description="Call a l'autre api")
 
-headers = {"x-rapidapi-host": Config.X_RAPID_API_HOST, "x-rapidapi-key": Config.X_RAPID_API_KEY}
-
 APISPORT = SmartApiClient(
     "https://edb-with-videos-and-images-by-ascendapi.p.rapidapi.com/api/v1/",
-    headers=headers,
+    headers={"x-rapidapi-host": Config.X_RAPID_API_HOST, "x-rapidapi-key": Config.X_RAPID_API_KEY},
 )
 
-url = "https://places-api.foursquare.com/places/"
-
-headersSalle = {"X-Places-Api-Version": "2025-06-17", "accept": "application/json", "Authorization": f"Bearer {Config.SALLE_KEY}"}
-
-
 APISALLE = SmartApiClient(
-    base_url=url,
-    headers=headersSalle,
+    "https://places-api.foursquare.com/places/",
+    headers={"X-Places-Api-Version": "2025-06-17", "accept": "application/json", "Authorization": f"Bearer {Config.SALLE_KEY}"},
 )
 
 
@@ -351,6 +348,7 @@ def modifierUsername(data):
     route_logger.info(f"USERNAME CHANGED | user_id={user.id} | {old_username} -> {new_username}")
     return {"message": "Nom d'utilisateur changé avec succès"}
 
+
 @externeBLP.route("/salle", methods=["POST"])
 @externeBLP.arguments(SalleSchema)
 @externeBLP.doc(security=[{"bearerAuth": []}])
@@ -361,3 +359,82 @@ def getSalle(data):
     response = APISALLE.get("search", params=params, useCache=True)
 
     return response
+
+
+@externeBLP.route("/getExo", methods=["POST"])
+@externeBLP.arguments(ExerciceRequestSchema)
+@externeBLP.doc(security=[{"bearerAuth": []}])
+@externeBLP.response(200, ExerciceResponseSchema)
+@externeBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération de l'exercice")
+@externeBLP.alt_response(404, schema=BaseErrorSchema, description="Exercice non trouvé sur l'API externe")
+@jwt_required()
+def getExo(data):
+    """Récupère un exercice depuis la BDD si existant, sinon depuis l'API externe puis le sauvegarde"""
+
+    idExo = data["exoId"]
+    if not idExo:
+        abort(400, message="exerciseId manquant")
+
+    exo = db.session.scalar(sa.select(Exercise).where(Exercise.id_api == idExo))
+    if exo:
+        return {
+            "idExo": exo.id_api,
+            "name": exo.name,
+            "img_url": exo.img_url,
+            "video_url": exo.video_url,
+            "overview": exo.overview,
+            "instructions": exo.instructions,
+            "body_part": exo.body_part,
+        }
+
+    exo = APISPORT.get(f"exercises/{idExo}")
+    if not exo:
+        abort(404, message="Erreur lors de la récupération de l'exercice externe")
+
+    exercise = Exercise(
+        id_api=exo["exerciseId"],
+        name=exo["name"],
+        img_url=exo["imageUrl"],
+        video_url=exo["videoUrl"],
+        overview=exo["overview"],
+        instructions="\n".join(exo["instructions"]) if isinstance(exo["instructions"], list) else exo["instructions"],
+        body_part=", ".join(exo["bodyParts"]) if isinstance(exo["bodyParts"], list) else exo["bodyParts"],
+    )
+
+    db.session.add(exercise)
+    db.session.commit()
+
+    return {
+        "idExo": exercise.id_api,
+        "name": exercise.name,
+        "img_url": exercise.img_url,
+        "video_url": exercise.video_url,
+        "overview": exercise.overview,
+        "instructions": exercise.instructions,
+        "body_part": exercise.body_part,
+    }
+
+
+@externeBLP.route("/searchExo", methods=["POST"])
+@externeBLP.arguments(SearchExoRequestSchema)
+@externeBLP.doc(security=[{"bearerAuth": []}])
+@externeBLP.response(200, SearchExoResponseSchema)
+@externeBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération des exercices")
+@jwt_required()
+def searchExo(data):
+    """Recherche des exercices par nom (fuzzy matching) et retourne les n plus proches."""
+
+    search_string = data["q"]
+    n = int(data["limit"])
+
+    params = {"name": search_string, "limit": n}
+    response = APISPORT.get("exercises", params=params)
+
+    if not response:
+        abort(400, message="Erreur")
+
+    liste_resultats = [(exo.get("name"), exo.get("exerciseId")) for exo in response]
+
+    print(liste_resultats)
+
+    return {"resultats": liste_resultats}
