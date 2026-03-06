@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -9,6 +10,8 @@ load_dotenv(Path(__file__).parent / ".env")
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY") or "c une application super secrete"
+
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=2)
 
     USER: str = os.getenv("user", "user")
     PASSWORD: str = os.getenv("password", "password")
