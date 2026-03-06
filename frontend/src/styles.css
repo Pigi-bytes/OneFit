@@ -3,168 +3,179 @@
 
 /* 1 est la teinte la plus foncée, 3 la plus claire*/
 :root {
-        --red1: #b83100ff;
-        --red2: #E03C00;
-        --red3: #FF4B0A;
+    --red1: #b83100ff;
+    --red2: #E03C00;
+    --red3: #FF4B0A;
 
-        --white1: #D7D8EA;
-        --white2: #F0F1FD;
-        --white3: #f9f9ffff;
+    --white1: #D7D8EA;
+    --white2: #F0F1FD;
+    --white3: #f9f9ffff;
 
-        --silver1: #aba3a3ff;
-        --silver2: #c5bfbfff;
-        --silver3: #d8d4d4ff;
+    --silver1: #aba3a3ff;
+    --silver2: #c5bfbfff;
+    --silver3: #d8d4d4ff;
 
-        --blue1: #1c364cff;
-        --blue2: #31485cff;
-        --blue3: #44596bff;
+    --blue1: #1c364cff;
+    --blue2: #31485cff;
+    --blue3: #44596bff;
 }
 
 
 /* Faire prendre toute la hauteur de la page */
 html,
 body {
-        height: 100%;
-        margin: 0;
-        font-family: Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
 }
 
 main {
-        min-height: 90vh;
-        background-color: var(--white3);
-        height: 100%;
+    min-height: 90vh;
+    background-color: var(--white3);
+    height: 100%;
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        /* centrer verticalement */
-        align-items: center;
-        /* centrer horizontalement */
-        text-align: center;
-        padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* centrer verticalement */
+    align-items: center;
+    /* centrer horizontalement */
+    text-align: center;
+    padding: 20px;
 }
 
 body.dark main {
-        background-color: var(--blue1);
+    background-color: var(--blue1);
 }
 
 
 h1 {
-        color: var(--red1);
-        font-size: 48px;
-        margin-bottom: 20px;
+    color: var(--red1);
+    font-size: 48px;
+    margin-bottom: 20px;
 }
 
 h2 {
-        color: var(--blue1);
-        font-size: 24px;
-        font-weight: normal;
+    color: var(--blue1);
+    font-size: 24px;
+    font-weight: normal;
 }
 
-body.dark h1, body.dark h2, body.dark label, body.dark p {
-        color: var(--white3);
+body.dark h1,
+body.dark h2,
+body.dark label,
+body.dark p {
+    color: var(--white3);
 }
 
 .button-group {
-        display: flex;
-        /* met les boutons côte à côte */
-        gap: 10px;
-        /* espace entre les boutons */
-        justify-content: center;
-        /* centrer horizontalement */
-        margin-top: 20px;
+    display: flex;
+    /* met les boutons côte à côte */
+    gap: 10px;
+    /* espace entre les boutons */
+    justify-content: center;
+    /* centrer horizontalement */
+    margin-top: 20px;
 }
 
-button, input {
-        padding: 10px 20px;
-        border-radius: 12px !important;
-        transition-duration: 0.3s;
+button,
+input {
+    padding: 10px 20px;
+    border-radius: 12px !important;
+    transition-duration: 0.3s;
 }
 
 .btn-principal {
-        background-color: var(--blue1);
-        border-color: var(--blue1);
-        color: var(--white3);
+    background-color: var(--blue1);
+    border-color: var(--blue1);
+    color: var(--white3);
 }
 
 body.dark .btn-principal {
-        background-color: var(--white3);
-        border-color: var(--white3);
-        color: var(--blue1);
+    background-color: var(--white3);
+    border-color: var(--white3);
+    color: var(--blue1);
 }
 
 .btn-principal:hover {
-        background-color: var(--blue3);
-        border-color: var(--blue3);
+    background-color: var(--blue3);
+    border-color: var(--blue3);
 
 }
 
 body.dark .btn-principal:hover {
-        background-color: var(--silver3);
-        border-color: var(--silver3);
-        color: var(--blue1);
+    background-color: var(--silver3);
+    border-color: var(--silver3);
+    color: var(--blue1);
 }
 
 
 .btn-red {
-        background-color: var(--red1);
-        border-color: var(--red1);
-        color: var(--white3);
+    background-color: var(--red1);
+    border-color: var(--red1);
+    color: var(--white3);
 }
 
 .btn-red:hover {
-        background-color: var(--red2) !important;
-        border-color: var(--red2) !important;
-        color: #fff !important;
+    background-color: var(--red2) !important;
+    border-color: var(--red2) !important;
+    color: #fff !important;
 }
 
 form {
-        display: block;
-        margin: 0 auto;
+    display: block;
+    margin: 0 auto;
 
 }
 
 .form-group {
-        text-align: center;
-        min-width: 100px;
+    text-align: center;
+    min-width: 100px;
 }
 
 form input {
-        display: block;
-        margin: 0 auto;
-        width: 50%;
-        text-align: center;
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    text-align: center;
 }
 
 form input[type=submit] {
-        width: 20%;
-        text-align: center;
-        min-width: 100px;
-        box-sizing: border-box;
+    width: 20%;
+    text-align: center;
+    min-width: 100px;
+    box-sizing: border-box;
 }
 
 form button {
-        width: 20%;
-        min-width: 100px;
-        margin: 0 auto;
+    width: 20%;
+    min-width: 100px;
+    margin: 0 auto;
 }
 
-form .btn-principal, form .btn-red {
-        padding: 5px 10px;
+form .btn-principal,
+form .btn-red {
+    padding: 5px 10px;
 }
 
 .imgLogo {
-        height: 150px;
+    height: 150px;
 }
 
 canvas {
-        width: 800px;
-        height: 500px;
-        align-items: right;
+    width: 800px;
+    height: 500px;
+    align-items: right;
 }
 
 body.dark canvas {
-        width: 800px;
-        height: 500px;
-        align-items: right;
+    width: 800px;
+    height: 500px;
+    align-items: right;
+}
+
+.hbox {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
