@@ -30,6 +30,7 @@ from app.utils.logger import QueryTimer, auth_logger, db_logger, route_logger
 authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentification")
 userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion utilisateur")
 userOptionBLP = Blueprint("option", __name__, url_prefix="/user/option", description="Option utilisateur")
+externeBLP = Blueprint("externe", __name__, url_prefix="/externe", description="Call a l'autre api")
 
 headers = {"x-rapidapi-host": Config.X_RAPID_API_HOST, "x-rapidapi-key": Config.X_RAPID_API_KEY}
 
@@ -350,21 +351,10 @@ def modifierUsername(data):
     route_logger.info(f"USERNAME CHANGED | user_id={user.id} | {old_username} -> {new_username}")
     return {"message": "Nom d'utilisateur changé avec succès"}
 
-
-@userOptionBLP.route("/liveness", methods=["GET"])
-@userOptionBLP.doc(security=[{"bearerAuth": []}])
-@userOptionBLP.response(200)
-def liveness():
-    "Check si l'api de sport est en ligne"
-    response = APISPORT.get("/liveness", useCache=False)
-
-    return response
-
-
-@userOptionBLP.route("/salle", methods=["POST"])
-@userOptionBLP.arguments(SalleSchema)
-@userOptionBLP.doc(security=[{"bearerAuth": []}])
-@userOptionBLP.response(200)
+@externeBLP.route("/salle", methods=["POST"])
+@externeBLP.arguments(SalleSchema)
+@externeBLP.doc(security=[{"bearerAuth": []}])
+@externeBLP.response(200)
 def getSalle(data):
     "trouve les salles en fonction d'un nom de ville"
     params = {"near": data["ville"], "limit": 50, "query": "gym"}
