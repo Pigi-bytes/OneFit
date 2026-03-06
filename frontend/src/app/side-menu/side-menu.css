@@ -50,3 +50,11 @@ hr {
 body.part hr {
   border-top: 2px solid var(--blue1);
 }
+
+ul {
+  height: 100%;
+}
+
+.bottom {
+  margin-top:auto;
+}
