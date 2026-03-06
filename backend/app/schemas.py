@@ -39,11 +39,11 @@ def _note(**kw):
     return fields.Str(**{**d, **kw})
 
 def _lat(**kw):
-    d = {"required": True, "validate": validate.Range(-90, 90), "metadata": {"description": "Latitude"}}
+    d = {"required": True, "metadata": {"description": "Latitude"}}
     return fields.Float(**{**d, **kw})
 
 def _lng(**kw):
-    d = {"required": True, "validate": validate.Range(-180,180), "metadata": {"description": "Longitude"}}
+    d = {"required": True, "metadata": {"description": "Longitude"}}
     return fields.Float(**{**d, **kw})
 
 
