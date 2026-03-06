@@ -38,6 +38,14 @@ def _note(**kw):
     d = {"allow_none": True, "load_default": None, "metadata": {"description": "Note"}}
     return fields.Str(**{**d, **kw})
 
+def _lat(**kw):
+    d = {"required": True, "validate": validate.Range(-90, 90), "metadata": {"description": "Latitude"}}
+    return fields.Float(**{**d, **kw})
+
+def _lng(**kw):
+    d = {"required": True, "validate": validate.Range(-180,180), "metadata": {"description": "Longitude"}}
+    return fields.Float(**{**d, **kw})
+
 
 def _exo(**kw):
     d = {"required": True, "metadata": {"description": "ID de l'exercice externe"}}
@@ -179,3 +187,7 @@ class SearchExoResponseSchema(Schema):
     resultats = fields.List(
         fields.Tuple((fields.Str(), fields.Str())), required=True, metadata={"description": "Liste de tuples [(nom, idExo)]"}
     )
+
+class SalleSchemaByLoc(Schema):
+    lat = _lat()
+    lng = _lng()

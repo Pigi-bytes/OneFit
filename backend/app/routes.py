@@ -18,6 +18,7 @@ from app.schemas import (
     SalleSchema,
     SearchExoRequestSchema,
     SearchExoResponseSchema,
+    SalleSchemaByLoc,
     TokenSchema,
     UserAjouterPoidsSchema,
     UserChangementMdpSchema,
@@ -359,6 +360,18 @@ def getSalle(data):
     response = APISALLE.get("search", params=params, useCache=True)
 
     return response
+
+@externeBLP.route("/salleByLoc", methods=["POST"])
+@externeBLP.arguments(SalleSchemaByLoc)
+@externeBLP.doc(security=[{"bearerAuth": []}])
+@externeBLP.response(200)
+def getSalle(data):
+    "trouve les salles en fonction d'un nom de ville"
+    params = {"ll": f"{data['lat']},{data['lng']}","query": "gym"}
+    response = APISALLE.get("search", params=params, useCache=True)
+
+    return response
+
 
 
 @externeBLP.route("/getExo", methods=["POST"])
