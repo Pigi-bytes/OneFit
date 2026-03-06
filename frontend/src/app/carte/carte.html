@@ -15,14 +15,16 @@
                         (click)="resetNotif()" />
                 </div>
 
+                <button type="submit" class="btn-principal">Trouver Lieu</button>
+                <button type="button" class="btn-principal" (click)="findByLoc()">afficher salle</button>
+                <button type="button" class="btn-principal" routerLink="/accueil">Revenir</button>
+
             </form>
             <div *ngIf="backendResponse" class="mt-2 alert alert-info">
                 {{ backendResponse }}
             </div>
 
-            <button type="submit" class="btn-principal">Trouver Lieu</button>
-            <button type="button" class="btn-principal" (click)="findByLoc()">afficher salle</button>
-            <button type="button" class="btn-principal" routerLink="/accueil">Revenir</button>
+            
         
         </div>
     </div>
