@@ -165,6 +165,10 @@ export class Carte implements AfterViewInit {
             }
         });
     }
+    test() {
+        const center = this.map.getCenter(); // L.LatLng
+        console.log(center.lat, center.lng);
+    }
 
     resetNotif() {
         this.not.reset(this, this.cdr);

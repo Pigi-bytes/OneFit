@@ -41,6 +41,14 @@ def _note(**kw):
     d = {"allow_none": True, "load_default": None, "metadata": {"description": "Note"}}
     return fields.Str(**{**d, **kw})
 
+def _lat(**kw):
+    d = {"required": True, "validate": validate.Range(-90, 90), "metadata": {"description": "Latitude"}}
+    return fields.Float(**{**d, **kw})
+
+def _lng(**kw):
+    d = {"required": True, "validate": validate.Range(-180,180), "metadata": {"description": "Longitude"}}
+    return fields.Float(**{**d, **kw})
+
 
 # ---------------------------------------------------------------------------
 # Erreurs
@@ -142,3 +150,7 @@ class UserHistoriqueResponseSchema(Schema):
 # ---------------------------------------------------------------------------
 class SalleSchema(Schema):
     ville = _ville()
+
+class SalleSchemaByLoc(Schema):
+    lat = _lat()
+    lng = _lng()
