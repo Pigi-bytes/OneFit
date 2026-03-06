@@ -63,7 +63,7 @@ export class Carte implements AfterViewInit {
      `
         console.log("HTTP:", this.http);
 
-        this.http.post('http://127.0.0.1:5000/user/option/salle', {
+        this.http.post('http://127.0.0.1:5000/externe/salle', {
             ville: this.ville,
         }).subscribe({
 
