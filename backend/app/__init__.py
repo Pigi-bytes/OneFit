@@ -44,7 +44,7 @@ api.spec.components.security_scheme(  # type: ignore
     },
 )
 
-from app.routes import apiExterneBLP, authBLP, userBLP, userOptionBLP  # noqa: E402
+from app.routes import authBLP, externeBLP, userBLP, userOptionBLP  # noqa: E402
 
 api.register_blueprint(authBLP)
 logger.debug("Blueprint enregistré (/auth)")
@@ -52,7 +52,7 @@ api.register_blueprint(userBLP)
 logger.debug("Blueprint enregistré (/user)")
 api.register_blueprint(userOptionBLP)
 logger.debug("Blueprint enregistré (/user/option)")
-api.register_blueprint(apiExterneBLP)
+api.register_blueprint(externeBLP)
 logger.debug("Blueprint enregistré (/externe/)")
 
 
