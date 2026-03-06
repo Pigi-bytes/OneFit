@@ -10,6 +10,7 @@
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+  z-index: 1;
 }
 
 body.dark #side-menu {
@@ -48,4 +49,12 @@ hr {
 
 body.part hr {
   border-top: 2px solid var(--blue1);
+}
+
+ul {
+  height: 100%;
+}
+
+.bottom {
+  margin-top:auto;
 }

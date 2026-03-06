@@ -4,12 +4,9 @@
 
 <main>
 
-    <div class="hbox">
-        <div>
-            <div id="map"></div>
-        </div>
-
-        <div>
+    <div class="vbox">
+        <div id="map"></div>
+        <div id="controls" class="hbox">
 
             <form (ngSubmit)="trouverLoc()" #loginForm="ngForm" id="signup_form" class="d-flex flex-column gap-3 w-50">
                 <div class="form-group">
@@ -18,18 +15,17 @@
                         (click)="resetNotif()" />
                 </div>
 
-                <button type="submit" class="btn-principal">trouver ville</button>
+                <button type="submit" class="btn-principal">Trouver Lieu</button>
                 <button type="button" class="btn-principal" (click)="findByLoc()">afficher salle</button>
                 <button type="button" class="btn-principal" routerLink="/accueil">Revenir</button>
-
-
 
             </form>
             <div *ngIf="backendResponse" class="mt-2 alert alert-info">
                 {{ backendResponse }}
             </div>
 
-
+            
+        
         </div>
     </div>
 

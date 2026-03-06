@@ -3,11 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { SideMenu } from '../side-menu/side-menu';
 
 @Component({
   selector: 'app-accueil',
-  imports: [RouterModule, SideMenu],
+  imports: [RouterModule],
   templateUrl: './accueil.html',
   styleUrl: './accueil.css',
 })

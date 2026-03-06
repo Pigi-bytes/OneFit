@@ -1,7 +1,20 @@
 #map {
-    height: 400px;
-    width: 800px;
+
     display: flex;
-    overflow: hidden;
     border-radius: 15px;
+    overflow: hidden;
+    width: 80%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    transition: height 0.5s ease-in-out;
+}
+
+#controls {
+    position: absolute;
+    display:flex;
+    width:20%;
+    right: 0;
 }

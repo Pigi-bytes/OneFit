@@ -368,7 +368,7 @@ def getSalle(data):
 @externeBLP.response(200)
 def getSalleLoc(data):
     "trouve les salles en fonction d'un nom de ville"
-    params = {"ll": f"{data['lat']},{data['lng']}", "query": "gym"}
+    params = {"ll": f"{data['lat']},{data['lng']}","limit": 50,"query": "gym"}
     response = APISALLE.get("search", params=params, useCache=True)
 
     return response
