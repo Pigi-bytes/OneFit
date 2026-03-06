@@ -1,6 +1,7 @@
 import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule, Router } from '@angular/router';
+import { Theme } from '../theme';
 
 @Component({
   selector: 'app-side-menu',
@@ -13,12 +14,22 @@ export class SideMenu {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
   private router = inject(Router);
+  isDark = false;
 
+  constructor(private theme: Theme) { }
   name = "";
 
   deconnexion() {
     localStorage.removeItem("access_token")
     this.router.navigate(['']);
+  }
+  
+  toggleTheme() {
+      this.theme.toggleDark();
+      this.isDark = document.body.classList.contains('dark');
 
+      if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('darkMode', String(this.isDark));
+      }
   }
 }

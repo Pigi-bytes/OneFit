@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
-import { Theme } from '../theme';
 import { Notification } from '../notification';
 
 @Component({
@@ -31,8 +30,7 @@ export class Utilisateur {
     private oldDate = '';
     private oldTaille = '';
 
-    constructor(private cdr: ChangeDetectorRef, private theme: Theme, private not: Notification) { }
-    isDark = false;
+    constructor(private cdr: ChangeDetectorRef, private not: Notification) { }
 
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {
@@ -43,16 +41,6 @@ export class Utilisateur {
                 return;
             }
             this.getAllinformation();
-        }
-    }
-
-
-    toggleTheme() {
-        this.theme.toggleDark();
-        this.isDark = document.body.classList.contains('dark');
-
-        if (typeof localStorage !== 'undefined') {
-            localStorage.setItem('darkMode', String(this.isDark));
         }
     }
 

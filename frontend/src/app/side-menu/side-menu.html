@@ -18,9 +18,19 @@
             <li>
                 <a routerLink="/carte" class="nav-link link-dark">Carte</a>
             </li>
-            <li class="bottom">
-                <a (click)="deconnexion()" class="nav-link link-dark">Déconnexion</a>
-            </li>
+
+            <div class="bottom">
+                <li>
+                        <label class="switch">
+                        <input type="checkbox" [checked]="isDark" (change)="toggleTheme()">
+                        <span class="slider round"></span>
+                        </label>
+                </li>
+
+                <li>
+                        <a (click)="deconnexion()" class="nav-link link-dark">Déconnexion</a>
+                </li>
+            </div>
         </ul>
 
         <hr>
