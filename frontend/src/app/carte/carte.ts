@@ -30,18 +30,30 @@ export class Carte implements AfterViewInit {
 
 
     markers: L.Marker[] = [];
+    couleur = '#b83100';
 
     constructor(@Inject(PLATFORM_ID) private platformId: Object, private not: Notification, private cdr: ChangeDetectorRef, private http: HttpClient) { }
 
     async ngAfterViewInit(): Promise<void> {
         if (isPlatformBrowser(this.platformId)) {
 
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            let themeMap = 'alidade_smooth';
+
+            if (isDark) {
+                themeMap = 'alidade_smooth_dark';
+                this.couleur = '#aba3a3ff';
+
+            }
+
+
+
             this.L = await import('leaflet');
 
             this.map = this.L.map('map').setView([47.988, 0.160], 13);
 
-            this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
+            this.L.tileLayer('https://tiles.stadiamaps.com/tiles/' + themeMap + '/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; Stadia Maps, &copy; OpenStreetMap contributors'
             }).addTo(this.map);
 
             /* GEOLOCALISATION, WIP
@@ -86,15 +98,16 @@ export class Carte implements AfterViewInit {
                         className: '',
                         html: `<div style="
                             width: 64px; height: 64px; 
-                            background-image: url('${salle.categories[0].icon.prefix}64${salle.categories[0].icon.suffix}');
+                            background-color: ${this.couleur};
+                            -webkit-mask-image: url('${salle.categories[0].icon.prefix}64${salle.categories[0].icon.suffix}');
+                            mask-image: url('${salle.categories[0].icon.prefix}64${salle.categories[0].icon.suffix}');
                             background-size: cover;
-                            filter: brightness(0) saturate(100%) invert(13%) sepia(90%) saturate(7495%) hue-rotate(350deg) brightness(1) contrast(1);
-                            border-radius: 50%;
                         "></div>`,
                         iconSize: [64, 64],
                         iconAnchor: [16, 32],
                         popupAnchor: [0, -32]
                     });
+
 
                     const marker = this.L.marker([lat, lng], { icon: customIcon }).addTo(this.map).bindPopup(`<ul>
                         <li>nom : ${name} </li>
