@@ -13,6 +13,7 @@ from app.schemas import (
     LoginSchema,
     MessageSchema,
     RegisterSchema,
+    SalleSchema,
     TokenSchema,
     UserAjouterPoidsSchema,
     UserChangementMdpSchema,
@@ -22,7 +23,6 @@ from app.schemas import (
     UserSchema,
     UserSuppPoidSchema,
     ValidationErrorSchema,
-    SalleSchema,
 )
 from app.smart_client import SmartApiClient
 from app.utils.logger import QueryTimer, auth_logger, db_logger, route_logger
@@ -40,18 +40,13 @@ APISPORT = SmartApiClient(
 
 url = "https://places-api.foursquare.com/places/"
 
-headersSalle = {
-    "X-Places-Api-Version": "2025-06-17",
-    "accept": "application/json",
-    "Authorization": f"Bearer {Config.SALLE_KEY}"
-}
+headersSalle = {"X-Places-Api-Version": "2025-06-17", "accept": "application/json", "Authorization": f"Bearer {Config.SALLE_KEY}"}
 
 
-APISALLE= SmartApiClient(
+APISALLE = SmartApiClient(
     base_url=url,
     headers=headersSalle,
 )
-
 
 
 def getCurrentUserOrAbort401() -> User:
@@ -365,19 +360,14 @@ def liveness():
 
     return response
 
+
 @userOptionBLP.route("/salle", methods=["POST"])
 @userOptionBLP.arguments(SalleSchema)
 @userOptionBLP.doc(security=[{"bearerAuth": []}])
 @userOptionBLP.response(200)
-def get_salle(data):
+def getSalle(data):
     "trouve les salles en fonction d'un nom de ville"
-    near = data["ville"]
-
-    params = {
-        "near": near,
-        "limit": 50,
-        "query":"gym"
-    }
-    response = APISALLE.get("search",params=params, useCache=True)
+    params = {"near": data["ville"], "limit": 50, "query": "gym"}
+    response = APISALLE.get("search", params=params, useCache=True)
 
     return response
