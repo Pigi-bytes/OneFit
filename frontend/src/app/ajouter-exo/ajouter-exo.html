@@ -16,7 +16,7 @@
 
     <div class="d-flex flex-column gap-3 w-50" style="overflow-y: auto; max-height: 60vh;">
         <div *ngFor="let exo of exercices" class="card d-flex flex-row align-items-center p-2"
-            (click)="AfficherInfosExo()">
+            (click)="AfficherInfosExo(exo.id)">
 
             <img [src]="exo.image" alt="{{exo.nom}}" width="80" class="me-3 rounded">
 

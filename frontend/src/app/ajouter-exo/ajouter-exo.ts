@@ -6,6 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { EnvoyerId } from '../envoyer-id'
 
 @Component({
     selector: 'app-ajouter-exo',
@@ -19,7 +20,7 @@ export class AjouterExo {
     exercices: any[] = [];
 
 
-    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification) { }
+    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerId) { }
 
     trouverExo() {
         this.http.post('http://127.0.0.1:5000/externe/searchExo', {
@@ -83,8 +84,9 @@ export class AjouterExo {
         console.log(id);
     }
 
-    AfficherInfosExo() {
-        console.log("coucou");
+    AfficherInfosExo(id: any) {
+        this.ei.triggerRefresh(id);
+        this.router.navigate(['/afficher-exo']);
     }
 
 }
