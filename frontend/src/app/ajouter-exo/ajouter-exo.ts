@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 export class AjouterExo {
     backendResponse = "";
     nom = "";
+    exercices: any[] = [];
 
 
     constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification) { }
@@ -29,16 +30,12 @@ export class AjouterExo {
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
 
+                this.exercices = res.resultats.map((exo: any) => ({
+                    nom: exo[0],
+                    id: exo[1],
+                    image: exo[2]
+                }));
 
-                res.results.forEach((exo: any) => {
-                    const nom = String(exo[0]);
-                    const img = String(exo[2]);
-
-                    console.log(nom);
-                });
-
-
-                this.backendResponse = res.message;
                 this.cdr.detectChanges();
 
             },
@@ -79,6 +76,15 @@ export class AjouterExo {
 
     resetNotif() {
         this.not.reset(this, this.cdr);
+    }
+
+
+    ajouterExo(id: any) {
+        console.log(id);
+    }
+
+    AfficherInfosExo() {
+        console.log("coucou");
     }
 
 }
