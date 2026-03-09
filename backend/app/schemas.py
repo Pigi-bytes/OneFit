@@ -194,3 +194,16 @@ class SearchExoResponseSchema(Schema):
 class SalleSchemaByLoc(Schema):
     lat = _lat()
     lng = _lng()
+
+
+# ---------------------------------------------------------------------------
+# API Sport
+# ---------------------------------------------------------------------------
+class RoutineSchema(Schema):
+    id = fields.Int(required=True)
+    name = fields.Str(required=True)
+    is_active = fields.Bool(required=True)
+
+
+class RoutinesResponseSchema(Schema):
+    routines = fields.List(fields.Nested(RoutineSchema))
