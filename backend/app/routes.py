@@ -484,32 +484,47 @@ def getRoutines():
     return {"routines": routines}
 
 
-@sportBLP.route("/getSeance", methods=["GET"])
+@sportBLP.route("/getSeancesPrevu", methods=["GET"])
 @sportBLP.doc(security=[{"bearerAuth": []}])
 @sportBLP.response(200, SeancesResponseSchema)
 @sportBLP.alt_response(404, schema=BaseErrorSchema, description="Aucune routine active ou aucune séance trouvée")
 @jwt_required()
-def getSeance():
+def getSeancesPrevu():
     """
-    Renvoie les séances de la routine active de l'utilisateur.
+    Renvoie les séances de la routine active de l'utilisateur avec la liste des exercices prévus (par jour)
     """
     user = getCurrentUserOrAbort401()
-    route_logger.info(f"GET SEANCES | user_id={user.id}")
 
     routine = user.activeRoutine()
+    route_logger.info(f"GET SEANCES | user_id={user.id} | routine={routine.id}")
     if not routine:
-        abort(404, message="Aucune routine active trouvée pour cet utilisateur.")
+        route_logger.warning(f"Aucune routine trouvé | user_id={user.id}")
+        abort(404, message="Aucune routine active trouvée pour cet utilisateur")
 
-    seances = [
-        {
-            "id": s.id,
-            "routine_id": s.routine_id,
-            "day": s.day.value,
-            "title": s.title,
-            "is_rest_day": s.is_rest_day,
-        }
-        for s in routine.seances
-    ]
+    seances = []
+    for s in routine.seances:
+        seances.append(
+            {
+                "id": s.id,
+                "routine_id": s.routine_id,
+                "day": s.day.value,
+                "title": s.title,
+                "is_rest_day": s.is_rest_day,
+                "exercises": [
+                    {
+                        "id": plan.id,
+                        "exercise_id": plan.exercise_id,
+                        "name": plan.exercise.name,
+                        "ordre": plan.ordre,
+                        "planned_sets": plan.planned_sets,
+                        "planned_reps": plan.planned_reps,
+                        "planned_weight": plan.planned_weight,
+                        "img_url": plan.exercise.img_url,
+                    }
+                    for plan in sorted(s.exercises_plan, key=lambda x: x.ordre)
+                ],
+            }
+        )
 
     if not seances:
         abort(404, message="Aucune séance trouvée pour la routine active.")

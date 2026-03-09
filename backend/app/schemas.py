@@ -208,6 +208,16 @@ class RoutineSchema(Schema):
 class RoutinesResponseSchema(Schema):
     routines = fields.List(fields.Nested(RoutineSchema))
 
+class PlannedExerciseSchema(Schema):
+    id = fields.Int(required=True)
+    exercise_id = fields.Int(required=True)
+    name = fields.Str(required=True)
+    ordre = fields.Int(required=True)
+    planned_sets = fields.Int(required=True)
+    planned_reps = fields.Int(required=True)
+    planned_weight = fields.Float(required=True)
+    img_url = fields.Str(allow_none=True)
+
 
 class SeanceSchema(Schema):
     id = fields.Int(required=True)
@@ -215,6 +225,7 @@ class SeanceSchema(Schema):
     day = fields.Str(required=True)
     title = fields.Str(allow_none=True)
     is_rest_day = fields.Bool(required=True)
+    exercises = fields.List(fields.Nested(PlannedExerciseSchema), required=False)
 
 
 class SeancesResponseSchema(Schema):
