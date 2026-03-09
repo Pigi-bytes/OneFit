@@ -207,3 +207,15 @@ class RoutineSchema(Schema):
 
 class RoutinesResponseSchema(Schema):
     routines = fields.List(fields.Nested(RoutineSchema))
+
+
+class SeanceSchema(Schema):
+    id = fields.Int(required=True)
+    routine_id = fields.Int(required=True)
+    day = fields.Str(required=True)
+    title = fields.Str(allow_none=True)
+    is_rest_day = fields.Bool(required=True)
+
+
+class SeancesResponseSchema(Schema):
+    seances = fields.List(fields.Nested(SeanceSchema), required=True)

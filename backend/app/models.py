@@ -51,6 +51,8 @@ class User(db.Model):
         model_logger.debug(f"Load historique | user_id={self.id} | rows={len(df)}")
         return df
 
+    def activeRoutine(self):
+        return next((r for r in self.routines if r.is_active), None)
 
 class Routine(db.Model):
     __tablename__ = "routines"

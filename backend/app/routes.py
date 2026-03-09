@@ -18,6 +18,7 @@ from app.schemas import (
     RoutinesResponseSchema,
     SalleSchema,
     SalleSchemaByLoc,
+    SeancesResponseSchema,
     SearchExoRequestSchema,
     SearchExoResponseSchema,
     TokenSchema,
@@ -481,3 +482,36 @@ def getRoutines():
         abort(404, message="Aucune routine trouvée pour cet utilisateur.")
 
     return {"routines": routines}
+
+
+@sportBLP.route("/getSeance", methods=["GET"])
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(200, SeancesResponseSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Aucune routine active ou aucune séance trouvée")
+@jwt_required()
+def getSeance():
+    """
+    Renvoie les séances de la routine active de l'utilisateur.
+    """
+    user = getCurrentUserOrAbort401()
+    route_logger.info(f"GET SEANCES | user_id={user.id}")
+
+    routine = user.activeRoutine()
+    if not routine:
+        abort(404, message="Aucune routine active trouvée pour cet utilisateur.")
+
+    seances = [
+        {
+            "id": s.id,
+            "routine_id": s.routine_id,
+            "day": s.day.value,
+            "title": s.title,
+            "is_rest_day": s.is_rest_day,
+        }
+        for s in routine.seances
+    ]
+
+    if not seances:
+        abort(404, message="Aucune séance trouvée pour la routine active.")
+
+    return {"seances": seances}
