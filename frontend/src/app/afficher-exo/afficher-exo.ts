@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-afficher-exo',
+    standalone: true,
     imports: [RouterModule, CommonModule],
     templateUrl: './afficher-exo.html',
     styleUrl: './afficher-exo.css',
@@ -16,13 +17,14 @@ import { Subscription } from 'rxjs';
 export class AfficherExo {
     constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerId) { }
     backendResponse = "";
-    id = 'exr_41n2hxnFMotsXTj3'
+    id = null;
     exo: any;
     private subscription?: Subscription;
 
     ngOnInit() {
         this.subscription = this.ei.afficheExcercice$.subscribe((id) => {
             this.modifId(id);
+            this.chargeExo();
         });
 
         this.chargeExo();
@@ -31,6 +33,7 @@ export class AfficherExo {
 
     modifId(id: any) {
         this.id = id;
+        console.log("coucou");
     }
 
     chargeExo() {

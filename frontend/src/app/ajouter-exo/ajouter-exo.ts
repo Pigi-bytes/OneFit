@@ -10,6 +10,7 @@ import { EnvoyerId } from '../envoyer-id'
 
 @Component({
     selector: 'app-ajouter-exo',
+    standalone: true,
     imports: [FormsModule, CommonModule, RouterModule],
     templateUrl: './ajouter-exo.html',
     styleUrl: './ajouter-exo.css',
@@ -86,7 +87,6 @@ export class AjouterExo {
 
     AfficherInfosExo(id: any) {
         this.ei.triggerRefresh(id);
-        this.router.navigate(['/afficher-exo']);
     }
 
 }
