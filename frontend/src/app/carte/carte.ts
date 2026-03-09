@@ -4,10 +4,10 @@ import { RouterModule, Router } from '@angular/router';
 import { Notification } from '../notification';
 import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Theme } from '../theme';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { marker, Marker } from 'leaflet';
-import { from } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -21,9 +21,11 @@ import { from } from 'rxjs';
 
 
 export class Carte implements AfterViewInit {
+    private themeSubscription?: Subscription;
 
     private map!: L.Map;
     private L!: typeof import('leaflet');
+    private currentTileLayer?: L.TileLayer;
 
     ville = "";
     backendResponse = "";
@@ -32,9 +34,13 @@ export class Carte implements AfterViewInit {
     markers: L.Marker[] = [];
     couleur = '#b83100';
 
-    constructor(@Inject(PLATFORM_ID) private platformId: Object, private not: Notification, private cdr: ChangeDetectorRef, private http: HttpClient) { }
+    constructor(@Inject(PLATFORM_ID) private platformId: Object, private not: Notification, private cdr: ChangeDetectorRef, private http: HttpClient, private theme: Theme) { }
 
     async ngAfterViewInit(): Promise<void> {
+        this.themeSubscription = this.theme.themeChange$.subscribe(() => {
+            this.updateChartColors();
+        });
+
         if (isPlatformBrowser(this.platformId)) {
 
             const isDark = localStorage.getItem('darkMode') === 'true';
@@ -168,9 +174,7 @@ export class Carte implements AfterViewInit {
     }
 
     afficherPoint(res: any) {
-        this.markers.forEach(m => { m.remove() })
-        this.markers = [];
-
+        this.deleteMarker();
         res.results.forEach((salle: any) => {
             const lat = Number(salle.latitude);
             const lng = Number(salle.longitude);
@@ -213,6 +217,34 @@ export class Carte implements AfterViewInit {
             this.map.fitBounds(bounds, { padding: [50, 50] });
         }
 
+    }
+
+    private async updateChartColors() {
+        if (!this.map || !this.L) return;
+
+        const isDark = this.theme.isItDark();
+
+        this.couleur = isDark ? '#aba3a3ff' : '#b83100';
+        const themeMap = isDark ? 'alidade_smooth_dark' : 'alidade_smooth';
+
+        if (this.currentTileLayer) {
+            this.map.removeLayer(this.currentTileLayer);
+        }
+
+        this.currentTileLayer = this.L.tileLayer(
+            'https://tiles.stadiamaps.com/tiles/' + themeMap + '/{z}/{x}/{y}{r}.png',
+            {
+                attribution: '&copy; Stadia Maps, &copy; OpenStreetMap contributors'
+            }
+        ).addTo(this.map);
+
+        this.deleteMarker();
+    }
+
+    private deleteMarker() {
+
+        this.markers.forEach(m => m.remove());
+        this.markers = [];
     }
 
     resetNotif() {

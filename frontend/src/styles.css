@@ -180,3 +180,21 @@ body.dark canvas {
     flex-direction: row;
     gap: 10px;
 }
+
+.layout {
+    display: flex;
+    gap: 0px;
+    padding: 0px;
+}
+
+app-ajouter-exo,
+app-graph-poid {
+    flex: 7;
+    /* 6 parts */
+}
+
+app-afficher-exo,
+app-menu-poid {
+    flex: 3;
+    /* 4 parts → ratio 6:4 = 60:40 */
+}

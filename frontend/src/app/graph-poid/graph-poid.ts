@@ -1,8 +1,9 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, PLATFORM_ID, Inject, OnDestroy } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
+import { Chart, registerables, ChartConfiguration } from 'chart.js';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { take } from 'rxjs/operators';
+import { Theme } from '../theme';
 import { poidUpdate } from "../../poidUpdate"
 import { Subscription } from 'rxjs';
 
@@ -17,8 +18,9 @@ Chart.register(...registerables);
 })
 export class GraphPoid implements AfterViewInit, OnDestroy {
 
-    chart!: Chart;
+    chart!: Chart<'line'>;
     private subscription?: Subscription;
+    private themeSubscription?: Subscription;
 
 
 
@@ -29,12 +31,16 @@ export class GraphPoid implements AfterViewInit, OnDestroy {
     notes: (number | 'nan')[] = [];
 
 
-    constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private ser: poidUpdate) { }
+    constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private ser: poidUpdate, private theme: Theme) { }
     @ViewChild('myChart', { static: false }) myChart!: ElementRef<HTMLCanvasElement>;
 
     ngOnInit() {
         this.subscription = this.ser.refreshGraph$.subscribe(() => {
             this.getInformation();
+        });
+
+        this.themeSubscription = this.theme.themeChange$.subscribe(() => {
+            this.updateChartColors();
         });
     }
 
@@ -55,7 +61,7 @@ export class GraphPoid implements AfterViewInit, OnDestroy {
                 this.chart.destroy();
             }
 
-            this.chart = new Chart(this.myChart.nativeElement, {
+            const config: ChartConfiguration<'line'> = {
                 type: 'line',
                 data: {
                     labels: this.dates,
@@ -65,7 +71,7 @@ export class GraphPoid implements AfterViewInit, OnDestroy {
                             data: this.weights,
                             backgroundColor: '#676767',
                             borderColor: isDark ? '#4ade80' : '#2563eb',
-                            pointBackgroundColor: isDark ? '#ffffff' : '#333333',
+                            pointBackgroundColor: isDark ? '#ffffff' : '#333333', // ✅ OK maintenant
                             fill: false,
                         }
                     ]
@@ -112,12 +118,42 @@ export class GraphPoid implements AfterViewInit, OnDestroy {
                         }
                     }
                 }
-            });
+            };
 
-
-
+            this.chart = new Chart(this.myChart.nativeElement, config);
         });
     }
+
+    private updateChartColors() {
+        if (!this.chart) return;
+
+        const isDark = this.theme.isItDark();
+
+        this.chart.data.datasets[0].borderColor = isDark ? '#4ade80' : '#2563eb';
+        this.chart.data.datasets[0].pointBackgroundColor = isDark ? '#ffffff' : '#333333';
+
+        if (this.chart.options.scales) {
+            if (this.chart.options.scales['x']) {
+                this.chart.options.scales['x'].grid = {
+                    color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
+                };
+                this.chart.options.scales['x'].ticks = {
+                    color: isDark ? '#ffffff' : '#333333'
+                };
+            }
+            if (this.chart.options.scales['y']) {
+                this.chart.options.scales['y'].grid = {
+                    color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
+                };
+                this.chart.options.scales['y'].ticks = {
+                    color: isDark ? '#ffffff' : '#333333'
+                };
+            }
+        }
+
+        this.chart.update();
+    }
+
     ngOnDestroy() {
         this.subscription?.unsubscribe();
         if (this.chart) {

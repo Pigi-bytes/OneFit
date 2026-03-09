@@ -1,5 +1,6 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -7,6 +8,9 @@ import { isPlatformBrowser } from '@angular/common';
 export class Theme {
 
     private platformId = inject(PLATFORM_ID);
+    private themeChangeSource = new Subject<boolean>();
+
+    themeChange$ = this.themeChangeSource.asObservable();
 
     isItDark() {
         if (!isPlatformBrowser(this.platformId)) {
@@ -23,5 +27,7 @@ export class Theme {
 
         const isDark = document.body.classList.contains('dark');
         localStorage.setItem('darkMode', String(isDark));
+
+        this.themeChangeSource.next(isDark);
     }
 }
