@@ -235,3 +235,7 @@ class SeancesResponseSchema(Schema):
 
 class CreateRoutineSchema(Schema):
     name = fields.Str(required=True, metadata={"description": "Nom de la nouvelle routine"})
+
+
+class ActiveRoutineSchema(Schema):
+    routine_id = fields.Int(required=True)

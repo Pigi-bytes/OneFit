@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash
 from app import Config, db
 from app.models import DayOfWeek, Exercise, HistoriquePoids, Routine, Seance, User
 from app.schemas import (
+    ActiveRoutineSchema,
     BaseErrorSchema,
     CreateRoutineSchema,
     ExerciceRequestSchema,
@@ -560,3 +561,27 @@ def createRoutine(data):
     route_logger.info(f"ROUTINE CREATED | user_id={user.id} | routine_id={routine.id}")
 
     return {"message": "Routine créée !"}
+
+
+@sportBLP.route("/activerRoutine", methods=["POST"])
+@sportBLP.arguments(ActiveRoutineSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(200, MessageSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Routine non trouvée")
+@jwt_required()
+def activerRoutine(data):
+    """Change la routine active de l'utilisateur"""
+    user = getCurrentUserOrAbort401()
+    routine_id = data["routine_id"]
+
+    # Vérifie que la routine appartient bien à l'utilisateur
+    routine = db.session.scalar(sa.select(Routine).where(Routine.id == routine_id, Routine.user_id == user.id))
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    # Utilise la méthode du modèle pour gérer l'activation + logs
+    user.setActiveRoutine(routine_id)
+    db.session.commit()
+
+    route_logger.info(f"ROUTINE ACTIVATED | user_id={user.id} | routine_id={routine.id}")
+    return {"message": f"La routine '{routine.name}' est maintenant active !"}
