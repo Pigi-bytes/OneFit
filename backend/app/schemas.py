@@ -208,6 +208,7 @@ class RoutineSchema(Schema):
 class RoutinesResponseSchema(Schema):
     routines = fields.List(fields.Nested(RoutineSchema))
 
+
 class PlannedExerciseSchema(Schema):
     id = fields.Int(required=True)
     exercise_id = fields.Int(required=True)
@@ -230,3 +231,7 @@ class SeanceSchema(Schema):
 
 class SeancesResponseSchema(Schema):
     seances = fields.List(fields.Nested(SeanceSchema), required=True)
+
+
+class CreateRoutineSchema(Schema):
+    name = fields.Str(required=True, metadata={"description": "Nom de la nouvelle routine"})

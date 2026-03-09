@@ -7,9 +7,10 @@ from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
 from app import Config, db
-from app.models import Exercise, HistoriquePoids, User
+from app.models import DayOfWeek, Exercise, HistoriquePoids, Routine, Seance, User
 from app.schemas import (
     BaseErrorSchema,
+    CreateRoutineSchema,
     ExerciceRequestSchema,
     ExerciceResponseSchema,
     LoginSchema,
@@ -356,6 +357,7 @@ def modifierUsername(data):
 @externeBLP.route("/salle", methods=["POST"])
 @externeBLP.arguments(SalleSchema)
 @externeBLP.response(200)
+@externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 def getSalle(data):
     "trouve les salles en fonction d'un nom de ville"
 
@@ -370,6 +372,7 @@ def getSalle(data):
 @externeBLP.route("/salleByLoc", methods=["POST"])
 @externeBLP.arguments(SalleSchemaByLoc)
 @externeBLP.response(200)
+@externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 def getSalleLoc(data):
     "trouve les salles en fonction d'un nom de ville"
 
@@ -387,6 +390,7 @@ def getSalleLoc(data):
 @externeBLP.response(200, ExerciceResponseSchema)
 @externeBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération de l'exercice")
 @externeBLP.alt_response(404, schema=BaseErrorSchema, description="Exercice non trouvé sur l'API externe")
+@externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def getExo(data):
     """Récupère un exercice depuis la BDD si existant, sinon depuis l'API externe puis le sauvegarde"""
@@ -444,6 +448,7 @@ def getExo(data):
 @externeBLP.doc(security=[{"bearerAuth": []}])
 @externeBLP.response(200, SearchExoResponseSchema)
 @externeBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération des exercices")
+@externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def searchExo(data):
     """Recherche des exercices par nom (fuzzy matching) et retourne les n plus proches."""
@@ -530,3 +535,28 @@ def getSeancesPrevu():
         abort(404, message="Aucune séance trouvée pour la routine active.")
 
     return {"seances": seances}
+
+
+@sportBLP.route("/createRoutine", methods=["POST"])
+@sportBLP.arguments(CreateRoutineSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(201, MessageSchema)
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def createRoutine(data):
+    """Crée une nouvelle routine et initialise 7 jours de repos, on met cette routine a active"""
+    user = getCurrentUserOrAbort401()
+
+    routine = Routine(user_id=user.id, name=data["name"], is_active=False)
+    db.session.add(routine)
+    db.session.flush()  # Permet de générer l'id de la routine sans faire un commit complet
+
+    for day in DayOfWeek:
+        seance = Seance(routine_id=routine.id, day=day, title="Jour de Repos", is_rest_day=True)
+        db.session.add(seance)
+
+    user.setActiveRoutine(routine.id)
+    db.session.commit()
+    route_logger.info(f"ROUTINE CREATED | user_id={user.id} | routine_id={routine.id}")
+
+    return {"message": "Routine créée !"}

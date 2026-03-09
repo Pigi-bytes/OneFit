@@ -54,6 +54,17 @@ class User(db.Model):
     def activeRoutine(self):
         return next((r for r in self.routines if r.is_active), None)
 
+    def setActiveRoutine(self, routine_id: int):
+        for routine in self.routines:
+            if routine.id == routine_id:
+                if not routine.is_active:
+                    model_logger.info(f"Routine activée | user_id={self.id} | routine_id={routine.id} | name={routine.name}")
+                routine.is_active = True
+            else:
+                if routine.is_active:
+                    model_logger.info(f"Routine désactivée | user_id={self.id} | routine_id={routine.id} | name={routine.name}")
+                routine.is_active = False
+
 class Routine(db.Model):
     __tablename__ = "routines"
 
