@@ -1,3 +1,4 @@
+import enum
 import logging
 from datetime import date, datetime
 from typing import Optional
@@ -12,6 +13,16 @@ from app import db
 model_logger = logging.getLogger("OneFit.Models")
 
 
+class DayOfWeek(enum.Enum):
+    Lundi = "Lundi"
+    Mardi = "Mardi"
+    Mercredi = "Mercredi"
+    Jeudi = "Jeudi"
+    Vendredi = "Vendredi"
+    Samedi = "Samedi"
+    Dimanche = "Dimanche"
+
+
 class User(db.Model):
     __tablename__ = "users"
 
@@ -23,6 +34,8 @@ class User(db.Model):
     taille: so.Mapped[int] = so.mapped_column(sa.Integer)
 
     historique_poids: so.Mapped[list["HistoriquePoids"]] = so.relationship(back_populates="user", cascade="all, delete-orphan")
+    routines: so.Mapped[list["Routine"]] = so.relationship(back_populates="user", cascade="all, delete-orphan")
+    workout_logs: so.Mapped[list["WorkoutLog"]] = so.relationship(back_populates="user")
 
     def checkPassword(self, password: str) -> bool:
         result = check_password_hash(self.password, password)
@@ -37,6 +50,62 @@ class User(db.Model):
             df = df.sort_values("date")
         model_logger.debug(f"Load historique | user_id={self.id} | rows={len(df)}")
         return df
+
+
+class Routine(db.Model):
+    __tablename__ = "routines"
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("users.id"), nullable=False)
+    name: so.Mapped[str] = so.mapped_column(sa.String, nullable=False)
+    is_active: so.Mapped[bool] = so.mapped_column(sa.Boolean, default=False)
+
+    user: so.Mapped["User"] = so.relationship(back_populates="routines")
+    seances: so.Mapped[list["Seance"]] = so.relationship(back_populates="routine", cascade="all, delete-orphan")
+
+
+class Seance(db.Model):
+    __tablename__ = "seances"
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    routine_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("routines.id"), nullable=False)
+    day: so.Mapped[DayOfWeek] = so.mapped_column(sa.Enum(DayOfWeek), nullable=False)
+    title: so.Mapped[Optional[str]] = so.mapped_column(sa.String)
+    is_rest_day: so.Mapped[bool] = so.mapped_column(sa.Boolean, default=False)
+
+    routine: so.Mapped["Routine"] = so.relationship(back_populates="seances")
+    exercises_plan: so.Mapped[list["SeanceExercise"]] = so.relationship(back_populates="seance", cascade="all, delete-orphan")
+
+
+class SeanceExercise(db.Model):
+    __tablename__ = "seance_exercises"
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    seance_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("seances.id"), nullable=False)
+    exercise_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("exercise.id"), nullable=False)
+    ordre: so.Mapped[int] = so.mapped_column(sa.Integer, default=1)
+    planned_sets: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=False)
+    planned_reps: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=False)
+    planned_weight: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
+
+    seance: so.Mapped["Seance"] = so.relationship(back_populates="exercises_plan")
+    exercise: so.Mapped["Exercise"] = so.relationship()
+
+
+class WorkoutLog(db.Model):
+    __tablename__ = "workout_logs"
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("users.id"), nullable=False)
+    exercise_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("exercise.id"), nullable=False)
+    seance_id: so.Mapped[Optional[int]] = so.mapped_column(sa.ForeignKey("seances.id"))
+    reps: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=False)
+    weight: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
+    date: so.Mapped[datetime] = so.mapped_column(sa.DateTime, default=sa.func.now())
+    note: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
+
+    user: so.Mapped["User"] = so.relationship(back_populates="workout_logs")
+    exercise: so.Mapped["Exercise"] = so.relationship()
 
 
 class HistoriquePoids(db.Model):

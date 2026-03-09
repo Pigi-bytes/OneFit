@@ -356,6 +356,9 @@ def modifierUsername(data):
 @externeBLP.response(200)
 def getSalle(data):
     "trouve les salles en fonction d'un nom de ville"
+
+    route_logger.info(f"SALLE SEARCH | ville={data['ville']}")
+
     params = {"near": data["ville"], "limit": 50, "query": "gym"}
     response = APISALLE.get("search", params=params, useCache=True)
 
@@ -368,6 +371,9 @@ def getSalle(data):
 @externeBLP.response(200)
 def getSalleLoc(data):
     "trouve les salles en fonction d'un nom de ville"
+
+    route_logger.info(f"SALLE LOC SEARCH | lat={data['lat']} | lng={data['lng']}")
+
     params = {"ll": f"{data['lat']},{data['lng']}", "limit": 50, "query": "gym"}
     response = APISALLE.get("search", params=params, useCache=True)
 
@@ -388,8 +394,11 @@ def getExo(data):
     if not idExo:
         abort(400, message="exerciseId manquant")
 
+    route_logger.info(f"EXO FETCH ATTEMPT | user_id={get_jwt_identity()} | exoId={idExo}")
+
     exo = db.session.scalar(sa.select(Exercise).where(Exercise.id_api == idExo))
     if exo:
+        route_logger.warning(f"EXO FETCH FAIL | user_id={get_jwt_identity()} | exoId={idExo}")
         return {
             "idExo": exo.id_api,
             "name": exo.name,
@@ -416,6 +425,7 @@ def getExo(data):
 
     db.session.add(exercise)
     db.session.commit()
+    route_logger.info(f"EXO CREATED | user_id={get_jwt_identity()} | exoId={exercise.id_api}")
 
     return {
         "idExo": exercise.id_api,
@@ -440,10 +450,12 @@ def searchExo(data):
     recherche = data["recherche"]
     n = int(data["limit"])
 
+    route_logger.info(f"EXO SEARCH | recherche={recherche} | limit={n}")
     params = {"search": recherche, "limit": n}
     response = APISPORT.get("exercises/search", params=params)
 
     if not response:
+        route_logger.warning(f"EXO SEARCH FAIL | recherche={recherche}")
         abort(400, message="Erreur")
 
     resultat = [(exo["name"], exo["exerciseId"], exo["imageUrl"]) for exo in response]
