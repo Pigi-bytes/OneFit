@@ -15,6 +15,7 @@ from app.schemas import (
     LoginSchema,
     MessageSchema,
     RegisterSchema,
+    RoutinesResponseSchema,
     SalleSchema,
     SalleSchemaByLoc,
     SearchExoRequestSchema,
@@ -36,6 +37,7 @@ authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentif
 userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion utilisateur")
 userOptionBLP = Blueprint("option", __name__, url_prefix="/user/option", description="Option utilisateur")
 externeBLP = Blueprint("externe", __name__, url_prefix="/externe", description="Call a l'autre api")
+sportBLP = Blueprint("sport", __name__, url_prefix="/sport", description="Pour gerer tout ce qui est lié a la séance/routine/exo")
 
 APISPORT = SmartApiClient(
     "https://edb-with-videos-and-images-by-ascendapi.p.rapidapi.com/api/v1/",
@@ -352,7 +354,6 @@ def modifierUsername(data):
 
 @externeBLP.route("/salle", methods=["POST"])
 @externeBLP.arguments(SalleSchema)
-@externeBLP.doc(security=[{"bearerAuth": []}])
 @externeBLP.response(200)
 def getSalle(data):
     "trouve les salles en fonction d'un nom de ville"
@@ -367,7 +368,6 @@ def getSalle(data):
 
 @externeBLP.route("/salleByLoc", methods=["POST"])
 @externeBLP.arguments(SalleSchemaByLoc)
-@externeBLP.doc(security=[{"bearerAuth": []}])
 @externeBLP.response(200)
 def getSalleLoc(data):
     "trouve les salles en fonction d'un nom de ville"
@@ -460,3 +460,24 @@ def searchExo(data):
 
     resultat = [(exo["name"], exo["exerciseId"], exo["imageUrl"]) for exo in response]
     return {"resultats": resultat}
+
+
+@sportBLP.route("/getRoutine", methods=["GET"])
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(200, RoutinesResponseSchema)
+@sportBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération des routines")
+@sportBLP.alt_response(400, schema=BaseErrorSchema, description="Aucune routine trouvée")
+@jwt_required()
+def getRoutines():
+    """Renvoie toutes les routines de l'utilisateur, avec indication de la routine active"""
+    user = getCurrentUserOrAbort401()
+    route_logger.info(f"GET ROUTINES | user_id={user.id}")
+
+    routines = [{"id": r.id, "name": r.name, "is_active": r.is_active} for r in user.routines]
+
+    if not routines:
+        route_logger.warning(f"Aucune routine trouvé | user_id={user.id}")
+
+        abort(404, message="Aucune routine trouvée pour cet utilisateur.")
+
+    return {"routines": routines}
