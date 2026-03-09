@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HelpMenu } from './help-menu';
+import { AfficherExo } from './afficher-exo';
 
-describe('HelpMenu', () => {
-  let component: HelpMenu;
-  let fixture: ComponentFixture<HelpMenu>;
+describe('AfficherExo', () => {
+  let component: AfficherExo;
+  let fixture: ComponentFixture<AfficherExo>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HelpMenu]
+      imports: [AfficherExo]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(HelpMenu);
+    fixture = TestBed.createComponent(AfficherExo);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
