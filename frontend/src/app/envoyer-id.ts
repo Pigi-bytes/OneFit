@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class EnvoyerId {
-    private afficheExcercice = new BehaviorSubject<string>('');
+    private afficheExcercice = new Subject<string>();
     afficheExcercice$ = this.afficheExcercice.asObservable();
 
-    triggerRefresh(id: any) {
+    triggerRefresh(id: string) {
         this.afficheExcercice.next(id);
     }
 

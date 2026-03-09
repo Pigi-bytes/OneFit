@@ -22,6 +22,7 @@ export class AfficherExo {
     private subscription?: Subscription;
 
     ngOnInit() {
+        this.exo = null;
         this.subscription = this.ei.afficheExcercice$.subscribe((id) => {
             this.modifId(id);
             this.chargeExo();
