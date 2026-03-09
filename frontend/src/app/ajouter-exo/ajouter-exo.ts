@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-ajouter-exo',
-    imports: [FormsModule, CommonModule],
+    imports: [FormsModule, CommonModule, RouterModule],
     templateUrl: './ajouter-exo.html',
     styleUrl: './ajouter-exo.css',
 })
