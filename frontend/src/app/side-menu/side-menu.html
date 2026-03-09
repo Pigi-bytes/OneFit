@@ -13,7 +13,7 @@
                 <a routerLink="/poid" class="nav-link link-dark">Historique des poids</a>
             </li>
             <li>
-                <a routerLink="/creer-seance" class="nav-link link-dark">creer une séance</a>
+                <a routerLink="/ajouter-exo" class="nav-link link-dark">creer une séance</a>
             </li>
             <li>
                 <a routerLink="/carte" class="nav-link link-dark">Carte</a>
@@ -21,14 +21,14 @@
 
             <div class="bottom">
                 <li>
-                        <label class="switch">
+                    <label class="switch">
                         <input type="checkbox" [checked]="isDark" (change)="toggleTheme()">
                         <span class="slider round"></span>
-                        </label>
+                    </label>
                 </li>
 
                 <li>
-                        <a (click)="deconnexion()" class="nav-link link-dark">Déconnexion</a>
+                    <a (click)="deconnexion()" class="nav-link link-dark">Déconnexion</a>
                 </li>
             </div>
         </ul>

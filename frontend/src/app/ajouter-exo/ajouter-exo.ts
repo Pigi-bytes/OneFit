@@ -8,14 +8,15 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-creer-seance',
+    selector: 'app-ajouter-exo',
     imports: [FormsModule, CommonModule],
-    templateUrl: './creer-seance.html',
-    styleUrl: './creer-seance.css',
+    templateUrl: './ajouter-exo.html',
+    styleUrl: './ajouter-exo.css',
 })
-export class CreerSeance {
+export class AjouterExo {
     backendResponse = "";
     nom = "";
+
 
     constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification) { }
 

@@ -9,7 +9,7 @@ import { ModifPassword } from './modif-password/modif-password';
 import { Poid } from './poid/poid';
 import { Carte } from './carte/carte';
 import { SideMenu } from './side-menu/side-menu';
-import { CreerSeance } from './creer-seance/creer-seance';
+import { AjouterExo } from './ajouter-exo/ajouter-exo';
 
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },
@@ -22,5 +22,5 @@ export const routes: Routes = [
     { path: "poid", component: Poid },
     { path: "carte", component: Carte },
     { path: "side-menu", component: SideMenu },
-    { path: "creer-seance", component: CreerSeance },
+    { path: "ajouter-exo", component: AjouterExo },
 ];
