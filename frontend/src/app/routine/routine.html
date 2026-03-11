@@ -6,6 +6,8 @@
     <div class="routine">
         <div class="jour">
             <h5> Lundi </h5>
+            <p *ngFor="let m of message[0]">{{ m }}</p>
+
         </div>
         <div class="jour">
             <h5> Mardi </h5>
@@ -29,7 +31,7 @@
     </div>
 
     <div class="routineBtn">
-        <button class="btn-principal" routerLink="/choisir-routine" >Vos routines enregistrées</button>
+        <button class="btn-principal" routerLink="/choisir-routine">Vos routines enregistrées</button>
         <button class="btn-principal">Routines préfaites</button>
     </div>
 
