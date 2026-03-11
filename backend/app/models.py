@@ -65,6 +65,7 @@ class User(db.Model):
                     model_logger.info(f"Routine désactivée | user_id={self.id} | routine_id={routine.id} | name={routine.name}")
                 routine.is_active = False
 
+
 class Routine(db.Model):
     __tablename__ = "routines"
 
