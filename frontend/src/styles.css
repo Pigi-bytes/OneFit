@@ -21,7 +21,6 @@
 }
 
 
-/* Faire prendre toute la hauteur de la page */
 html,
 body {
     height: 100%;
@@ -30,19 +29,15 @@ body {
 }
 
 main {
-    min-height: 90vh;
+    min-height: 100vh;
     background-color: var(--white3);
     height: 100%;
-
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* centrer verticalement */
     align-items: center;
-    /* centrer horizontalement */
     text-align: center;
-    padding: 20px;
 }
 
 body.dark main {
@@ -185,6 +180,11 @@ body.dark canvas {
     display: flex;
     gap: 0px;
     padding: 0px;
+}
+
+.page {
+    flex: 1;
+    overflow: auto;
 }
 
 app-ajouter-exo,
