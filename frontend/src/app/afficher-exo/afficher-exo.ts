@@ -4,7 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { Notification } from '../notification';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EnvoyerId } from '../envoyer-id';
+import { EnvoyerElt } from '../envoyerElt';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
     styleUrl: './afficher-exo.css',
 })
 export class AfficherExo {
-    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerId) { }
+    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
     backendResponse = "";
     id = null;
     exo: any;
@@ -24,7 +24,7 @@ export class AfficherExo {
     ngOnInit() {
         this.exo = null;
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
-            this.modifId(id);
+            this.modifId(id[1]);
             this.chargeExo();
         });
         this.chargeExo();

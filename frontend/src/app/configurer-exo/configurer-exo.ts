@@ -1,44 +1,50 @@
 import { Component } from '@angular/core';
-import { RouterModule, Router } from '@angular/router';
-import { Notification } from '../notification';
-import { ChangeDetectorRef } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { EnvoyerElt } from '../envoyerElt';
 import { HttpClient } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
+import { Notification } from '../notification';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { EnvoyerElt } from '../envoyerElt'
 
 @Component({
-    selector: 'app-ajouter-exo',
-    standalone: true,
-    imports: [FormsModule, CommonModule, RouterModule],
-    templateUrl: './ajouter-exo.html',
-    styleUrl: './ajouter-exo.css',
+    selector: 'app-configurer-exo',
+    imports: [FormsModule, CommonModule],
+    templateUrl: './configurer-exo.html',
+    styleUrl: './configurer-exo.css',
 })
-export class AjouterExo {
+export class ConfigurerExo {
+
+    private subscription?: Subscription;
+    id = "";
     backendResponse = "";
-    nom = "";
-    exercices: any[] = [];
+    exo: any;
+    setNumber = null;
+    repNumber = null;
+    poids = null;
 
 
-    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
+    constructor(private ei: EnvoyerElt, private http: HttpClient, private cdr: ChangeDetectorRef, private not: Notification) { }
 
-    trouverExo() {
-        this.http.post('http://127.0.0.1:5000/externe/searchExo', {
-            recherche: this.nom,
+    ngOnInit() {
+        this.subscription = this.ei.afficheExercice$.subscribe((id) => {
+            this.id = id[1];
+            console.log(this.id);
+            this.chargeExo();
+        });
+    }
+
+    chargeExo() {
+        this.http.post('http://127.0.0.1:5000/externe/getExo', {
+            exoId: this.id,
 
         }).subscribe({
 
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
-
-                this.exercices = res.resultats.map((exo: any) => ({
-                    nom: exo[0],
-                    id: exo[1],
-                    image: exo[2]
-                }));
-
+                this.exo = res;
+                this.backendResponse = res.message;
                 this.cdr.detectChanges();
-
             },
 
             error: (err: any) => {
@@ -47,8 +53,6 @@ export class AjouterExo {
 
                     const errorsObj = err.error.errors;
                     const messages: string[] = [];
-
-
 
                     for (const key in errorsObj) {
 
@@ -73,19 +77,12 @@ export class AjouterExo {
 
     }
 
+    ajouter() {
 
+    }
 
     resetNotif() {
         this.not.reset(this, this.cdr);
-    }
-
-
-    ajouterExo(id: any) {
-        this.ei.triggerRefresh([0, id]);
-    }
-
-    AfficherInfosExo(id: any) {
-        this.ei.triggerRefresh([1, id]);
     }
 
 }

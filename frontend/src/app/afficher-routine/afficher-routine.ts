@@ -4,7 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { Notification } from '../notification';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EnvoyerId } from '../envoyer-id';
+import { EnvoyerElt } from '../envoyerElt';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
     styleUrl: './afficher-routine.css',
 })
 export class AfficherRoutine {
-    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerId) { }
+    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
     backendResponse = "";
     id = null;
     seances: any;

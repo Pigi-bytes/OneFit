@@ -199,7 +199,8 @@ app-choisir-routine {
 
 app-afficher-exo,
 app-menu-poid,
-app-afficher-routine {
+app-afficher-routine,
+app-configurer-exo {
     flex: 3;
     /* 4 parts → ratio 6:4 = 60:40 */
 }

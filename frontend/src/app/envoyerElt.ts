@@ -4,11 +4,11 @@ import { Subject } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class EnvoyerId {
-    private afficheExercice = new Subject<string>();
+export class EnvoyerElt {
+    private afficheExercice = new Subject<any>();
     afficheExercice$ = this.afficheExercice.asObservable();
 
-    triggerRefresh(id: string) {
+    triggerRefresh(id: any) {
         this.afficheExercice.next(id);
     }
 
