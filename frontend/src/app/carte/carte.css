@@ -1,20 +1,25 @@
-#map {
+.vbox {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
 
+#map {
     display: flex;
     border-radius: 15px;
     overflow: hidden;
-    width: 80%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-
+    flex: 1;
+    min-height: 100%;
+    position: relative;
     transition: height 0.5s ease-in-out;
 }
 
 #controls {
-    position: absolute;
-    display:flex;
-    width:20%;
-    right: 0;
+    position: relative;
+    display: flex;
+    width: 300px;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    overflow-y: auto;
 }
