@@ -4,7 +4,7 @@ import { EnvoyerElt } from '../envoyerElt';
 import { Notification } from '../notification';
 import { Subscription } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { App } from '../app';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -25,12 +25,13 @@ export class AfficheSceance implements OnInit {
         private cdr: ChangeDetectorRef,
         private net: Notification,
         private ei: EnvoyerElt,
-        private route: ActivatedRoute
+        private app: App
+
     ) { }
 
     ngOnInit() {
         // récupère le paramètre 'id' de la route
-        this.jour = this.route.snapshot.paramMap.get('id') || 'chargement...';
+        this.jour = this.app.jourActuel;
         this.chargeSeance();
     }
 

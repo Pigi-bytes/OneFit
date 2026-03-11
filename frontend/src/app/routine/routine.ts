@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt';
+import { App } from '../app';
 
 
 
@@ -19,7 +20,7 @@ import { EnvoyerElt } from '../envoyerElt';
 })
 export class Routine {
 
-    constructor(private http: HttpClient, private not: Notification, private cdr: ChangeDetectorRef, private elt: EnvoyerElt, private router: Router) { }
+    constructor(private http: HttpClient, private not: Notification, private cdr: ChangeDetectorRef, private elt: EnvoyerElt, private router: Router, private app: App) { }
 
 
     seance = []
@@ -108,7 +109,9 @@ export class Routine {
 
 
     afficherSeance(id: string) {
-        this.router.navigate(['/affiche-seance', id]);
+
+        this.app.jourActuel = id
+        this.router.navigate(['/affiche-seance']);
 
     }
 
