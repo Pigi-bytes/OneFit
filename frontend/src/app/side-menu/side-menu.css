@@ -1,12 +1,10 @@
 #side-menu {
     height: 100%; 
     width: 280px;
-    position: fixed;
     top: 0;
     left: 0;
     background-color: var(--blue1);
     overflow-x: hidden;
-    padding-top: 60px;
     transition: 0.5s;
     display: flex;
     flex-direction: column;
