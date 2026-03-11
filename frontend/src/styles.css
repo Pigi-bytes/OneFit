@@ -59,9 +59,12 @@ h2 {
 
 body.dark h1,
 body.dark h2,
-body.dark label,
-body.dark p {
+body.dark label {
     color: var(--white3);
+}
+
+body.dark p {
+    color: var(--blue1);
 }
 
 .button-group {
@@ -217,8 +220,8 @@ app-menu-poid {
     justify-content: space-between;
     border-radius: 8px;
     background-color: #f8f9fa;
-    height: 80vh;
-    width: 150px;
+    height: 60vh;
+    width: 180px;
 }
 
 .routineBtn {
