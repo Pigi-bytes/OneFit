@@ -54,6 +54,45 @@ def _exo(**kw):
     return fields.Str(**{**d, **kw})
 
 
+def _day(**kw):
+    d = {
+        "required": True,
+        "validate": validate.OneOf(["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]),
+        "metadata": {"description": "Jour de la séance"},
+    }
+    return fields.Str(**{**d, **kw})
+
+
+def _name(**kw):
+    d = {"required": True, "metadata": {"description": "Nom"}}
+    return fields.Str(**{**d, **kw})
+
+
+def _routine_id(**kw):
+    d = {"required": True, "metadata": {"description": "ID de la routine"}}
+    return fields.Int(**{**d, **kw})
+
+
+def _planned_sets(**kw):
+    d = {"required": True, "metadata": {"description": "Nombre de séries prévues"}}
+    return fields.Int(**{**d, **kw})
+
+
+def _planned_reps(**kw):
+    d = {"required": True, "metadata": {"description": "Nombre de répétitions prévues"}}
+    return fields.Int(**{**d, **kw})
+
+
+def _planned_weight(**kw):
+    d = {"required": True, "metadata": {"description": "Charge prévue"}}
+    return fields.Float(**{**d, **kw})
+
+
+def _routine(**kw):
+    d = {"load_default": -1, "metadata": {"description": "ID de la routine cible (-1 = routine active)"}}
+    return fields.Int(**{**d, **kw})
+
+
 # ---------------------------------------------------------------------------
 # Erreurs
 # ---------------------------------------------------------------------------
@@ -125,9 +164,9 @@ class UserChangementUsernameSchema(Schema):
 # Poids / Historique
 # ---------------------------------------------------------------------------
 class UserHistoriqueItem(Schema):
-    poids = fields.Float(required=True)
-    date = fields.Str(required=True)
-    note = fields.Str(allow_none=True)
+    date = _date()
+    poids = _poids()
+    note = _note()
 
 
 class UserAjouterPoidsSchema(Schema):
@@ -165,11 +204,11 @@ class ExerciceRequestSchema(Schema):
 
 
 class ExerciceResponseSchema(Schema):
-    exoId = fields.Str()
+    exoId = _exo()
     name = fields.Str()
     img_url = fields.Str()
     video_url = fields.Str()
-    overview = fields.Str(allow_none=True)
+    overview = fields.Str()
     instructions = fields.Str()
     body_part = fields.Str()
 
@@ -187,7 +226,7 @@ class SearchExoRequestSchema(Schema):
 class SearchExoResponseSchema(Schema):
     resultats = fields.List(
         fields.Tuple((_exo(), fields.Str(), fields.Str())),
-        metadata={"description": "Liste de tuples [(nom, idExo, img)]"},
+        metadata={"description": "Liste de tuples [(idExo, nom, img)]"},
     )
 
 
@@ -200,8 +239,8 @@ class SalleSchemaByLoc(Schema):
 # API Sport
 # ---------------------------------------------------------------------------
 class RoutineSchema(Schema):
-    id = fields.Int(required=True)
-    name = fields.Str(required=True)
+    routine_id = _routine_id()
+    name = _name()
     is_active = fields.Bool(required=True)
 
 
@@ -210,20 +249,18 @@ class RoutinesResponseSchema(Schema):
 
 
 class PlannedExerciseSchema(Schema):
-    id = fields.Int(required=True)
-    exercise_id = _exo
-    name = fields.Str(required=True)
+    exercise_id = _exo(required=True)
+    name = _name()
     ordre = fields.Int(required=True)
-    planned_sets = fields.Int(required=True)
-    planned_reps = fields.Int(required=True)
-    planned_weight = fields.Float(required=True)
+    planned_sets = _planned_sets()
+    planned_reps = _planned_reps()
+    planned_weight = _planned_weight()
     img_url = fields.Str(allow_none=True)
 
 
 class SeanceSchema(Schema):
-    id = fields.Int(required=True)
-    routine_id = fields.Int(required=True)
-    day = fields.Str(required=True)
+    routine_id = _routine_id()
+    day = _day()
     title = fields.Str(allow_none=True)
     is_rest_day = fields.Bool(required=True)
     exercises = fields.List(fields.Nested(PlannedExerciseSchema), required=False)
@@ -234,29 +271,18 @@ class SeancesResponseSchema(Schema):
 
 
 class CreateRoutineSchema(Schema):
-    name = fields.Str(required=True, metadata={"description": "Nom de la nouvelle routine"})
+    name = _name(metadata={"description": "Nom de la nouvelle routine"})
 
 
 class ActiveRoutineSchema(Schema):
-    routine_id = fields.Int(required=True)
+    routine_id = _routine_id()
 
 
 class AddExerciseToSeanceSchema(Schema):
-    routine_id = fields.Int(
-        required=False,
-        load_default=-1,
-        metadata={"description": "ID de la routine cible (-1 = routine active)"},
-    )
-
-    day = fields.Str(
-        required=True,
-        validate=validate.OneOf(["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]),
-        metadata={"description": "Jour de la séance"},
-    )
-
+    routine_id = _routine()
+    day = _day()
     exercise_id = _exo()
-    planned_sets = fields.Int(required=True, validate=validate.Range(min=1, max=30))
-    planned_reps = fields.Int(required=True, validate=validate.Range(min=1, max=200))
-    planned_weight = fields.Float(required=True, validate=validate.Range(min=0, max=1000))
-    ordre = fields.Int(required=False, allow_none=True, load_default=None, validate=validate.Range(min=1))
-    title = fields.Str(required=False, allow_none=True, load_default=None)
+
+    planned_sets = _planned_sets(validate=validate.Range(min=1, max=30))
+    planned_reps = _planned_reps(validate=validate.Range(min=1, max=200))
+    planned_weight = _planned_weight(validate=validate.Range(min=0, max=1000))

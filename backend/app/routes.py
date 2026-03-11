@@ -526,7 +526,6 @@ def getSeancesPrevu(data):
                 "is_rest_day": s.is_rest_day,
                 "exercises": [
                     {
-                        "id": plan.id,
                         "exercise_id": plan.exercise_id,
                         "name": plan.exercise.name,
                         "ordre": plan.ordre,
@@ -671,10 +670,7 @@ def ajouterExoSeance(data):
     db.session.add(plan)
 
     seance.is_rest_day = False
-    if data.get("title") is not None:
-        seance.title = data["title"]
-    elif seance.title in (None, "Jour de Repos"):
-        seance.title = f"Séance {seance.day.value}"
+    seance.title = f"Séance {seance.day.value}"
 
     db.session.commit()
 
