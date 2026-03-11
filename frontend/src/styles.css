@@ -202,8 +202,10 @@ app-menu-poid {
 .routine {
     display: flex;
     justify-content: center;
+    /* centre horizontalement les jours */
+    align-items: flex-end;
     /* centre la ligne dans la page */
-    gap: 15px;
+    gap: 11px;
     /* espace entre les jours */
     margin-top: 40px;
 }
@@ -212,8 +214,16 @@ app-menu-poid {
     border: 4px solid var(--blue1);
     padding: 10px 15px;
     text-align: center;
+    justify-content: space-between;
     border-radius: 8px;
     background-color: #f8f9fa;
     height: 80vh;
     width: 150px;
+}
+
+.routineBtn {
+    display: flex;
+    padding: 10px 15px;
+    margin-right: 10px;
+    gap: 10px;
 }
