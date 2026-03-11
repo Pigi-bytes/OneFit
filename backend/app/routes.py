@@ -469,7 +469,7 @@ def searchExo(data):
     return {"resultats": resultat}
 
 
-@sportBLP.route("/getRoutine", methods=["GET"])
+@sportBLP.route("/getRoutines", methods=["POST"])
 @sportBLP.doc(security=[{"bearerAuth": []}])
 @sportBLP.response(200, RoutinesResponseSchema)
 @sportBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération des routines")
@@ -505,7 +505,6 @@ def getSeancesPrevu(data):
     if data["routine_id"] == -1:
         routine = user.activeRoutine()
     else:
-
         routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
     if not routine:
         abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
