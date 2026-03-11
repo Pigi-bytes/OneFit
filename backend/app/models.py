@@ -1,7 +1,7 @@
 import enum
 import logging
 from datetime import date, datetime
-from typing import Optional
+from typing import Literal, Optional
 
 import pandas as pd
 import sqlalchemy as sa
@@ -89,6 +89,30 @@ class Seance(db.Model):
 
     routine: so.Mapped["Routine"] = so.relationship(back_populates="seances")
     exercises_plan: so.Mapped[list["SeanceExercise"]] = so.relationship(back_populates="seance", cascade="all, delete-orphan")
+
+    def trieParOrdre(self) -> list["SeanceExercise"]:
+        return sorted(self.exercises_plan, key=lambda plan: (plan.ordre, plan.id))
+
+    def numeroteExo(self) -> None:
+        for index, plan in enumerate(self.trieParOrdre(), start=1):
+            plan.ordre = index
+
+    def moveExercice(self, seance_exercise_id: int, direction: Literal["up", "down"]) -> bool:
+        self.numeroteExo()
+        plans = self.trieParOrdre()
+        current_index = next((idx for idx, plan in enumerate(plans) if plan.id == seance_exercise_id), -1)
+
+        if direction == "up":
+            if current_index == 0:
+                return False
+            other_index = current_index - 1
+        else:
+            if current_index == len(plans) - 1:
+                return False
+            other_index = current_index + 1
+
+        plans[current_index].ordre, plans[other_index].ordre = plans[other_index].ordre, plans[current_index].ordre
+        return True
 
 
 class SeanceExercise(db.Model):

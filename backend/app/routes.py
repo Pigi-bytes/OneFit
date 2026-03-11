@@ -17,6 +17,7 @@ from app.schemas import (
     ExerciceResponseSchema,
     LoginSchema,
     MessageSchema,
+    MoveExerciseOrderSchema,
     RegisterSchema,
     RoutinesResponseSchema,
     SalleSchema,
@@ -526,7 +527,8 @@ def getSeancesPrevu(data):
                 "is_rest_day": s.is_rest_day,
                 "exercises": [
                     {
-                        "exercise_id": plan.exercise_id,
+                        "seance_exercise_id": plan.id,
+                        "exoId": plan.exercise.id_api,
                         "name": plan.exercise.name,
                         "ordre": plan.ordre,
                         "planned_sets": plan.planned_sets,
@@ -534,7 +536,7 @@ def getSeancesPrevu(data):
                         "planned_weight": plan.planned_weight,
                         "img_url": plan.exercise.img_url,
                     }
-                    for plan in sorted(s.exercises_plan, key=lambda x: x.ordre)
+                    for plan in s.trieParOrdre()
                 ],
             }
         )
@@ -674,3 +676,50 @@ def ajouterExoSeance(data):
     return {"message": "Exercice ajouté à la séance avec succès."}
 
 
+@sportBLP.route("/deplacerOrdreExoSeance", methods=["POST"])
+@sportBLP.arguments(MoveExerciseOrderSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(200, MessageSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Routine, séance ou exercice prévu introuvable")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def deplacerOrdreExoSeance(data):
+    """Déplace l'ordre d'un exercice prévu vers le haut ou le bas dans la séance d'un jour donné."""
+    user = getCurrentUserOrAbort401()
+
+    if data["routine_id"] == -1:
+        routine = user.activeRoutine()
+    else:
+        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
+    if not seance:
+        abort(404, message="Séance non trouvée pour ce jour.")
+
+    try:
+        moved = seance.moveExercice(data["seance_exercise_id"], data["direction"])
+    except ValueError:
+        abort(404, message="Exercice prévu non trouvé dans cette séance.")
+
+    with QueryTimer("commitMoveExerciseOrder"):
+        db.session.commit()
+
+    if not moved:
+        if data["direction"] == "up":
+            route_logger.info(
+                f"SEANCE EXO ORDER | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | plan_id={data['seance_exercise_id']} | direction=up"
+            )
+            return {"message": "Exercice déjà en première position."}
+
+        route_logger.info(
+            f"SEANCE EXO ORDER | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | plan_id={data['seance_exercise_id']} | direction=down"
+        )
+        return {"message": "Exercice déjà en dernière position."}
+
+    route_logger.info(
+        f"SEANCE EXO ORDER MOVED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | plan_id={data['seance_exercise_id']} | direction={data['direction']}"
+    )
+    return {"message": "Ordre de l'exercice mis à jour avec succès."}

@@ -93,6 +93,20 @@ def _routine(**kw):
     return fields.Int(**{**d, **kw})
 
 
+def _seance_exercise_id(**kw):
+    d = {"required": True, "metadata": {"description": "ID de l'exercice prévu dans la séance"}}
+    return fields.Int(**{**d, **kw})
+
+
+def _direction(**kw):
+    d = {
+        "required": True,
+        "validate": validate.OneOf(["up", "down"]),
+        "metadata": {"description": "Direction du déplacement (up/down)"},
+    }
+    return fields.Str(**{**d, **kw})
+
+
 # ---------------------------------------------------------------------------
 # Erreurs
 # ---------------------------------------------------------------------------
@@ -249,7 +263,8 @@ class RoutinesResponseSchema(Schema):
 
 
 class PlannedExerciseSchema(Schema):
-    exercise_id = _exo(required=True)
+    seance_exercise_id = _seance_exercise_id()
+    exoId = _exo()
     name = _name()
     ordre = fields.Int(required=True)
     planned_sets = _planned_sets()
@@ -286,3 +301,10 @@ class AddExerciseToSeanceSchema(Schema):
     planned_sets = _planned_sets(validate=validate.Range(min=1, max=30))
     planned_reps = _planned_reps(validate=validate.Range(min=1, max=200))
     planned_weight = _planned_weight(validate=validate.Range(min=0, max=1000))
+
+
+class MoveExerciseOrderSchema(Schema):
+    routine_id = _routine()
+    day = _day()
+    seance_exercise_id = _seance_exercise_id()
+    direction = _direction()
