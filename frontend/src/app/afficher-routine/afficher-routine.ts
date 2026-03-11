@@ -73,6 +73,6 @@ export class AfficherRoutine {
                 this.cdr.detectChanges();
             }
         });
-
     }
+
 }

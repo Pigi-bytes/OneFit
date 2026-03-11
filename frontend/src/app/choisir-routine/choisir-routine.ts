@@ -31,6 +31,7 @@ export class ChoisirRoutine {
                 this.routines = res.routines.map((r: any) => ({
                     nom: r["name"],
                     id: r["id"],
+                    isActive: r["is_active"],
                 }));
 
                 this.backendResponse = res.message;
