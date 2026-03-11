@@ -66,6 +66,10 @@ export class ChoisirRoutine {
                 this.cdr.detectChanges();
             }
         });
+    }
 
+	AfficherInfosRoutine(id: any) {
+		console.log(id);
+        this.ei.triggerRefresh(id);
     }
 }

@@ -5,11 +5,11 @@ import { Subject } from 'rxjs';
     providedIn: 'root',
 })
 export class EnvoyerId {
-    private afficheExcercice = new Subject<string>();
-    afficheExcercice$ = this.afficheExcercice.asObservable();
+    private afficheExercice = new Subject<string>();
+    afficheExercice$ = this.afficheExercice.asObservable();
 
     triggerRefresh(id: string) {
-        this.afficheExcercice.next(id);
+        this.afficheExercice.next(id);
     }
 
 }
