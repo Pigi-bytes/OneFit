@@ -108,8 +108,7 @@ export class Routine {
 
 
     afficherSeance(id: string) {
-        this.elt.triggerRefresh(id);
-        this.router.navigate(['/affiche-seance']);
+        this.router.navigate(['/affiche-seance', id]);
 
     }
 
