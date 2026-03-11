@@ -33,6 +33,7 @@ main {
     background-color: var(--white3);
     height: 100%;
     overflow: hidden;
+    transition-duration: 0.2s;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -44,28 +45,48 @@ body.dark main {
     background-color: var(--blue1);
 }
 
+main .card{
+    border: 4px solid var(--white1);
+    background-color: var(--white2);
+}
 
-h1 {
+body.dark main .card {
+    background-color: var(--white3);
+}
+
+p,
+body.dark main .card p,
+body.dark main .routine p {
+    color: var(--blue1);
+}
+
+body.dark p {
+    color: var(--white3);
+}
+
+h1,
+body.dark main .card h1 {
     color: var(--red1);
-    font-size: 48px;
     margin-bottom: 20px;
 }
 
-h2 {
+h2,
+body.dark main .card h2 {
     color: var(--blue1);
-    font-size: 24px;
     font-weight: normal;
+}
+
+main .card h1 {
+    color: var(--blue1);
 }
 
 body.dark h1,
 body.dark h2,
-body.dark label {
+body.dark label
+{
     color: var(--white3);
 }
 
-p {
-    color: var(--blue1);
-}
 
 .button-group {
     display: flex;
@@ -84,22 +105,25 @@ input {
     transition-duration: 0.3s;
 }
 
-.btn-principal {
+.btn-principal,
+body.dark .card .btn-principal {
     background-color: var(--blue1);
     border-color: var(--blue1);
     color: var(--white3);
 }
 
+.card .btn-principal,
 body.dark .btn-principal {
     background-color: var(--white3);
     border-color: var(--white3);
     color: var(--blue1);
 }
 
-.btn-principal:hover {
+.btn-principal:hover,
+body.dark .card .btn-principal:hover {
     background-color: var(--blue3);
     border-color: var(--blue3);
-
+    color: var(--white3);
 }
 
 body.dark .btn-principal:hover {
@@ -217,12 +241,12 @@ app-configurer-exo {
 }
 
 .routine .jour {
-    border: 4px solid var(--blue1);
+    border: 4px solid var(--white1);
     padding: 10px 15px;
     text-align: center;
     justify-content: space-between;
     border-radius: 8px;
-    background-color: #f8f9fa;
+    background-color: var(--white2);
     height: 60vh;
     width: 180px;
 }
@@ -232,4 +256,8 @@ app-configurer-exo {
     padding: 10px 15px;
     margin-right: 10px;
     gap: 10px;
+}
+
+.card .text-gray {
+    color: var(--blue3);
 }

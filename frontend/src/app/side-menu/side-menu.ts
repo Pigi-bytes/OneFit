@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, PLATFORM_ID, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule, Router } from '@angular/router';
 import { Theme } from '../theme';
@@ -9,6 +9,7 @@ import { Theme } from '../theme';
   imports: [RouterModule],
   templateUrl: './side-menu.html',
   styleUrl: './side-menu.css',
+  encapsulation: ViewEncapsulation.None,
 })
 export class SideMenu {
   private http = inject(HttpClient);
@@ -20,8 +21,12 @@ export class SideMenu {
   name = "";
 
   deconnexion() {
-    localStorage.removeItem("access_token")
-    this.router.navigate(['']);
+    const confirmAction = confirm("Êtes-vous sûr(e) de vouloir vous déconnecter ?");
+
+    if(confirmAction){
+      localStorage.removeItem("access_token")
+      this.router.navigate(['']);
+    }
   }
   
   toggleTheme() {
