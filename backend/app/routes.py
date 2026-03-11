@@ -650,13 +650,7 @@ def ajouterExoSeance(data):
     if not seance:
         abort(404, message="Séance non trouvée pour ce jour.")
 
-    ordre = data.get("ordre")
-    if ordre is None:
-        ordre = max((plan.ordre for plan in seance.exercises_plan), default=0) + 1
-    else:
-        for plan in sorted(seance.exercises_plan, key=lambda x: x.ordre, reverse=True):
-            if plan.ordre >= ordre:
-                plan.ordre += 1
+    ordre = max((plan.ordre for plan in seance.exercises_plan), default=0) + 1
 
     plan = SeanceExercise(
         seance_id=seance.id,
@@ -678,3 +672,5 @@ def ajouterExoSeance(data):
         f"SEANCE EXO ADDED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | day={seance.day.value} | exercise_id={exercise.id} | ordre={ordre}"
     )
     return {"message": "Exercice ajouté à la séance avec succès."}
+
+
