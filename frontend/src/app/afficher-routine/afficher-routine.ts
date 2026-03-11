@@ -4,7 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { Notification } from '../notification';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EnvoyerElt } from '../envoyerElt';
+import { EnvoyerElt } from '../envoyerElt'
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -82,7 +82,7 @@ export class AfficherRoutine {
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
                 this.backendResponse = res.message;
-                this.ei.triggerRoutineActivated();
+                this.ei.triggerRefresh(null);
                 this.cdr.detectChanges();
             },
 

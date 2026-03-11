@@ -17,17 +17,17 @@ import { Subscription } from 'rxjs';
 export class ChoisirRoutine {
     backendResponse = "";
     routines: any[] = [];
-    private routineActivatedSubscription?: Subscription;
+    private subscription?: Subscription;
 
     constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
 
     ngOnInit() {
         this.getRoutines();
-        this.routineActivatedSubscription = this.ei.routineActivated$.subscribe(() => {
+        this.subscription = this.ei.afficheExercice$.subscribe(() => {
             this.getRoutines();
         });
     }
-    
+
     getRoutines() {
         this.http.get('http://127.0.0.1:5000/sport/getRoutines', {}).subscribe({
 
