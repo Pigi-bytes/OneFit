@@ -27,9 +27,7 @@ export class AfficherExo {
             this.modifId(id);
             this.chargeExo();
         });
-
         this.chargeExo();
-
     }
 
     modifId(id: any) {
@@ -45,10 +43,7 @@ export class AfficherExo {
 
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
-
                 this.exo = res;
-                console.log(this.exo);
-
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { Notification } from '../notification';
 import { ChangeDetectorRef } from '@angular/core';
