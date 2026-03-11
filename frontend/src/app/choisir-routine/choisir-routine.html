@@ -3,9 +3,9 @@
 
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100 bg-light">
 
-    <div class="routine-container container text-center">
+    <div class="container text-center">
 
-        <h2 class="mb-4">Vos routines enregistrées</h2>
+        <h1 class="mb-4">Vos routines enregistrées</h1>
         
         <div *ngFor="let r of routines" class="card mb-3 p-3 cursor-pointer"
              style="max-width: 400px; margin:auto;"
@@ -17,6 +17,8 @@
         <div *ngIf="routines.length === 0" class="alert alert-secondary mt-3">
             <p class="mb-0 text-muted">Aucune routine disponible</p>
         </div>
+
+        <button class="btn-principal">Créer une routine</button>
 
     </div>
 

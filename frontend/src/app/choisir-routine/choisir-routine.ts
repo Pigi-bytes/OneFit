@@ -5,6 +5,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt'
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-choisir-routine',
@@ -16,13 +17,17 @@ import { EnvoyerElt } from '../envoyerElt'
 export class ChoisirRoutine {
     backendResponse = "";
     routines: any[] = [];
+    private routineActivatedSubscription?: Subscription;
 
     constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
 
     ngOnInit() {
         this.getRoutines();
+        this.routineActivatedSubscription = this.ei.routineActivated$.subscribe(() => {
+            this.getRoutines();
+        });
     }
-
+    
     getRoutines() {
         this.http.get('http://127.0.0.1:5000/sport/getRoutines', {}).subscribe({
 
