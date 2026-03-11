@@ -15,6 +15,7 @@
 body.dark #side-menu {
     background-color: var(--white1);
 }
+
 #side-menu a,
 #side-menu h1,
 #side-menu p {

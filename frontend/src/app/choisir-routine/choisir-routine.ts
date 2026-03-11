@@ -1,49 +1,38 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { RouterModule, Router } from '@angular/router';
 import { Notification } from '../notification';
 import { ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { EnvoyerId } from '../envoyer-id';
-import { Subscription } from 'rxjs';
+import { EnvoyerId } from '../envoyer-id'
 
 @Component({
-    selector: 'app-afficher-exo',
-    standalone: true,
-    imports: [RouterModule, CommonModule],
-    templateUrl: './afficher-exo.html',
-    styleUrl: './afficher-exo.css',
+	selector: 'app-choisir-routine',
+	imports: [CommonModule, RouterModule],
+	templateUrl: './choisir-routine.html',
+	styleUrl: './choisir-routine.css',
 })
-export class AfficherExo {
+
+export class ChoisirRoutine {
+	backendResponse = "";
+    routines: any[] = [];
+
     constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerId) { }
-    backendResponse = "";
-    id = null;
-    exo: any;
-    private subscription?: Subscription;
 
-    ngOnInit() {
-        this.exo = null;
-        this.subscription = this.ei.afficheExcercice$.subscribe((id) => {
-            this.modifId(id);
-            this.chargeExo();
-        });
-        this.chargeExo();
-    }
+	ngOnInit(){
+		this.getRoutines();
+	}
 
-    modifId(id: any) {
-        this.id = id;
-        console.log("coucou");
-    }
-
-    chargeExo() {
-        this.http.post('http://127.0.0.1:5000/externe/getExo', {
-            exoId: this.id,
-
-        }).subscribe({
+    getRoutines() {
+        this.http.get('http://127.0.0.1:5000/sport/getRoutines', {}).subscribe({
 
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
-                this.exo = res;
+				this.routines = res.routines.map((r: any) => ({
+                    nom: r["name"],
+                    id: r["id"],
+                }));
+
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },
@@ -54,6 +43,8 @@ export class AfficherExo {
 
                     const errorsObj = err.error.errors;
                     const messages: string[] = [];
+
+
 
                     for (const key in errorsObj) {
 
