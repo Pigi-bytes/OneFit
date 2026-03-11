@@ -469,7 +469,7 @@ def searchExo(data):
     return {"resultats": resultat}
 
 
-@sportBLP.route("/getRoutines", methods=["POST"])
+@sportBLP.route("/getRoutines", methods=["GET"])
 @sportBLP.doc(security=[{"bearerAuth": []}])
 @sportBLP.response(200, RoutinesResponseSchema)
 @sportBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération des routines")
@@ -490,7 +490,7 @@ def getRoutines():
     return {"routines": routines}
 
 
-@sportBLP.route("/getSeancesPrevu", methods=["GET"])
+@sportBLP.route("/getSeancesPrevu", methods=["POST"])
 @sportBLP.doc(security=[{"bearerAuth": []}])
 @externeBLP.arguments(ActiveRoutineSchema)
 @sportBLP.response(200, SeancesResponseSchema)
