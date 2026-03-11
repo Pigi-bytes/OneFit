@@ -36,5 +36,5 @@ export const routes: Routes = [
     { path: "choisir-routine", component: ChoisirRoutine },
     { path: "routines-persos", component: RoutinesPersos },
     { path: "seance", component: Seance },
-    { path: "affiche-seance", component: Seance }
+    { path: "affiche-seance", component: AfficheSceance }
 ];
