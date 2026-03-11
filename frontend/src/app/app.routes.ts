@@ -16,6 +16,7 @@ import { Routine } from './routine/routine';
 import { ChoisirRoutine } from './choisir-routine/choisir-routine';
 import { RoutinesPersos } from './routines-persos/routines-persos';
 import { Seance } from './seance/seance';
+import { AfficheSceance } from './affiche-sceance/affiche-sceance';
 
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },
@@ -35,4 +36,5 @@ export const routes: Routes = [
     { path: "choisir-routine", component: ChoisirRoutine },
     { path: "routines-persos", component: RoutinesPersos },
     { path: "seance", component: Seance },
+    { path: "affiche-seance", component: Seance }
 ];

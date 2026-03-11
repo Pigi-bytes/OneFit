@@ -1,0 +1,14 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<main class="d-flex align-items-center justify-content-center min-vh-100 rout">
+
+    <div class="jour" style="overflow-y: auto; max-height: 60vh;">
+        <h5> Lundi </h5>
+        <p *ngFor="let m of message[0]" [innerHTML]="m"></p>
+
+    </div>
+
+
+
+</main>
