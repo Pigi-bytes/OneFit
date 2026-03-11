@@ -253,7 +253,7 @@ class SalleSchemaByLoc(Schema):
 # API Sport
 # ---------------------------------------------------------------------------
 class RoutineSchema(Schema):
-    routine_id = _routine_id()
+    id = _routine_id()
     name = _name()
     is_active = fields.Bool(required=True)
 
