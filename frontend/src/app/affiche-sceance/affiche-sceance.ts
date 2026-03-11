@@ -21,6 +21,7 @@ export class AfficheSceance {
 
 
     jour = "";
+    message: any[] = [];
 
 
     ngOnInit() {
@@ -34,6 +35,8 @@ export class AfficheSceance {
 
 
     chargeSeance() {
+
+        console.log(this.jour);
 
     }
 

@@ -5,6 +5,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { EnvoyerElt } from '../envoyerElt';
 
 
 
@@ -18,7 +19,7 @@ import { CommonModule } from '@angular/common';
 })
 export class Routine {
 
-    constructor(private http: HttpClient, private not: Notification, private cdr: ChangeDetectorRef) { }
+    constructor(private http: HttpClient, private not: Notification, private cdr: ChangeDetectorRef, private elt: EnvoyerElt, private router: Router) { }
 
 
     seance = []
@@ -102,6 +103,13 @@ export class Routine {
                 this.cdr.detectChanges();
             }
         });
+
+    }
+
+
+    afficherSeance(id: string) {
+        this.elt.triggerRefresh(id);
+        this.router.navigate(['/affiche-seance']);
 
     }
 
