@@ -12,7 +12,8 @@ import { SideMenu } from './side-menu/side-menu';
 import { AjouterExo } from './ajouter-exo/ajouter-exo';
 import { AfficherExo } from './afficher-exo/afficher-exo';
 import { Exercices } from './exercices/exercices';
- 
+import { Routine } from './routine/routine';
+
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },
     { path: "connexion", component: Connexion, data: { hideMenu: true } },
@@ -27,4 +28,5 @@ export const routes: Routes = [
     { path: "ajouter-exo", component: AjouterExo },
     { path: "afficher-exo", component: AfficherExo },
     { path: "exercices", component: Exercices },
+    { path: "routine", component: Routine },
 ];
