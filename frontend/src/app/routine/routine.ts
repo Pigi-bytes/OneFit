@@ -62,7 +62,7 @@ export class Routine {
 
                     else {
                         for (let m of s.exercises) {
-                            this.message[i].push("nom : " + m.name + "<br>" + m.planned_sets + " sets de " + m.planned_reps + " reps à " + m.planned_weight + " kg");
+                            this.message[i].push(m.name + "<br>" + m.planned_sets + " sets de " + m.planned_reps + " reps à " + m.planned_weight + " kg");
                         }
                     }
 

@@ -50,6 +50,12 @@ main .card{
     background-color: var(--white2);
 }
 
+main .card li{
+    background-color: var(--white2);
+}
+
+
+body.dark main .card li,
 body.dark main .card {
     background-color: var(--white3);
 }
@@ -87,7 +93,6 @@ body.dark label
     color: var(--white3);
 }
 
-
 .button-group {
     display: flex;
     /* met les boutons côte à côte */
@@ -112,7 +117,6 @@ body.dark .card .btn-principal {
     color: var(--white3);
 }
 
-.card .btn-principal,
 body.dark .btn-principal {
     background-color: var(--white3);
     border-color: var(--white3);

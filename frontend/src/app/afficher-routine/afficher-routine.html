@@ -10,14 +10,14 @@
 
     </div>
 
-        <div class="card p-4" style="max-width: 600px; width:100%;" *ngIf="seances">
+        <div class="card p-3" style="max-width: 600px; width:100%;" *ngIf="seances">
 
-        <div *ngFor="let s of seances" class="card border-0 mb-3 p-3">
-            <p class="mb-2 fw-bold">{{ s.title }}</p>
+        <div *ngFor="let s of seances" class="card border-0 p-3">
+            <p class="fw-bold">{{ s.title }}</p>
 
             <ul class="list-group list-group-flush">
-                <li class="list-group-item border-0 py-1" *ngFor="let exo of s.exercises">
-                    {{ exo.name }}
+                <li class="list-group-item border-0 p-0" *ngFor="let exo of s.exercises">
+                    <p>{{ exo.name }} - <span class="text-gray"> {{ exo.planned_sets}} sets de {{ exo.planned_reps}} reps à {{ exo.planned_weight}}kg</span></p>
                 </li>
             </ul>
         </div>
