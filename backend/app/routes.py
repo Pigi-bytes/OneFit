@@ -492,16 +492,24 @@ def getRoutines():
 
 @sportBLP.route("/getSeancesPrevu", methods=["GET"])
 @sportBLP.doc(security=[{"bearerAuth": []}])
+@externeBLP.arguments(ActiveRoutineSchema)
 @sportBLP.response(200, SeancesResponseSchema)
 @sportBLP.alt_response(404, schema=BaseErrorSchema, description="Aucune routine active ou aucune séance trouvée")
 @jwt_required()
-def getSeancesPrevu():
+def getSeancesPrevu(data):
     """
-    Renvoie les séances de la routine active de l'utilisateur avec la liste des exercices prévus (par jour)
+    Renvoie les séances de la routine active de l'utilisateur avec la liste des exercices prévus (par jour) | -1 pour la routine active
     """
     user = getCurrentUserOrAbort401()
 
-    routine = user.activeRoutine()
+    if data["routine_id"] == -1:
+        routine = user.activeRoutine()
+    else:
+
+        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
     route_logger.info(f"GET SEANCES | user_id={user.id} | routine={routine.id}")
     if not routine:
         route_logger.warning(f"Aucune routine trouvé | user_id={user.id}")
