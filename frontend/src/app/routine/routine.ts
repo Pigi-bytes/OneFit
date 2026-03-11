@@ -6,6 +6,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
+
+
+
+
 @Component({
     selector: 'app-routine',
     imports: [FormsModule, CommonModule, RouterModule],
@@ -20,12 +24,14 @@ export class Routine {
     seance = []
     backendResponse = ""
     id = -1;
-    message: string[][] = [];
+    message: any[] = [];
+
+    seances: any[] = [];
 
 
 
     ngOnInit() {
-        this.initMessage();
+
         this.http.post('http://127.0.0.1:5000/sport/getSeancesPrevu', {
             routine_id: this.id,
 
@@ -33,6 +39,36 @@ export class Routine {
 
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
+
+                this.seances = res.seances.map((s: any) => ({
+                    jour: s.day,
+                    title: s.title,
+                    exercises: s.exercises,
+                    isRestDay: s.is_rest_day
+                }));
+
+                this.message = [];
+
+
+                let i = 0;
+                for (let s of this.seances) {
+                    this.message[i] = [];
+
+                    if (s.exercises.length === 0) {
+                        this.message[i].push(s.title);
+                    }
+
+                    else {
+                        for (let m of s.exercises) {
+                            this.message[i].push("nom : " + m.name + "<br>" + m.planned_sets + " sets de " + m.planned_reps + " reps à " + m.planned_weight + " kg");
+                        }
+                    }
+
+                    i += 1;
+
+                }
+
+
 
             },
 
@@ -67,16 +103,6 @@ export class Routine {
             }
         });
 
-    }
-
-    initMessage() {
-        for (let i = 0; i < 7; i++) {
-            if (!this.message[i]) {
-                this.message[i] = [];
-            }
-            this.message[i].push("jour de repos");
-
-        }
     }
 
 

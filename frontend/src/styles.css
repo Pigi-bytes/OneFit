@@ -191,13 +191,15 @@ body.dark canvas {
 }
 
 app-ajouter-exo,
-app-graph-poid {
+app-graph-poid,
+app-choisir-routine {
     flex: 7;
     /* 6 parts */
 }
 
 app-afficher-exo,
-app-menu-poid {
+app-menu-poid,
+app-afficher-routine {
     flex: 3;
     /* 4 parts → ratio 6:4 = 60:40 */
 }
