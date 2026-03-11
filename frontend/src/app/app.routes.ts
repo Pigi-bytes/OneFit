@@ -14,6 +14,7 @@ import { AfficherExo } from './afficher-exo/afficher-exo';
 import { Exercices } from './exercices/exercices';
 import { Routine } from './routine/routine';
 import { ChoisirRoutine } from './choisir-routine/choisir-routine';
+import { RoutinesPersos } from './routines-persos/routines-persos';
 import { Seance } from './seance/seance';
 
 export const routes: Routes = [
@@ -32,5 +33,6 @@ export const routes: Routes = [
     { path: "exercices", component: Exercices },
     { path: "routine", component: Routine },
     { path: "choisir-routine", component: ChoisirRoutine },
+    { path: "routines-persos", component: RoutinesPersos },
     { path: "seance", component: Seance },
 ];
