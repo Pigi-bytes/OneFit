@@ -7,6 +7,7 @@ import { Notification } from '../notification';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
     selector: 'app-configurer-exo',
     imports: [FormsModule, CommonModule],
@@ -83,6 +84,10 @@ export class ConfigurerExo {
 
     resetNotif() {
         this.not.reset(this, this.cdr);
+    }
+
+    annuler() {
+        this.ei.triggerRefresh([1, null]);
     }
 
 }
