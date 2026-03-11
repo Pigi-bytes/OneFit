@@ -7,9 +7,10 @@ from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
 from app import Config, db
-from app.models import DayOfWeek, Exercise, HistoriquePoids, Routine, Seance, User
+from app.models import DayOfWeek, Exercise, HistoriquePoids, Routine, Seance, SeanceExercise, User
 from app.schemas import (
     ActiveRoutineSchema,
+    AddExerciseToSeanceSchema,
     BaseErrorSchema,
     CreateRoutineSchema,
     ExerciceRequestSchema,
@@ -620,3 +621,64 @@ def supprimerRoutine(data):
     route_logger.info(f"ROUTINE DELETED | user_id={user.id} | routine_id={routine.id} | name={routine.name}")
 
     return {"message": f"La routine '{routine.name}' a bien été supprimée."}
+
+
+@sportBLP.route("/ajouterExoSeance", methods=["POST"])
+@sportBLP.arguments(AddExerciseToSeanceSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(201, MessageSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Routine, séance ou exercice introuvable")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def ajouterExoSeance(data):
+    """Ajoute un exercice dans la séance d'un jour donné pour une routine."""
+    user = getCurrentUserOrAbort401()
+
+    if data["routine_id"] == -1:
+        routine = user.activeRoutine()
+    else:
+        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    exercise = db.session.scalar(sa.select(Exercise).where(Exercise.id_api == data["exercise_id"]))
+    if not exercise:
+        abort(404, message="Exercice non trouvé.")
+
+    day_enum = DayOfWeek(data["day"])
+    seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == day_enum))
+    if not seance:
+        abort(404, message="Séance non trouvée pour ce jour.")
+
+    ordre = data.get("ordre")
+    if ordre is None:
+        ordre = max((plan.ordre for plan in seance.exercises_plan), default=0) + 1
+    else:
+        for plan in sorted(seance.exercises_plan, key=lambda x: x.ordre, reverse=True):
+            if plan.ordre >= ordre:
+                plan.ordre += 1
+
+    plan = SeanceExercise(
+        seance_id=seance.id,
+        exercise_id=exercise.id,
+        ordre=ordre,
+        planned_sets=data["planned_sets"],
+        planned_reps=data["planned_reps"],
+        planned_weight=data["planned_weight"],
+    )
+
+    db.session.add(plan)
+
+    seance.is_rest_day = False
+    if data.get("title") is not None:
+        seance.title = data["title"]
+    elif seance.title in (None, "Jour de Repos"):
+        seance.title = f"Séance {seance.day.value}"
+
+    db.session.commit()
+
+    route_logger.info(
+        f"SEANCE EXO ADDED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | day={seance.day.value} | exercise_id={exercise.id} | ordre={ordre}"
+    )
+    return {"message": "Exercice ajouté à la séance avec succès."}

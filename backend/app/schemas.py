@@ -211,7 +211,7 @@ class RoutinesResponseSchema(Schema):
 
 class PlannedExerciseSchema(Schema):
     id = fields.Int(required=True)
-    exercise_id = fields.Int(required=True)
+    exercise_id = _exo
     name = fields.Str(required=True)
     ordre = fields.Int(required=True)
     planned_sets = fields.Int(required=True)
@@ -239,3 +239,24 @@ class CreateRoutineSchema(Schema):
 
 class ActiveRoutineSchema(Schema):
     routine_id = fields.Int(required=True)
+
+
+class AddExerciseToSeanceSchema(Schema):
+    routine_id = fields.Int(
+        required=False,
+        load_default=-1,
+        metadata={"description": "ID de la routine cible (-1 = routine active)"},
+    )
+
+    day = fields.Str(
+        required=True,
+        validate=validate.OneOf(["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]),
+        metadata={"description": "Jour de la séance"},
+    )
+
+    exercise_id = _exo()
+    planned_sets = fields.Int(required=True, validate=validate.Range(min=1, max=30))
+    planned_reps = fields.Int(required=True, validate=validate.Range(min=1, max=200))
+    planned_weight = fields.Float(required=True, validate=validate.Range(min=0, max=1000))
+    ordre = fields.Int(required=False, allow_none=True, load_default=None, validate=validate.Range(min=1))
+    title = fields.Str(required=False, allow_none=True, load_default=None)
