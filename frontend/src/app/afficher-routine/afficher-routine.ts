@@ -42,6 +42,7 @@ export class AfficherRoutine {
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
                 this.seances = res.seances;
+                console.log(res);
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },

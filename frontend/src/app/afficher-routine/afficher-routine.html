@@ -7,19 +7,23 @@
         <p class="text-muted mb-0">
             Sélectionnez une routine
         </p>
+
     </div>
 
-    <div class="card shadow-sm p-4" style="max-width: 600px; width:100%;" *ngIf="seances">
+        <div class="card shadow-sm p-4" style="max-width: 600px; width:100%;" *ngIf="seances">
 
-        <div *ngFor="let s of seances"
-             class="card border-0 shadow-sm mb-3 p-3 d-flex flex-row align-items-center">
+        <div *ngFor="let s of seances" class="card border-0 shadow-sm mb-3 p-3">
+            <p class="mb-2 fw-bold">{{ s.title }}</p>
 
-            <div class="d-flex justify-content-between align-items-center w-100">
-                <p class="mb-0 fw-semibold">{{ s.title }}</p>
-            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item border-0 py-1" *ngFor="let exo of s.exercises">
+                    {{ exo.name }}
+                </li>
+            </ul>
 
         </div>
 
     </div>
+
 
 </main>

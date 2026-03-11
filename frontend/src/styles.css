@@ -63,7 +63,7 @@ body.dark label {
     color: var(--white3);
 }
 
-body.dark p {
+p {
     color: var(--blue1);
 }
 
