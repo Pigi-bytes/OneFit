@@ -16,28 +16,28 @@
     <form (ngSubmit)="ajouter()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3 w-50">
 
         <div class="form-group">
-            <label for="setNumber">nombre de sets</label>
+            <label for="setNumber">Nombre de sets :</label>
             <input type="text" id="setNumber" name="setNumber" [(ngModel)]="setNumber" required class="form-control"
                 (click)="resetNotif()" />
         </div>
 
         <div class="form-group">
-            <label for="repNumber">nombre de répétitions</label>
+            <label for="repNumber">Nombre de répétitions :</label>
             <input type="text" id="repNumber" name="repNumber" [(ngModel)]="repNumber" required class="form-control"
                 (click)="resetNotif()" />
         </div>
 
         <div class="form-group">
-            <label for="poids">poids :</label>
+            <label for="poids">Poids :</label>
             <input type="text" id="poids" name="poids" [(ngModel)]="poids" required class="form-control"
                 (click)="resetNotif()" />
         </div>
 
 
 
-        <button type="submit" class="btn-principal">ajouter</button>
+        <button type="submit" class="btn-principal">Ajouter</button>
 
-        <button type="button" class="btn-principal" (click)="annuler()">annuler</button>
+        <button type="button" class="btn-principal" (click)="annuler()">Annuler</button>
 
     </form>
 

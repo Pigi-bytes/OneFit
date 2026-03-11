@@ -45,10 +45,15 @@ body.dark main {
     background-color: var(--blue1);
 }
 
-main .card{
+main .card {
     border: 4px solid var(--white1);
     background-color: var(--white2);
 }
+
+main .clickable-card:hover {
+    background-color: var(--white1);
+}
+
 
 main .card li{
     background-color: var(--white2);
@@ -244,11 +249,10 @@ app-configurer-exo {
     margin-top: 40px;
 }
 
-.routine .jour {
+.routine .card {
     border: 4px solid var(--white1);
     padding: 10px 15px;
     text-align: center;
-    justify-content: space-between;
     border-radius: 8px;
     background-color: var(--white2);
     height: 60vh;

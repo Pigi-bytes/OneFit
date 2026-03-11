@@ -7,7 +7,7 @@
 
         <h1 class="mb-4">Vos routines enregistrées</h1>
         
-        <div *ngFor="let r of routines" class="card mb-3 p-3 cursor-pointer"
+        <div *ngFor="let r of routines" class="card clickable-card mb-3 p-3 cursor-pointer"
              style="max-width: 400px; margin:auto;"
              (click)="AfficherInfosRoutine(r.id)">
             
