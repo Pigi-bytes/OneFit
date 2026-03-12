@@ -152,9 +152,6 @@ export class AfficheSceance implements OnInit {
 
     }
 
-    down(id: any) {
-
-    }
 
     trackByExo(index: number, item: any) {
         return item.seance_exercise_id;
@@ -163,4 +160,6 @@ export class AfficheSceance implements OnInit {
     ajouterExo() {
         this.router.navigate(['/exercices']);
     }
+
+    modifie() { }
 }

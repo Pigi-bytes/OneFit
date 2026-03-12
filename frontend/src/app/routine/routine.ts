@@ -109,7 +109,7 @@ export class Routine {
     afficherSeance(id: string) {
 
         localStorage.setItem("jour", id);
-        this.router.navigate(['/affiche-seance']);
+        this.router.navigate(['/seance']);
 
     }
 
