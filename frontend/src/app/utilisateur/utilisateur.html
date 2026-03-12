@@ -3,38 +3,56 @@
 
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
 
-    <form (ngSubmit)="modif()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3 w-50">
+    <h1 class="mb-4">Votre profil d'utilisateur</h1>
 
-        <div class="form-group">
-            <label for="username">username</label>
-            <input type="text" id="username" name="username" [(ngModel)]="username" required class="form-control"
-                (click)="resetNotif()" />
+    <div class="card p-4 mb-4 w-100" style="max-width: 600px;"> 
+        <form (ngSubmit)="modif()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3">
+
+            <table>
+                <!-- username -->
+                <tr>
+                    <td class="text-start"><label for="username">Nom d'utilisateur</label></td>
+                    <td><input type="text" id="username" name="username"
+                        [(ngModel)]="username" required class="form-control"
+                        (click)="resetNotif()" />
+                    </td>
+                </tr>
+
+                <!-- taille -->
+                    <tr>
+                        <td class="text-start"><label for="taille">Taille</label></td>
+                        <td> <input type="text" id="taille" name="taille"
+                            [(ngModel)]="taille" required class="form-control"
+                            (click)="resetNotif()" />
+                        </td>
+                    </tr>
+
+                <!-- date de naissance -->
+
+                <tr>
+                    <td class="text-start"><label for="birthDate">Date de naissance</label></td>
+                    <td><input type="date" id="birthDate" name="birthDate"
+                        [(ngModel)]="birthDate" required class="form-control"
+                        (click)="resetNotif()" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2"><button type="submit" class="btn-principal w-auto">Enregistrer les modifications</button></td>
+                </tr>
+            </table>
+
+        </form>
+
+        <div class="button-group">
+            <button type="button" class="btn-principal" routerLink="/modif-password">Modifier le mot de passe</button>
+            <button type="button" class="btn-red" (click)="supprimer()">Supprimer votre compte</button>
         </div>
 
-        <div class="form-group">
-            <label for="taille">taille</label>
-            <input type="text" id="taille" name="taille" [(ngModel)]="taille" required class="form-control"
-                (click)="resetNotif()" />
+        <div *ngIf="backendResponse" class="mt-2 alert alert-info">
+            {{ backendResponse }}
         </div>
 
-        <div class="form-group">
-            <label for="birthDate">Date de naissance:</label>
-            <input type="date" id="birthDate" name="birthDate" [(ngModel)]="birthDate" required class="form-control"
-                (click)="resetNotif()" />
-        </div>
-
-
-
-        <button type="submit" class="btn-principal">modifier</button>
-
-        <button type="button" class="btn-principal" routerLink="/modif-password">modifier Mot de passe</button>
-
-        <button type="button" class="btn-red" (click)="supprimer()">supprimer compte</button>
-
-    </form>
-
-    <div *ngIf="backendResponse" class="mt-2 alert alert-info">
-        {{ backendResponse }}
     </div>
 
 </main>

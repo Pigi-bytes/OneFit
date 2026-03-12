@@ -292,3 +292,7 @@ app-modife-exercice {
 .card:hover .tooltiptext {
     visibility: visible;
 }
+
+td {
+    padding:10px;
+}
