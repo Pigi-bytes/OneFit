@@ -145,10 +145,11 @@ export class AfficheSceance implements OnInit {
                 } else {
                     this.backendResponse = 'Erreur serveur';
                 }
-                this.cdr.detectChanges();
+
             }
         });
 
+        this.cdr.detectChanges();
 
     }
 
