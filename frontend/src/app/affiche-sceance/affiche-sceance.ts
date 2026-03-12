@@ -53,12 +53,74 @@ export class AfficheSceance implements OnInit {
 
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
-                this.exercices = res.seance.exercises;
+                this.exercices = res.seance.exercises.sort((a: any, b: any) => a.ordre - b.ordre);;
 
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },
 
+            error: (err: any) => {
+                //erreur 422
+                if (err.status == 422 && err.error.errors) {
+
+                    const errorsObj = err.error.errors;
+                    const messages: string[] = [];
+
+                    for (const key in errorsObj) {
+
+                        const value = errorsObj[key];
+                        Object.values(value).forEach(v => {
+                            if (Array.isArray(v)) messages.push(...v);
+                            else if (typeof v === 'string') messages.push(v);
+                        });
+                    }
+
+                    this.backendResponse = messages.join('\n');
+                }
+                // erreurs HTTP (400, 409, 500…)
+                else if (err.error && err.error.message) {
+                    this.backendResponse = err.error.message; // <- message du backend
+                } else {
+                    this.backendResponse = 'Erreur serveur';
+                }
+
+                this.cdr.detectChanges();
+            }
+        });
+
+
+    }
+
+    modifierExo(id: any) {
+
+    }
+
+    bouger(id: any, sens: string) {
+        const index = this.exercices.findIndex(e => e.seance_exercise_id === id);
+
+        if (index === -1) return;
+
+        if (sens === 'up' && index > 0) {
+
+            [this.exercices[index], this.exercices[index - 1]] =
+                [this.exercices[index - 1], this.exercices[index]];
+
+        }
+
+        if (sens === 'down' && index < this.exercices.length - 1) {
+
+            [this.exercices[index], this.exercices[index + 1]] =
+                [this.exercices[index + 1], this.exercices[index]];
+
+        }
+
+        this.http.post('http://127.0.0.1:5000/sport/deplacerOrdreExoSeance', {
+            routine_id: -1,
+            day: this.jour,
+            seance_exercise_id: id,
+            direction: sens
+
+        }).subscribe({
             error: (err: any) => {
                 //erreur 422
                 if (err.status == 422 && err.error.errors) {
@@ -90,12 +152,12 @@ export class AfficheSceance implements OnInit {
 
     }
 
-    modifierExo(id: any) {
+    down(id: any) {
 
     }
 
-    supprimer(id: any) {
-
+    trackByExo(index: number, item: any) {
+        return item.seance_exercise_id;
     }
 
     ajouterExo() {

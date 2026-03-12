@@ -16,11 +16,11 @@
             <p class="mb-0">{{ exo.name }}</p>
 
             <div class="d-flex ms-auto">
-                <button *ngIf="i > 0" type="button" class="btn-principal" (click)="modifierExo(exo.exoId)">
+                <button *ngIf="i > 0" type="button" class="btn-principal" (click)="bouger(exo.seance_exercise_id,'up')">
                     &#9650;
                 </button>
                 <button *ngIf="i < exercices.length - 1" type="button" class="btn-principal"
-                    (click)="supprimer(exo.seance_exercise_id)">
+                    (click)="bouger(exo.seance_exercise_id,'down')">
                     &#9660;
                 </button>
             </div>
