@@ -62,13 +62,15 @@ export class Routine {
 
                     else {
                         for (let m of s.exercises) {
-                            this.message[i].push(m.name + "<br>" + m.planned_sets + " sets de " + m.planned_reps + " reps à " + m.planned_weight + " kg");
+                            this.message[i].push(m.name + "<br>" + " <span class='text-gray'>" + m.planned_sets + " sets de " + m.planned_reps + " reps à " + m.planned_weight + " kg</spam>");
                         }
                     }
 
                     i += 1;
 
                 }
+
+                this.cdr.detectChanges();
 
 
 

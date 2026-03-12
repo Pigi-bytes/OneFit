@@ -280,7 +280,6 @@ app-configurer-exo {
     visibility: hidden;
     width: 130px;
     background-color: black;
-    opacity: 0.65;
     color: var(--silver3);
     text-align: center;
     padding: 10px 0;

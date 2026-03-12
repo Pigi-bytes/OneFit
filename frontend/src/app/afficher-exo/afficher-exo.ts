@@ -19,12 +19,15 @@ export class AfficherExo {
     backendResponse = "";
     id = null;
     exo: any;
+    message: any;
     private subscription?: Subscription;
 
     ngOnInit() {
         this.exo = null;
+        this.message = null;
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
             this.modifId(id[1]);
+            this.message = id[2];
             this.chargeExo();
         });
         this.chargeExo();
@@ -35,45 +38,47 @@ export class AfficherExo {
     }
 
     chargeExo() {
-        this.http.post('http://127.0.0.1:5000/externe/getExo', {
-            exoId: this.id,
+        if (this.id !== null) {
+            this.http.post('http://127.0.0.1:5000/externe/getExo', {
+                exoId: this.id,
 
-        }).subscribe({
+            }).subscribe({
 
-            next: (res: any) => {
-                console.log('RESPONSE OK', res);
-                this.exo = res;
-                this.backendResponse = res.message;
-                this.cdr.detectChanges();
-            },
+                next: (res: any) => {
+                    console.log('RESPONSE OK', res);
+                    this.exo = res;
+                    this.backendResponse = res.message;
+                    this.cdr.detectChanges();
+                },
 
-            error: (err: any) => {
-                //erreur 422
-                if (err.status == 422 && err.error.errors) {
+                error: (err: any) => {
+                    //erreur 422
+                    if (err.status == 422 && err.error.errors) {
 
-                    const errorsObj = err.error.errors;
-                    const messages: string[] = [];
+                        const errorsObj = err.error.errors;
+                        const messages: string[] = [];
 
-                    for (const key in errorsObj) {
+                        for (const key in errorsObj) {
 
-                        const value = errorsObj[key];
-                        Object.values(value).forEach(v => {
-                            if (Array.isArray(v)) messages.push(...v);
-                            else if (typeof v === 'string') messages.push(v);
-                        });
+                            const value = errorsObj[key];
+                            Object.values(value).forEach(v => {
+                                if (Array.isArray(v)) messages.push(...v);
+                                else if (typeof v === 'string') messages.push(v);
+                            });
+                        }
+
+                        this.backendResponse = messages.join('\n');
                     }
-
-                    this.backendResponse = messages.join('\n');
+                    // erreurs HTTP (400, 409, 500…)
+                    else if (err.error && err.error.message) {
+                        this.backendResponse = err.error.message; // <- message du backend
+                    } else {
+                        this.backendResponse = 'Erreur serveur';
+                    }
+                    this.cdr.detectChanges();
                 }
-                // erreurs HTTP (400, 409, 500…)
-                else if (err.error && err.error.message) {
-                    this.backendResponse = err.error.message; // <- message du backend
-                } else {
-                    this.backendResponse = 'Erreur serveur';
-                }
-                this.cdr.detectChanges();
-            }
-        });
+            });
 
+        }
     }
 }
