@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EnvoyerId } from './envoyer-id';
+import { SelectComposant } from './select-composant';
 
-describe('EnvoyerId', () => {
-  let service: EnvoyerId;
+describe('SelectComposant', () => {
+  let service: SelectComposant;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(EnvoyerId);
+    service = TestBed.inject(SelectComposant);
   });
 
   it('should be created', () => {

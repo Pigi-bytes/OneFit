@@ -3,17 +3,13 @@
     width: 280px;
     top: 0;
     left: 0;
-    background-color: var(--blue1);
+    background-color: var(--blue2);
     overflow-x: hidden;
     transition: 0.5s;
     display: flex;
     flex-direction: column;
     align-items: center;
     z-index: 1;
-}
-
-body.dark #side-menu {
-    background-color: var(--white1);
 }
 
 #side-menu a,
@@ -33,26 +29,14 @@ body.dark #side-menu {
     color: var(--white3);
 }
 
-body.dark #side-menu a,
-body.dark #side-menu h1 {
-    color: var(--blue1);
-}
-
-body.dark #side-menu a:hover {
-    color: var(--blue3);
-}
-
-hr {
+#side-menu hr {
     display: block;
     height: 1px;
     border: 0;
-    border-top: 2px solid var(--white3);
+    border-top: 2px solid var(--white1);
     margin: 1em 0;
     padding: 0;
-}
-
-body.part hr {
-    border-top: 2px solid var(--blue1);
+    width: 100%;
 }
 
 ul {
@@ -85,7 +69,7 @@ ul {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: var(--silver1);
     transition: 0.4s;
     border-radius: 34px;
 }
@@ -97,17 +81,13 @@ ul {
     width: 26px;
     left: 4px;
     bottom: 4px;
-    background-color: white;
+    background-color: var(--white3);
     transition: 0.4s;
     border-radius: 50%;
 }
 
 input:checked + .slider {
-    background-color: #2196F3;
-}
-
-input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    background-color: var(--red3);
 }
 
 input:checked + .slider:before {

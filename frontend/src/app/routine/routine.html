@@ -3,29 +3,68 @@
 
 <main class="d-flex align-items-center justify-content-center min-vh-100 rout">
 
+    <h1> Votre routine active</h1>
+
     <div class="routine">
         <div class="jour">
-            <h5> Lundi </h5>
-            <p *ngFor="let m of message[0]">{{ m }}</p>
+            <span class="tooltiptext">cliquer pour modifier la séance du Lundi</span>
+            <div class="card clickable-card jour" style="overflow-y: auto; max-height: 60vh;"
+                (click)="afficherSeance('Lundi')">
+                <h5> Lundi </h5>
+                <p *ngFor="let m of message[0]" [innerHTML]="m"></p>
+            </div>
+        </div>
 
+        <div class="jour">
+            <span class="tooltiptext">cliquer pour modifier la séance du Mardi</span>
+            <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
+                (click)="afficherSeance('Mardi')">
+                <h5> Mardi </h5>
+                <p *ngFor="let m of message[1]" [innerHTML]="m"></p>
+            </div>
+        </div>
+
+        <div class="jour">
+            <span class="tooltiptext">cliquer pour modifier la séance du Mercredi</span>
+            <div class="card clickable-card jour " style="overflow-y: auto; max-height: 60vh;"
+                (click)="afficherSeance('Mercredi')">
+                <h5> Mercredi </h5>
+                <p *ngFor="let m of message[2]" [innerHTML]="m"></p>
+            </div>
+        </div>
+
+        <div class="jour">
+            <span class="tooltiptext">cliquer pour modifier la séance du Jeudi</span>
+            <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
+                (click)="afficherSeance('Jeudi')">
+                <h5> Jeudi </h5>
+                <p *ngFor="let m of message[3]" [innerHTML]="m"></p>
+            </div>
         </div>
         <div class="jour">
-            <h5> Mardi </h5>
+            <span class="tooltiptext">cliquer pour modifier la séance du Vendredi</span>
+            <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
+                (click)="afficherSeance('Vendredi')">
+                <h5> Vendredi </h5>
+                <p *ngFor="let m of message[4]" [innerHTML]="m"></p>
+            </div>
         </div>
         <div class="jour">
-            <h5> Mercredi </h5>
+            <span class="tooltiptext">cliquer pour modifier la séance du Samedi</span>
+            <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
+                (click)="afficherSeance('Samedi')">
+                <h5> Samedi </h5>
+                <p *ngFor="let m of message[5]" [innerHTML]="m"></p>
+            </div>
         </div>
+
         <div class="jour">
-            <h5> Jeudi </h5>
-        </div>
-        <div class="jour">
-            <h5> Vendredi </h5>
-        </div>
-        <div class="jour">
-            <h5> Samedi </h5>
-        </div>
-        <div class="jour">
-            <h5> Dimanche </h5>
+            <span class="tooltiptext">cliquer pour modifier la séance du Dimanche</span>
+            <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
+                (click)="afficherSeance('Dimanche')">
+                <h5> Dimanche </h5>
+                <p *ngFor="let m of message[6]" [innerHTML]="m"></p>
+            </div>
         </div>
 
     </div>

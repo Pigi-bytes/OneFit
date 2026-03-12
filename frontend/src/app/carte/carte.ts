@@ -197,13 +197,18 @@ export class Carte implements AfterViewInit {
                 popupAnchor: [0, -32]
             });
 
+            const mailHtml = mail !== 'N/A' ? `<li> mail : ${mail} </li>` : '';
+            const addressHtml = adresse !== 'N/A' ? `<li>adresse : ${adresse} </li>` : '';
+            const telHtml = tel !== 'N/A' ? `<li> téléphone :${tel} </li>` : '';
+            const siteHtml = webSite !== 'N/A' ? `<li> site :${webSite} </li>` : '';
+
 
             const marker = this.L.marker([lat, lng], { icon: customIcon }).addTo(this.map).bindPopup(`<ul>
                         <li>nom : ${name} </li>
-                        <li> adresse :${adresse} </li>
-                        <li> téléphone :${tel} </li>
-                        <li> mail : ${mail} </li>
-                        <li> site : ${webSite} </li>
+                        ${addressHtml}
+                        ${telHtml}
+                        ${mailHtml}
+                        ${siteHtml}
                          </ul>`);
 
             this.markers.push(marker);

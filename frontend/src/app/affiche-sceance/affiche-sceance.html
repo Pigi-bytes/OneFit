@@ -1,0 +1,35 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<main class="d-flex align-items-center justify-content-center min-vh-100 rout">
+
+    <h1>Séance du {{ jour }}</h1>
+
+    <div class="d-flex flex-column gap-3 w-50" style="overflow-y: auto; max-height: 60vh;">
+        <div *ngIf="exercices.length === 0">
+            <p>aucun exercice </p>
+
+
+        </div>
+        <div *ngFor="let exo of exercices" class="card clickable-card d-flex flex-row align-items-center p-2">
+
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <p>{{ exo.nom }}</p>
+                <button type=" button" class="btn btn-success" (click)="modifierExo(exo.id)">
+                    modifier
+                </button>
+                <button type=" button" class="btn btn-success" (click)="supprimer(exo.id)">
+                    supprimer
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <button type="button" class="btn-principal" (click)="ajouterExo()">ajouter un exercices</button>
+    <button type="button" class="btn-principal" routerLink="/routine">retour</button>
+
+
+
+
+</main>

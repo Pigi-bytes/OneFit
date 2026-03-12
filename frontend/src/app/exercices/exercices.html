@@ -1,4 +1,10 @@
 <div class="layout">
     <app-ajouter-exo></app-ajouter-exo>
-    <app-afficher-exo></app-afficher-exo>
+    <app-afficher-exo *ngIf="afficherComposant === 'afficher'" [id]="exoId" [attr.key]="composantKey">
+    </app-afficher-exo>
+
+    <app-configurer-exo *ngIf="afficherComposant === 'configue'" [id]="exoId" [attr.key]="composantKey">
+    </app-configurer-exo>
+
+
 </div>

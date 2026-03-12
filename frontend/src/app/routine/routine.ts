@@ -5,6 +5,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { EnvoyerElt } from '../envoyerElt';
+
 
 @Component({
     selector: 'app-routine',
@@ -14,18 +16,20 @@ import { CommonModule } from '@angular/common';
 })
 export class Routine {
 
-    constructor(private http: HttpClient, private not: Notification, private cdr: ChangeDetectorRef) { }
+    constructor(private http: HttpClient, private not: Notification, private cdr: ChangeDetectorRef, private elt: EnvoyerElt, private router: Router) { }
 
 
     seance = []
     backendResponse = ""
     id = -1;
-    message: string[][] = [];
+    message: any[] = [];
+
+    seances: any[] = [];
 
 
 
     ngOnInit() {
-        this.initMessage();
+
         this.http.post('http://127.0.0.1:5000/sport/getSeancesPrevu', {
             routine_id: this.id,
 
@@ -33,6 +37,38 @@ export class Routine {
 
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
+
+                this.seances = res.seances.map((s: any) => ({
+                    jour: s.day,
+                    title: s.title,
+                    exercises: s.exercises,
+                    isRestDay: s.is_rest_day
+                }));
+
+                this.message = [];
+
+
+                let i = 0;
+                for (let s of this.seances) {
+                    this.message[i] = [];
+
+                    if (s.exercises.length === 0) {
+                        this.message[i].push(s.title);
+                    }
+
+                    else {
+                        for (let m of s.exercises) {
+                            this.message[i].push(m.name + "<br>" + " <span class='text-gray'>" + m.planned_sets + " sets de " + m.planned_reps + " reps à " + m.planned_weight + " kg</spam>");
+                        }
+                    }
+
+                    i += 1;
+
+                }
+
+                this.cdr.detectChanges();
+
+
 
             },
 
@@ -69,14 +105,12 @@ export class Routine {
 
     }
 
-    initMessage() {
-        for (let i = 0; i < 7; i++) {
-            if (!this.message[i]) {
-                this.message[i] = [];
-            }
-            this.message[i].push("jour de repos");
 
-        }
+    afficherSeance(id: string) {
+
+        localStorage.setItem("jour", id);
+        this.router.navigate(['/affiche-seance']);
+
     }
 
 

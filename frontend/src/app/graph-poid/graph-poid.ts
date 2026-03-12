@@ -84,7 +84,7 @@ export class GraphPoid implements AfterViewInit, OnDestroy {
                             callbacks: {
                                 label: (ctx) => {
                                     const note = this.notes[ctx.dataIndex];
-                                    if (note !== 'nan') {
+                                    if (note !== null) {
                                         return [
                                             `Poids: ${ctx.raw}`,
                                             `Note: ${note}`
