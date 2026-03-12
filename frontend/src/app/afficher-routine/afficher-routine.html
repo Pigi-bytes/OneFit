@@ -10,23 +10,27 @@
 
     </div>
 
-        <div class="card p-3" style="max-width: 600px; width:100%;" *ngIf="seances">
+    <div *ngIf="seances">
+        <div style="overflow-y: auto; max-height: 60vh;">
+            <div class="card p-3" style="max-width: 600px; width:100%;">
 
-        <div *ngFor="let s of seances" class="card border-0 p-3">
-            <p class="fw-bold">{{ s.title }}</p>
+                <div *ngFor="let s of seances" class="card border-0 p-3">
+                    <p class="fw-bold">{{ s.title }}</p>
 
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item border-0 p-0" *ngFor="let exo of s.exercises">
-                    <p>{{ exo.name }} - <span class="text-gray"> {{ exo.planned_sets}} sets de {{ exo.planned_reps}} reps à {{ exo.planned_weight}}kg</span></p>
-                </li>
-            </ul>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item border-0 p-0" *ngFor="let exo of s.exercises">
+                            <p>{{ exo.name }} - <span class="text-gray"> {{ exo.planned_sets}} sets de {{
+                                    exo.planned_reps}}
+                                    reps à {{ exo.planned_weight}}kg</span></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-
         <div class="button-group">
             <button class="btn-principal" (click)="activerRoutine()">Activer cette routine</button>
             <button class="btn-red" (click)="supprimerRoutine()">Supprimer</button>
         </div>
-
     </div>
 
 
