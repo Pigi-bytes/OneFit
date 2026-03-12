@@ -6,6 +6,11 @@
     <h1>Séance du {{ jour }}</h1>
 
     <div class="d-flex flex-column gap-3 w-50" style="overflow-y: auto; max-height: 60vh;">
+        <div *ngIf="exercices.length === 0">
+            <p>aucun exercice </p>
+
+
+        </div>
         <div *ngFor="let exo of exercices" class="card clickable-card d-flex flex-row align-items-center p-2">
 
             <div class="d-flex justify-content-between align-items-center w-100">
@@ -20,6 +25,9 @@
 
         </div>
     </div>
+
+    <button type="button" class="btn-principal" (click)="ajouterExo()">ajouter un exercices</button>
+    <button type="button" class="btn-principal" routerLink="/routine">retour</button>
 
 
 

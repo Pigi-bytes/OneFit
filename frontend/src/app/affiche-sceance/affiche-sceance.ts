@@ -7,10 +7,11 @@ import { ChangeDetectorRef } from '@angular/core';
 import { App } from '../app';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
     selector: 'app-affiche-sceance',
-    imports: [FormsModule, CommonModule],
+    imports: [FormsModule, CommonModule, RouterModule],
     templateUrl: './affiche-sceance.html',
     styleUrls: ['./affiche-sceance.css'],
 })
@@ -26,7 +27,8 @@ export class AfficheSceance implements OnInit {
         private cdr: ChangeDetectorRef,
         private net: Notification,
         private ei: EnvoyerElt,
-        private app: App
+        private app: App,
+        private router: Router
 
     ) { }
 
@@ -46,5 +48,9 @@ export class AfficheSceance implements OnInit {
 
     supprimer(id: any) {
 
+    }
+
+    ajouterExo() {
+        this.router.navigate(['/exercices']);
     }
 }
