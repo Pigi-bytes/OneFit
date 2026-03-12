@@ -18,7 +18,8 @@ export class AfficheSceance implements OnInit {
 
     private subscription?: Subscription;
     jour: string = '';
-    message: any[] = [];
+    exercices: any[] = [];
+    backendResponse = "";
 
     constructor(
         private http: HttpClient,
@@ -36,6 +37,14 @@ export class AfficheSceance implements OnInit {
     }
 
     chargeSeance() {
-        console.log(this.jour);
+        console.log("test");
+    }
+
+    modifierExo(id: any) {
+
+    }
+
+    supprimer(id: any) {
+
     }
 }
