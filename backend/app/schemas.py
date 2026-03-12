@@ -308,3 +308,12 @@ class MoveExerciseOrderSchema(Schema):
     day = _day()
     seance_exercise_id = _seance_exercise_id()
     direction = _direction()
+
+
+class getSeanceByDay(Schema):
+    routine_id = _routine()
+    day = _day()
+
+
+class SeanceResponseSchema(Schema):
+    seance = fields.Nested(SeanceSchema, required=True)

@@ -22,6 +22,7 @@ from app.schemas import (
     RoutinesResponseSchema,
     SalleSchema,
     SalleSchemaByLoc,
+    SeanceResponseSchema,
     SeancesResponseSchema,
     SearchExoRequestSchema,
     SearchExoResponseSchema,
@@ -34,6 +35,7 @@ from app.schemas import (
     UserSchema,
     UserSuppPoidSchema,
     ValidationErrorSchema,
+    getSeanceByDay,
 )
 from app.smart_client import SmartApiClient
 from app.utils.logger import QueryTimer, auth_logger, db_logger, route_logger
@@ -494,7 +496,7 @@ def getRoutines():
 
 @sportBLP.route("/getSeancesPrevu", methods=["POST"])
 @sportBLP.doc(security=[{"bearerAuth": []}])
-@externeBLP.arguments(ActiveRoutineSchema)
+@sportBLP.arguments(ActiveRoutineSchema)
 @sportBLP.response(200, SeancesResponseSchema)
 @sportBLP.alt_response(404, schema=BaseErrorSchema, description="Aucune routine active ou aucune séance trouvée")
 @jwt_required()
@@ -723,3 +725,52 @@ def deplacerOrdreExoSeance(data):
         f"SEANCE EXO ORDER MOVED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | plan_id={data['seance_exercise_id']} | direction={data['direction']}"
     )
     return {"message": "Ordre de l'exercice mis à jour avec succès."}
+
+
+@sportBLP.route("/getSeanceDuJour", methods=["POST"])
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.arguments(getSeanceByDay)
+@sportBLP.response(200, SeanceResponseSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Séance non trouvée")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def getSeanceDuJour(data):
+    """
+    Renvoie la séance d'un jour spécifique pour une routine donnée (ou active si -1)
+    """
+    user = getCurrentUserOrAbort401()
+
+    if data["routine_id"] == -1:
+        routine = user.activeRoutine()
+    else:
+        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
+    if not seance:
+        abort(404, message="Séance non trouvée pour ce jour.")
+
+    res = {
+        "id": seance.id,
+        "routine_id": seance.routine_id,
+        "day": seance.day.value,
+        "title": seance.title,
+        "is_rest_day": seance.is_rest_day,
+        "exercises": [
+            {
+                "seance_exercise_id": plan.id,
+                "exoId": plan.exercise.id_api,
+                "name": plan.exercise.name,
+                "ordre": plan.ordre,
+                "planned_sets": plan.planned_sets,
+                "planned_reps": plan.planned_reps,
+                "planned_weight": plan.planned_weight,
+                "img_url": plan.exercise.img_url,
+            }
+            for plan in seance.trieParOrdre()
+        ],
+    }
+
+    return {"seance": res}
