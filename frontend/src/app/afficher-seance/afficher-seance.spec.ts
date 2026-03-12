@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AfficheSceance } from './affiche-sceance';
+import { AfficheSceance } from './afficher-seance';
 
 describe('AfficheSceance', () => {
   let component: AfficheSceance;

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AfficheSceance } from '../affiche-sceance/affiche-sceance';
+import { AfficheSceance } from '../afficher-seance/afficher-seance';
 import { ModifeExercice } from '../modife-exercice/modife-exercice';
 
 @Component({

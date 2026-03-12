@@ -6,11 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt'
+import { TooltipMoveDirective } from '../tooltipmove';
 
 @Component({
     selector: 'app-ajouter-exo',
     standalone: true,
-    imports: [FormsModule, CommonModule, RouterModule],
+    imports: [FormsModule, CommonModule, RouterModule, TooltipMoveDirective],
     templateUrl: './ajouter-exo.html',
     styleUrl: './ajouter-exo.css',
 })

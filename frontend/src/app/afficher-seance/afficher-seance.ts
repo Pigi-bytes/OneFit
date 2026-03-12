@@ -10,10 +10,10 @@ import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
-    selector: 'app-affiche-sceance',
+    selector: 'app-afficher-seance',
     imports: [FormsModule, CommonModule, RouterModule],
-    templateUrl: './affiche-sceance.html',
-    styleUrls: ['./affiche-sceance.css'],
+    templateUrl: './afficher-seance.html',
+    styleUrls: ['./afficher-seance.css'],
 })
 export class AfficheSceance implements OnInit {
 

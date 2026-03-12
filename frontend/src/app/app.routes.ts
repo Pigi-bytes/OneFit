@@ -16,7 +16,7 @@ import { Routine } from './routine/routine';
 import { ChoisirRoutine } from './choisir-routine/choisir-routine';
 import { RoutinesPersos } from './routines-persos/routines-persos';
 import { Seance } from './seance/seance';
-import { AfficheSceance } from './affiche-sceance/affiche-sceance';
+import { AfficheSceance } from './afficher-seance/afficher-seance';
 
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },

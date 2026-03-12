@@ -228,7 +228,7 @@ body.dark canvas {
 app-ajouter-exo,
 app-graph-poid,
 app-choisir-routine,
-app-affiche-sceance {
+app-afficher-seance {
     flex: 7;
     /* 6 parts */
 }
