@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterModule, Router } from '@angular/router';
 import { Notification } from '../notification';
@@ -6,6 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt';
 import { Subscription } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
     selector: 'app-afficher-exo',
@@ -15,23 +16,24 @@ import { Subscription } from 'rxjs';
     styleUrl: './afficher-exo.css',
 })
 export class AfficherExo {
+    private platformId = inject(PLATFORM_ID);
     constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
     backendResponse = "";
     id = null;
     exo: any;
-    message: any;
+    message: any | null = null;
     private subscription?: Subscription;
 
     ngOnInit() {
         this.exo = null;
         this.message = null;
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
+            if (isPlatformBrowser(this.platformId)) {
+                this.message = localStorage.getItem("message");
+            }
             this.modifId(id[1]);
-            alert(id[2]);
-            this.message = id[2];
             this.chargeExo();
         });
-        this.chargeExo();
     }
 
     modifId(id: any) {
