@@ -6,10 +6,11 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt'
 import { Subscription } from 'rxjs';
+import { TooltipMoveDirective } from '../tooltipmove';
 
 @Component({
     selector: 'app-choisir-routine',
-    imports: [CommonModule, RouterModule],
+    imports: [CommonModule, RouterModule, TooltipMoveDirective],
     templateUrl: './choisir-routine.html',
     styleUrl: './choisir-routine.css',
 })
