@@ -6,11 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt';
+import { TooltipMoveDirective } from '../tooltipmove';
 
 
 @Component({
     selector: 'app-routine',
-    imports: [FormsModule, CommonModule, RouterModule],
+    imports: [FormsModule, CommonModule, RouterModule, TooltipMoveDirective],
     templateUrl: './routine.html',
     styleUrl: './routine.css',
 })
@@ -112,11 +113,5 @@ export class Routine {
         this.router.navigate(['/affiche-seance']);
 
     }
-
-    onCardMouseMove(event: MouseEvent, tooltip: HTMLElement): void {
-        tooltip.style.left = (event.clientX + 10) + 'px';
-        tooltip.style.top = (event.clientY + 10) + 'px';
-    }
-
 
 }
