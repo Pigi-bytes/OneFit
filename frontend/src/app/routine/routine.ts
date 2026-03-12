@@ -113,5 +113,10 @@ export class Routine {
 
     }
 
+    onCardMouseMove(event: MouseEvent, tooltip: HTMLElement): void {
+        tooltip.style.left = (event.clientX + 10) + 'px';
+        tooltip.style.top = (event.clientY + 10) + 'px';
+    }
+
 
 }

@@ -246,9 +246,9 @@ app-configurer-exo {
     /* centre horizontalement les jours */
     align-items: flex-end;
     /* centre la ligne dans la page */
-    gap: 11px;
+    gap: 10px;
     /* espace entre les jours */
-    margin-top: 40px;
+    margin: 40px;
 }
 
 .routine .card {
@@ -258,7 +258,8 @@ app-configurer-exo {
     border-radius: 8px;
     background-color: var(--white2);
     height: 60vh;
-    width: 180px;
+    width: 20%;
+    cursor: pointer;
 }
 
 .routineBtn {
@@ -272,24 +273,20 @@ app-configurer-exo {
     color: var(--blue3);
 }
 
-.jour {
-    cursor: pointer;
-}
-
 .tooltiptext {
     visibility: hidden;
-    width: 130px;
+    width: auto;
     background-color: black;
     color: var(--silver3);
     text-align: center;
-    padding: 10px 0;
+    padding: 10px;
     border-radius: 6px;
-    margin: 10px;
-    position: absolute;
-    z-index: 1;
-    top: 60px
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    font-size: 12px;
 }
 
-.jour:hover .tooltiptext {
+.card:hover .tooltiptext {
     visibility: visible;
 }
