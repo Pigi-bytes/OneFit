@@ -12,7 +12,7 @@ import { SideMenu } from './side-menu/side-menu';
 })
 export class App implements OnInit {
 
-    public jourActuel: string = '';
+
 
     protected readonly title = signal('OneFit');
     showMenu = true;

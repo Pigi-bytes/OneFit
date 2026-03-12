@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EnvoyerElt } from '../envoyerElt';
 import { Notification } from '../notification';
 import { Subscription } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
-import { App } from '../app';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
     selector: 'app-affiche-sceance',
@@ -18,7 +18,8 @@ import { RouterModule, Router } from '@angular/router';
 export class AfficheSceance implements OnInit {
 
     private subscription?: Subscription;
-    jour: string = '';
+    private platformId = inject(PLATFORM_ID);
+    jour: string | null = "";
     exercices: any[] = [];
     backendResponse = "";
 
@@ -27,15 +28,20 @@ export class AfficheSceance implements OnInit {
         private cdr: ChangeDetectorRef,
         private net: Notification,
         private ei: EnvoyerElt,
-        private app: App,
-        private router: Router
+        private router: Router,
 
     ) { }
 
     ngOnInit() {
+
+        if (isPlatformBrowser(this.platformId)) {
+            this.jour = localStorage.getItem("jour");
+            this.chargeSeance();
+
+        }
+
         // récupère le paramètre 'id' de la route
-        this.jour = this.app.jourActuel;
-        this.chargeSeance();
+
     }
 
     chargeSeance() {

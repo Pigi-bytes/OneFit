@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EnvoyerElt } from '../envoyerElt';
 import { HttpClient } from '@angular/common/http';
@@ -6,7 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Notification } from '../notification';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { App } from '../app';
+import { isPlatformBrowser } from '@angular/common';
 
 
 @Component({
@@ -24,11 +24,17 @@ export class ConfigurerExo {
     setNumber = null;
     repNumber = null;
     poids = null;
+    jour: any | null = null;
+    private platformId = inject(PLATFORM_ID);
 
 
-    constructor(private ei: EnvoyerElt, private http: HttpClient, private cdr: ChangeDetectorRef, private not: Notification, private app: App) { }
+    constructor(private ei: EnvoyerElt, private http: HttpClient, private cdr: ChangeDetectorRef, private not: Notification) { }
 
     ngOnInit() {
+        if (isPlatformBrowser(this.platformId)) {
+            this.jour = localStorage.getItem("jour");
+
+        }
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
             this.idExo = id[1];
             this.chargeExo();
@@ -81,7 +87,7 @@ export class ConfigurerExo {
     ajouter() {
         this.http.post('http://127.0.0.1:5000/sport/ajouterExoSeance', {
             routine_id: -1,
-            day: this.app.jourActuel,
+            day: this.jour,
             exercise_id: this.idExo,
             planned_sets: this.setNumber,
             planned_reps: this.repNumber,

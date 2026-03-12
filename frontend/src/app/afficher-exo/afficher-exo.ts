@@ -27,6 +27,7 @@ export class AfficherExo {
         this.message = null;
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
             this.modifId(id[1]);
+            alert(id[2]);
             this.message = id[2];
             this.chargeExo();
         });
