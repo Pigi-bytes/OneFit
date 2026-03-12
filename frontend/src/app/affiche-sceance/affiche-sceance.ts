@@ -145,16 +145,14 @@ export class AfficheSceance implements OnInit {
                 } else {
                     this.backendResponse = 'Erreur serveur';
                 }
-                this.cdr.detectChanges();
+
             }
         });
 
+        this.cdr.detectChanges();
 
     }
 
-    down(id: any) {
-
-    }
 
     trackByExo(index: number, item: any) {
         return item.seance_exercise_id;
@@ -163,4 +161,6 @@ export class AfficheSceance implements OnInit {
     ajouterExo() {
         this.router.navigate(['/exercices']);
     }
+
+    modifie() { }
 }
