@@ -69,7 +69,9 @@ body.dark main .clickable-card:hover {
 }
 
 p,
+label,
 body.dark main .card p,
+body.dark main .card label,
 body.dark main .routine p {
     color: var(--blue1);
 }

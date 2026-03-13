@@ -3,14 +3,12 @@
 
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
 
-    <div class="container text-center">
+    <div class="container text-center" style="overflow-y: auto; max-height: 60vh;">
 
         <h1 class="mb-4">Vos routines enregistrées</h1>
-        
+
         <div *ngFor="let r of routines" class="card clickable-card mb-3 p-3 cursor-pointer"
-             style="max-width: 400px; margin:auto;"
-             (click)="AfficherInfosRoutine(r.id)"
-             tooltip>
+            style="max-width: 400px; margin:auto;" (click)="AfficherInfosRoutine(r.id)" tooltip>
 
             <span class="tooltiptext">Cliquez pour voir la routine</span>
             <p class="h5 mb-0">{{ r.nom }} <span class="mb-0 text-gray" *ngIf="r.isActive"> (Active)</span></p>
