@@ -406,9 +406,11 @@ def getExo(data):
 
     route_logger.info(f"EXO FETCH ATTEMPT | user_id={get_jwt_identity()} | exoId={idExo}")
 
-    exo = db.session.scalar(sa.select(Exercise).where(Exercise.id_api == idExo))
+    with QueryTimer("checkExoExistant"):
+        exo = db.session.scalar(sa.select(Exercise).where(Exercise.id_api == idExo))
+
     if exo:
-        route_logger.warning(f"EXO FETCH FAIL | user_id={get_jwt_identity()} | exoId={idExo}")
+        route_logger.warning(f"EXO FETCH WIN | user_id={get_jwt_identity()} | exoId={idExo}")
         return {
             "idExo": exo.id_api,
             "name": exo.name,
@@ -419,6 +421,7 @@ def getExo(data):
             "body_part": exo.body_part,
         }
 
+    route_logger.warning(f"EXO FETCH FAIL | user_id={get_jwt_identity()} | exoId={idExo}")
     exo = APISPORT.get(f"exercises/{idExo}")
     if not exo:
         abort(404, message="Erreur lors de la récupération de l'exercice externe")
@@ -433,8 +436,10 @@ def getExo(data):
         body_part=", ".join(exo["bodyParts"]) if isinstance(exo["bodyParts"], list) else exo["bodyParts"],
     )
 
-    db.session.add(exercise)
-    db.session.commit()
+    with QueryTimer("addExo"):
+        db.session.add(exercise)
+        db.session.commit()
+
     route_logger.info(f"EXO CREATED | user_id={get_jwt_identity()} | exoId={exercise.id_api}")
 
     return {
@@ -509,7 +514,8 @@ def getSeancesPrevu(data):
     if data["routine_id"] == -1:
         routine = user.activeRoutine()
     else:
-        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+        with QueryTimer("checkRoutineExistant"):
+            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
     if not routine:
         abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
 
@@ -560,8 +566,9 @@ def createRoutine(data):
     user = getCurrentUserOrAbort401()
 
     routine = Routine(user_id=user.id, name=data["name"], is_active=False)
-    db.session.add(routine)
-    db.session.flush()  # Permet de générer l'id de la routine sans faire un commit complet
+    with QueryTimer("ajoutRoutineDatabase"):
+        db.session.add(routine)
+        db.session.flush()  # Permet de générer l'id de la routine sans faire un commit complet
 
     for day in DayOfWeek:
         seance = Seance(routine_id=routine.id, day=day, title="Jour de Repos", is_rest_day=True)
@@ -587,7 +594,8 @@ def activerRoutine(data):
     routine_id = data["routine_id"]
 
     # Vérifie que la routine appartient bien à l'utilisateur
-    routine = db.session.scalar(sa.select(Routine).where(Routine.id == routine_id, Routine.user_id == user.id))
+    with QueryTimer("checkRoutineExistant"):
+        routine = db.session.scalar(sa.select(Routine).where(Routine.id == routine_id, Routine.user_id == user.id))
     if not routine:
         abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
 
@@ -612,15 +620,17 @@ def supprimerRoutine(data):
     routine_id = data["routine_id"]
 
     # Vérifie que la routine appartient bien à l'utilisateur
-    routine = db.session.scalar(sa.select(Routine).where(Routine.id == routine_id, Routine.user_id == user.id))
+    with QueryTimer("checkRoutineExistant"):
+        routine = db.session.scalar(sa.select(Routine).where(Routine.id == routine_id, Routine.user_id == user.id))
     if not routine:
         abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
 
     if routine.is_active:
         abort(409, message="Impossible de supprimer une routine active. Veuillez d'abord en activer une autre.")
 
-    db.session.delete(routine)
-    db.session.commit()
+    with QueryTimer("deleteRoutineDB"):
+        db.session.delete(routine)
+        db.session.commit()
     route_logger.info(f"ROUTINE DELETED | user_id={user.id} | routine_id={routine.id} | name={routine.name}")
 
     return {"message": f"La routine '{routine.name}' a bien été supprimée."}
@@ -640,7 +650,8 @@ def ajouterExoSeance(data):
     if data["routine_id"] == -1:
         routine = user.activeRoutine()
     else:
-        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+        with QueryTimer("checkRoutineExistant"):
+            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
 
     if not routine:
         abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
@@ -664,13 +675,13 @@ def ajouterExoSeance(data):
         planned_reps=data["planned_reps"],
         planned_weight=data["planned_weight"],
     )
+    with QueryTimer("addExoPlan"):
+        db.session.add(plan)
 
-    db.session.add(plan)
+        seance.is_rest_day = False
+        seance.title = f"Séance {seance.day.value}"
 
-    seance.is_rest_day = False
-    seance.title = f"Séance {seance.day.value}"
-
-    db.session.commit()
+        db.session.commit()
 
     route_logger.info(
         f"SEANCE EXO ADDED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | day={seance.day.value} | exercise_id={exercise.id} | ordre={ordre}"
@@ -692,12 +703,14 @@ def deplacerOrdreExoSeance(data):
     if data["routine_id"] == -1:
         routine = user.activeRoutine()
     else:
-        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+        with QueryTimer("checkRoutineExistant"):
+            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
 
     if not routine:
         abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
 
-    seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
+    with QueryTimer("checkSeanceExistant"):
+        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
     if not seance:
         abort(404, message="Séance non trouvée pour ce jour.")
 
@@ -743,12 +756,14 @@ def getSeanceDuJour(data):
     if data["routine_id"] == -1:
         routine = user.activeRoutine()
     else:
-        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+        with QueryTimer("checkRoutineExistant"):
+            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
 
     if not routine:
         abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
 
-    seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
+    with QueryTimer("checkSeanceExistant    "):
+        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
     if not seance:
         abort(404, message="Séance non trouvée pour ce jour.")
 
