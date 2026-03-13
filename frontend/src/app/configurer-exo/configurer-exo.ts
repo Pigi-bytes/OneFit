@@ -19,30 +19,50 @@ import { threadId } from 'worker_threads';
 export class ConfigurerExo {
 
     private subscription?: Subscription;
-    idExo = "";
+    idExo: any;
     backendResponse = "";
     exo: any;
     setNumber = null;
     repNumber = null;
     poids = null;
     jour: any | null = null;
+    modifie: any | null = null;
     private platformId = inject(PLATFORM_ID);
 
 
     constructor(private ei: EnvoyerElt, private http: HttpClient, private cdr: ChangeDetectorRef, private not: Notification) { }
 
     ngOnInit() {
+        this.exo = null;
+        this.modifie = "";
+        this.idExo = null;
+
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
 
         }
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
-            this.idExo = id[1];
-            this.chargeExo();
+            alert("test")
+            console.log(id);
+            if (id[0] === 3) {
+                this.idExo = id[1];
+                this.modifie = "";
+                this.setNumber = id[2];
+                this.repNumber = id[3];
+                this.poids = id[4];
+                this.cdr.detectChanges();
+            }
+            else if (id[0] === 0 || id[0] === 2) {
+                this.idExo = id[1];
+                this.modifie = null;
+                this.chargeExo();
+            }
+
         });
+        console.log(this);
     }
 
-    chargeExo() {
+    async chargeExo() {
         if (this.idExo) {
             this.http.post('http://127.0.0.1:5000/externe/getExo', {
                 exoId: this.idExo,
@@ -86,55 +106,57 @@ export class ConfigurerExo {
         }
     }
 
-    ajouter() {
-        this.http.post('http://127.0.0.1:5000/sport/ajouterExoSeance', {
-            routine_id: -1,
-            day: this.jour,
-            exercise_id: this.idExo,
-            planned_sets: this.setNumber,
-            planned_reps: this.repNumber,
-            planned_weight: this.poids
+    action() {
+        if (!this.modifie) {
+            this.http.post('http://127.0.0.1:5000/sport/ajouterExoSeance', {
+                routine_id: -1,
+                day: this.jour,
+                exercise_id: this.idExo,
+                planned_sets: this.setNumber,
+                planned_reps: this.repNumber,
+                planned_weight: this.poids
 
 
-        }).subscribe({
+            }).subscribe({
 
-            next: (res: any) => {
-                console.log('RESPONSE OK', res);
-                this.exo = res;
-                this.backendResponse = res.message;
-                this.cdr.detectChanges();
-            },
+                next: (res: any) => {
+                    console.log('RESPONSE OK', res);
+                    this.exo = res;
+                    this.backendResponse = res.message;
+                    this.cdr.detectChanges();
+                },
 
-            error: (err: any) => {
-                //erreur 422
-                if (err.status == 422 && err.error.errors) {
+                error: (err: any) => {
+                    //erreur 422
+                    if (err.status == 422 && err.error.errors) {
 
-                    const errorsObj = err.error.errors;
-                    const messages: string[] = [];
+                        const errorsObj = err.error.errors;
+                        const messages: string[] = [];
 
-                    for (const key in errorsObj) {
+                        for (const key in errorsObj) {
 
-                        const value = errorsObj[key];
-                        Object.values(value).forEach(v => {
-                            if (Array.isArray(v)) messages.push(...v);
-                            else if (typeof v === 'string') messages.push(v);
-                        });
+                            const value = errorsObj[key];
+                            Object.values(value).forEach(v => {
+                                if (Array.isArray(v)) messages.push(...v);
+                                else if (typeof v === 'string') messages.push(v);
+                            });
+                        }
+
+                        this.backendResponse = messages.join('\n');
                     }
-
-                    this.backendResponse = messages.join('\n');
+                    // erreurs HTTP (400, 409, 500…)
+                    else if (err.error && err.error.message) {
+                        this.backendResponse = err.error.message; // <- message du backend
+                    } else {
+                        this.backendResponse = 'Erreur serveur';
+                    }
+                    this.cdr.detectChanges();
                 }
-                // erreurs HTTP (400, 409, 500…)
-                else if (err.error && err.error.message) {
-                    this.backendResponse = err.error.message; // <- message du backend
-                } else {
-                    this.backendResponse = 'Erreur serveur';
-                }
-                this.cdr.detectChanges();
-            }
-        });
+            });
 
-        localStorage.setItem("message", "ajouté avec sucée");
-        this.ei.triggerRefresh([1, null]);
+            localStorage.setItem("message", "ajouté avec sucée");
+            this.ei.triggerRefresh([1, null]);
+        }
     }
 
     resetNotif() {
@@ -143,6 +165,10 @@ export class ConfigurerExo {
 
     annuler() {
         this.ei.triggerRefresh([1, null]);
+    }
+
+    ngOnDestroy() {
+        this.subscription?.unsubscribe();
     }
 
 }

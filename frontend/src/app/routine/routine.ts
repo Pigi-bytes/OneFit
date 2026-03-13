@@ -110,6 +110,7 @@ export class Routine {
     afficherSeance(id: string) {
 
         localStorage.setItem("jour", id);
+        this.elt.triggerRefresh([5]);
         this.router.navigate(['/seance']);
 
     }

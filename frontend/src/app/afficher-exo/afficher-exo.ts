@@ -28,6 +28,10 @@ export class AfficherExo {
         this.exo = null;
         this.message = null;
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
+            if (id[0] !== 1) return;
+
+            if (this.id === id[1]) return;
+
             if (isPlatformBrowser(this.platformId)) {
                 this.message = localStorage.getItem("message");
             }
@@ -83,5 +87,9 @@ export class AfficherExo {
             });
 
         }
+    }
+
+    ngOnDestroy() {
+        this.subscription?.unsubscribe();
     }
 }

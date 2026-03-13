@@ -3,17 +3,24 @@
 
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
 
-    <div class="card p-4" style="max-width: 200px;" *ngIf="exo">
+    <div class="card p-4" style="max-width: 200px;" *ngIf="!modifie && exo">
 
         <h5 class="text-center mb-4">{{ exo?.name }}</h5>
 
         <div class="text-center mb-4">
             <img [src]="exo?.img_url" alt="{{ exo?.name }}" class="img-fluid rounded" style="max-height: 150px;">
         </div>
+    </div>
+
+    <div class="card p-4" style="max-width: 600px;" *ngIf="modifie && !exo">
+        <p class="text-center text-gray">
+            <i class="text-center mb-4"></i> Sélectionnez un exercice
+        </p>
+
 
     </div>
 
-    <form (ngSubmit)="ajouter()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3 w-50">
+    <form (ngSubmit)="action()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3 w-50">
 
         <table>
             <tr>
@@ -21,9 +28,8 @@
                     <label for="setNumber">Nombre de sets :</label>
                 </td>
                 <td>
-                    <input type="text" id="setNumber" name="setNumber"
-                        [(ngModel)]="setNumber" required class="form-control"
-                        (click)="resetNotif()" />
+                    <input type="text" id="setNumber" name="setNumber" [(ngModel)]="setNumber" required
+                        class="form-control" (click)="resetNotif()" />
                 </td>
             </tr>
 
@@ -32,9 +38,8 @@
                     <label for="repNumber">Nombre de répétitions :</label>
                 </td>
                 <td>
-                    <input type="text" id="repNumber" name="repNumber"
-                        [(ngModel)]="repNumber" required class="form-control"
-                        (click)="resetNotif()" />
+                    <input type="text" id="repNumber" name="repNumber" [(ngModel)]="repNumber" required
+                        class="form-control" (click)="resetNotif()" />
                 </td>
             </tr>
 
@@ -43,14 +48,16 @@
                     <label for="poids">Poids :</label>
                 </td>
                 <td>
-                    <input type="text" id="poids" name="poids"
-                        [(ngModel)]="poids" required class="form-control"
+                    <input type="text" id="poids" name="poids" [(ngModel)]="poids" required class="form-control"
                         (click)="resetNotif()" />
                 </td>
             </tr>
         </table>
 
-        <button type="submit" class="btn-principal">Ajouter</button>
+        <button type="submit" class="btn-principal">
+            <span *ngIf="!modifie">Ajouter</span>
+            <span *ngIf="modifie">Supprimer</span>
+        </button>
 
         <button type="button" class="btn-principal" (click)="annuler()">Annuler</button>
 

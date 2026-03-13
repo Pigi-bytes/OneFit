@@ -89,4 +89,6 @@ export class AjouterExo {
         this.ei.triggerRefresh([1, id]);
     }
 
+
+
 }

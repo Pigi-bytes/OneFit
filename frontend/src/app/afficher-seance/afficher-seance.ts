@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 
+
 @Component({
     selector: 'app-afficher-seance',
     imports: [FormsModule, CommonModule, RouterModule],
@@ -35,6 +36,8 @@ export class AfficheSceance implements OnInit {
     ngOnInit() {
 
         if (isPlatformBrowser(this.platformId)) {
+
+
             this.jour = localStorage.getItem("jour");
             this.chargeSeance();
 
@@ -91,9 +94,6 @@ export class AfficheSceance implements OnInit {
 
     }
 
-    modifierExo(id: any) {
-
-    }
 
     bouger(id: any, sens: string) {
         const index = this.exercices.findIndex(e => e.seance_exercise_id === id);
@@ -162,7 +162,9 @@ export class AfficheSceance implements OnInit {
         this.router.navigate(['/exercices']);
     }
 
-    AfficherInfosExo(id: any) {
-        this.ei.triggerRefresh([1, id]);
+    modifie(id: any, nbRep: any, nbSet: any, poid: any) {
+        this.ei.triggerRefresh([3, id, nbRep, nbSet, poid]);
     }
+
+
 }
