@@ -162,5 +162,7 @@ export class AfficheSceance implements OnInit {
         this.router.navigate(['/exercices']);
     }
 
-    modifie() { }
+    AfficherInfosExo(id: any) {
+        this.ei.triggerRefresh([1, id]);
+    }
 }

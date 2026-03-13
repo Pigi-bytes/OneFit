@@ -1,4 +1,7 @@
 <div class="layout">
     <app-afficher-seance></app-afficher-seance>
-    <app-modife-exercice></app-modife-exercice>
+
+    <app-configurer-exo *ngIf="afficherComposant === 'configue'" [id]="exoId" [attr.key]="composantKey">
+    </app-configurer-exo>
+
 </div>

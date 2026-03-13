@@ -236,8 +236,7 @@ app-afficher-seance {
 app-afficher-exo,
 app-menu-poid,
 app-afficher-routine,
-app-configurer-exo,
-app-modife-exercice {
+app-configurer-exo {
     flex: 3;
     /* 4 parts → ratio 6:4 = 60:40 */
 }
