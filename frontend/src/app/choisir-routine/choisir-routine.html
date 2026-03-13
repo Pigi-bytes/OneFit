@@ -3,19 +3,21 @@
 
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
 
-    <div class="container text-center" style="overflow-y: auto; max-height: 60vh;">
+    <div class="container text-center">
 
         <h1 class="mb-4">Vos routines enregistrées</h1>
 
-        <div *ngFor="let r of routines" class="card clickable-card mb-3 p-3 cursor-pointer"
-            style="max-width: 400px; margin:auto;" (click)="AfficherInfosRoutine(r.id)" tooltip>
+        <div style="overflow-y: auto; max-height: 60vh;">
+            <div *ngFor="let r of routines" class="card clickable-card mb-3 p-3 cursor-pointer"
+                style="max-width: 400px; margin:auto;" (click)="AfficherInfosRoutine(r.id)" tooltip>
 
-            <span class="tooltiptext">Cliquez pour voir la routine</span>
-            <p class="h5 mb-0">{{ r.nom }} <span class="mb-0 text-gray" *ngIf="r.isActive"> (Active)</span></p>
-        </div>
+                <span class="tooltiptext">Cliquez pour voir la routine</span>
+                <p class="h5 mb-0">{{ r.nom }} <span class="mb-0 text-gray" *ngIf="r.isActive"> (Active)</span></p>
+            </div>
 
-        <div *ngIf="routines.length === 0" class="alert alert-secondary mt-3">
-            <p class="mb-0 text-gray">Aucune routine disponible</p>
+            <div *ngIf="routines.length === 0" class="alert alert-secondary mt-3">
+                <p class="mb-0 text-gray">Aucune routine disponible</p>
+            </div>
         </div>
 
         <div class="button-group">
