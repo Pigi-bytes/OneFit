@@ -38,6 +38,8 @@ from app.schemas import (
     getSeanceByDay,
     UpdateExerciseConfigSchema,
     RoutineSchema,
+    RenameRoutineSchema,
+    RenameSeanceSchema,
 )
 from app.smart_client import SmartApiClient
 from app.utils.logger import QueryTimer, auth_logger, db_logger, route_logger
