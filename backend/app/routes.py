@@ -37,6 +37,7 @@ from app.schemas import (
     ValidationErrorSchema,
     getSeanceByDay,
     UpdateExerciseConfigSchema,
+    RoutineSchema,
 )
 from app.smart_client import SmartApiClient
 from app.utils.logger import QueryTimer, auth_logger, db_logger, route_logger
@@ -457,8 +458,8 @@ def getExo(data):
 @externeBLP.route("/searchExo", methods=["POST"])
 @externeBLP.arguments(SearchExoRequestSchema)
 @externeBLP.doc(security=[{"bearerAuth": []}])
-@externeBLP.response(200, SearchExoResponseSchema)
-@externeBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération des exercices")
+@externeBLP.response(200, RoutineSchema)
+@externeBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération de la routine")
 @externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def searchExo(data):
@@ -498,6 +499,31 @@ def getRoutines():
         abort(404, message="Aucune routine trouvée pour cet utilisateur.")
 
     return {"routines": routines}
+
+
+@sportBLP.route("/getRoutine", methods=["POST"])
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(200, RoutineSchema)
+@sportBLP.arguments(ActiveRoutineSchema)
+@sportBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération de la routine")
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Aucune routine trouvée")
+@jwt_required()
+def getRoutine(data):
+    """Renvoie les informations de la routine dont l'id est passé en paramètres"""
+    user = getCurrentUserOrAbort401()
+
+    if data["routine_id"] == -1:
+        routine = user.activeRoutine()
+    else:
+        with QueryTimer("checkRoutineExistant"):
+            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    route_logger.info(f"GET ROUTINE | user_id={user.id} | routine={routine.id}")
+
+    return routine
+
 
 
 @sportBLP.route("/getSeancesPrevu", methods=["POST"])
@@ -839,3 +865,63 @@ def changerConfigurationExo(data):
         f"SEANCE EXO CONFIG UPDATED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | plan_id={plan.id} | sets={plan.planned_sets} | reps={plan.planned_reps} | weight={plan.planned_weight}"
     )
     return {"message": "Configuration de l'exercice mise à jour avec succès."}
+
+
+@sportBLP.route("/modiferNomRoutine", methods=["POST"])
+@sportBLP.arguments(RenameRoutineSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(200, MessageSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Routine introuvable")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def modiferNomRoutine(data):
+    """Modifie le nom d'une routine par son ID pour l'utilisateur connecté."""
+    user = getCurrentUserOrAbort401()
+
+    with QueryTimer("checkRoutineExistant"):
+        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    old_name = routine.name
+    routine.name = data["name"]
+
+    with QueryTimer("commitUpdateRoutineName"):
+        db.session.commit()
+
+    route_logger.info(f"ROUTINE NAME UPDATED | user_id={user.id} | routine_id={routine.id} | old_name={old_name} | new_name={routine.name}")
+    return {"message": "Nom de la routine mis à jour avec succès."}
+
+
+@sportBLP.route("/modifierNomSeance", methods=["POST"])
+@sportBLP.arguments(RenameSeanceSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(200, MessageSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Séance introuvable")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def modifierNomSeance(data):
+    """Modifie le nom d'une séance par son ID pour l'utilisateur connecté."""
+    user = getCurrentUserOrAbort401()
+
+    with QueryTimer("checkSeanceExistant"):
+        seance = db.session.scalar(
+            sa.select(Seance)
+            .join(Routine, Seance.routine_id == Routine.id)
+            .where(Seance.id == data["seance_id"], Routine.user_id == user.id)
+        )
+
+    if not seance:
+        abort(404, message="Séance non trouvée ou n'appartient pas à l'utilisateur.")
+
+    old_title = seance.title
+    seance.title = data["title"]
+
+    with QueryTimer("commitUpdateSeanceTitle"):
+        db.session.commit()
+
+    route_logger.info(
+        f"SEANCE TITLE UPDATED | user_id={user.id} | seance_id={seance.id} | old_title={old_title} | new_title={seance.title}"
+    )
+    return {"message": "Nom de la séance mis à jour avec succès."}

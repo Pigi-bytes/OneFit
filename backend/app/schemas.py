@@ -326,3 +326,19 @@ class UpdateExerciseConfigSchema(Schema):
     planned_sets = _planned_sets(validate=validate.Range(min=1, max=30))
     planned_reps = _planned_reps(validate=validate.Range(min=1, max=200))
     planned_weight = _planned_weight(validate=validate.Range(min=0, max=1000))
+
+
+def _seance_id(**kw):
+    d = {"required": True, "metadata": {"description": "ID de la séance"}}
+    return fields.Int(**{**d, **kw})
+
+
+class RenameRoutineSchema(Schema):
+    routine_id = _routine_id()
+    name = _name(metadata={"description": "Nouveau nom de la routine"})
+
+
+class RenameSeanceSchema(Schema):
+    seance_id = _seance_id()
+    title = _name(metadata={"description": "Nouveau nom de la séance"})
+
