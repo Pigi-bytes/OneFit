@@ -27,7 +27,6 @@ export class AfficherRoutine {
             this.modifId(id);
             this.chargeRoutine();
         });
-        this.chargeRoutine();
     }
 
     modifId(id: any) {
