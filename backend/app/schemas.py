@@ -335,10 +335,9 @@ def _seance_id(**kw):
 
 class RenameRoutineSchema(Schema):
     routine_id = _routine_id()
-    name = _name(metadata={"description": "Nouveau nom de la routine"})
+    name = _name(metadata={"description": "Nouveau nom de la routine", "validate": validate.Length(min=2, max=50)})
 
 
 class RenameSeanceSchema(Schema):
     seance_id = _seance_id()
-    title = _name(metadata={"description": "Nouveau nom de la séance"})
-
+    title = _name(metadata={"description": "Nouveau nom de la séance", "validate": validate.Length(min=2, max=50)})
