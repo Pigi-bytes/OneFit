@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { Message } from '../../message';
 
 
 @Component({
@@ -163,7 +164,7 @@ export class AfficheSceance implements OnInit {
     }
 
     modifie(id: any, nbRep: any, nbSet: any, poid: any) {
-        this.ei.triggerRefresh([3, id, nbRep, nbSet, poid]);
+        this.ei.triggerRefresh([Message.MODIFIER_EXERCICE, id, nbRep, nbSet, poid]);
     }
 
 

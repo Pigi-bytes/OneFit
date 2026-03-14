@@ -3,7 +3,7 @@
 
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
 
-    <div class="card p-4" style="max-width: 200px;" *ngIf="!modifie && exo">
+    <div class="card p-4" style="max-width: 200px;" *ngIf="exo">
 
         <h5 class="text-center mb-4">{{ exo?.name }}</h5>
 
@@ -20,7 +20,7 @@
 
     </div>
 
-    <form (ngSubmit)="action()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3 w-50">
+    <form (ngSubmit)="action()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3 w-50" *ngIf="idExo">
 
         <table>
             <tr>
@@ -56,8 +56,10 @@
 
         <button type="submit" class="btn-principal">
             <span *ngIf="!modifie">Ajouter</span>
-            <span *ngIf="modifie">Supprimer</span>
+            <span *ngIf="modifie">modifie</span>
         </button>
+
+        <button type="submit" class="btn-red" *ngIf="modifie">supprimer</button>
 
         <button type="button" class="btn-principal" (click)="annuler()">Annuler</button>
 

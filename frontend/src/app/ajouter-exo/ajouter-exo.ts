@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt'
 import { TooltipMoveDirective } from '../tooltipmove';
+import { Message } from '../../message';
 
 @Component({
     selector: 'app-ajouter-exo',
@@ -82,11 +83,11 @@ export class AjouterExo {
 
 
     ajouterExo(id: any) {
-        this.ei.triggerRefresh([0, id]);
+        this.ei.triggerRefresh([Message.AFFICHER_CONFIGURATEUR, id]);
     }
 
     AfficherInfosExo(id: any) {
-        this.ei.triggerRefresh([1, id]);
+        this.ei.triggerRefresh([Message.AFFICHER_SEANCE, id]);
     }
 
 

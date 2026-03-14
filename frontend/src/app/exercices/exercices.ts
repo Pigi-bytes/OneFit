@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { EnvoyerElt } from '../envoyerElt'
 import { ChangeDetectorRef } from '@angular/core';
 import { ConfigurerExo } from '../configurer-exo/configurer-exo';
+import { Message } from '../../message';
 
 @Component({
     selector: 'app-exercices',
@@ -39,7 +40,7 @@ export class Exercices {
                 }
 
                 this.cdr.detectChanges();
-                this.etl.triggerRefresh([2, this.exoId]);
+                this.etl.triggerRefresh([Message.SELECTION_EXERCICE, this.exoId]);
             }
             this.composantKey++;
             this.cdr.detectChanges();

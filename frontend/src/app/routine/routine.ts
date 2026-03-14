@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt';
 import { TooltipMoveDirective } from '../tooltipmove';
+import { Message } from '../../message';
 
 
 @Component({
@@ -110,7 +111,7 @@ export class Routine {
     afficherSeance(id: string) {
 
         localStorage.setItem("jour", id);
-        this.elt.triggerRefresh([5]);
+        this.elt.triggerRefresh([Message.RESET_SEANCE]);
         this.router.navigate(['/seance']);
 
     }

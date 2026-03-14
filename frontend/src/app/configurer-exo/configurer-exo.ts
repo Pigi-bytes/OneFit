@@ -7,6 +7,7 @@ import { Notification } from '../notification';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
+import { Message } from '../../message';
 import { threadId } from 'worker_threads';
 
 
@@ -27,6 +28,7 @@ export class ConfigurerExo {
     poids = null;
     jour: any | null = null;
     modifie: any | null = null;
+    requete: boolean = false;
     private platformId = inject(PLATFORM_ID);
 
 
@@ -34,36 +36,47 @@ export class ConfigurerExo {
 
     ngOnInit() {
         this.exo = null;
-        this.modifie = "";
+        this.modifie = "a";
         this.idExo = null;
+        this.requete = false;
 
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
 
         }
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
-            alert("test")
-            console.log(id);
-            if (id[0] === 3) {
+            if (id[0] === Message.MODIFIER_EXERCICE) {
                 this.idExo = id[1];
-                this.modifie = "";
+                this.exo = "a";
+                this.modifie = "a";
                 this.setNumber = id[2];
                 this.repNumber = id[3];
                 this.poids = id[4];
-                this.cdr.detectChanges();
+                this.requete = true;
+                this.chargeExo();
             }
-            else if (id[0] === 0 || id[0] === 2) {
+            else if (id[0] === Message.AFFICHER_CONFIGURATEUR || id[0] === Message.SELECTION_EXERCICE) {
+                this.requete = true;
                 this.idExo = id[1];
                 this.modifie = null;
                 this.chargeExo();
             }
+            else if (id[0] === Message.RESET_CONFIGURATEUR) {
+                this.idExo = null;
+                this.exo = null;
+                this.modifie = "a";
+                this.setNumber = null;
+                this.repNumber = null;
+                this.poids = null;
+                this.backendResponse = "";
+                this.cdr.detectChanges();
+            }
 
         });
-        console.log(this);
     }
 
     async chargeExo() {
-        if (this.idExo) {
+        if (this.requete) {
             this.http.post('http://127.0.0.1:5000/externe/getExo', {
                 exoId: this.idExo,
 
@@ -155,7 +168,7 @@ export class ConfigurerExo {
             });
 
             localStorage.setItem("message", "ajouté avec sucée");
-            this.ei.triggerRefresh([1, null]);
+            this.ei.triggerRefresh([Message.AFFICHER_SEANCE, null]);
         }
     }
 
@@ -164,7 +177,12 @@ export class ConfigurerExo {
     }
 
     annuler() {
-        this.ei.triggerRefresh([1, null]);
+        if (this.modifie === null) {
+            this.ei.triggerRefresh([Message.AFFICHER_SEANCE]);
+        } else {
+
+            this.ei.triggerRefresh([Message.RESET_SEANCE]);
+        }
     }
 
     ngOnDestroy() {

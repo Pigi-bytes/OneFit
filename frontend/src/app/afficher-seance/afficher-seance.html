@@ -13,8 +13,7 @@
         </div>
         <div *ngFor="let exo of exercices;let i = index" class=" card clickable-card d-flex flex-row align-items-center
             p-2">
-            <p class="mb-0"
-                (click)="modifie(exo.seance_exercise_id,exo.planned_sets,exo.planned_reps,exo.planned_weight)">{{
+            <p class="mb-0" (click)="modifie(exo.exoId,exo.planned_sets,exo.planned_reps,exo.planned_weight)">{{
                 exo.name }}</p>
 
             <div class="d-flex ms-auto">
