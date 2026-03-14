@@ -460,8 +460,8 @@ def getExo(data):
 @externeBLP.route("/searchExo", methods=["POST"])
 @externeBLP.arguments(SearchExoRequestSchema)
 @externeBLP.doc(security=[{"bearerAuth": []}])
-@externeBLP.response(200, RoutineSchema)
-@externeBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération de la routine")
+@externeBLP.response(200, SearchExoResponseSchema)
+@externeBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération des exercices")
 @externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def searchExo(data):
