@@ -9,6 +9,20 @@
         </p>
     </div>
 
+    <div *ngIf="!is_renaming && routine" class="mb-2 d-flex gap-3">
+        <h2>{{ routine.name }}</h2>
+        <button class="btn-principal" (click)="ouvrirFormulaireRenommerRoutine()"> Renommer </button>
+    </div>
+
+    <div class="mb-2 d-flex gap-3">
+        <form *ngIf="is_renaming" (ngSubmit)="renommerRoutine()" class="d-flex align-items-center gap-2 mb-2">
+            <input type="text" id="routine_nom" name="routine_nom" [(ngModel)]="routine_nom" required class="form-control"
+            [placeholder]="routine.name" />
+            <button type="submit" class="btn-principal">Valider</button>
+        </form>
+    </div>
+    
+    
     <div *ngIf="seances">
         <div style="overflow-y: auto; max-height: 60vh;">
             <div class="card p-3" style="max-width: 600px; width:100%;">
@@ -24,6 +38,7 @@
                         </li>
                     </ul>
                 </div>
+
             </div>
         </div>
         <div class="button-group">
