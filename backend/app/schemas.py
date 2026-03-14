@@ -317,3 +317,12 @@ class getSeanceByDay(Schema):
 
 class SeanceResponseSchema(Schema):
     seance = fields.Nested(SeanceSchema, required=True)
+
+
+class UpdateExerciseConfigSchema(Schema):
+    routine_id = _routine()
+    day = _day()
+    seance_exercise_id = _seance_exercise_id()
+    planned_sets = _planned_sets(validate=validate.Range(min=1, max=30))
+    planned_reps = _planned_reps(validate=validate.Range(min=1, max=200))
+    planned_weight = _planned_weight(validate=validate.Range(min=0, max=1000))

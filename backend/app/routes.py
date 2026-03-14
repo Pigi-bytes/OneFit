@@ -36,6 +36,7 @@ from app.schemas import (
     UserSuppPoidSchema,
     ValidationErrorSchema,
     getSeanceByDay,
+    UpdateExerciseConfigSchema,
 )
 from app.smart_client import SmartApiClient
 from app.utils.logger import QueryTimer, auth_logger, db_logger, route_logger
@@ -789,3 +790,52 @@ def getSeanceDuJour(data):
     }
 
     return {"seance": res}
+
+@sportBLP.route("/changerConfigurationExo", methods=["POST"])
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.arguments(UpdateExerciseConfigSchema)
+@sportBLP.response(200, MessageSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Routine, séance ou exercice prévu introuvable")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def changerConfigurationExo(data):
+    """
+    Modifie la configuration (sets/reps/poids) d'un exercice planifié.
+    """
+    user = getCurrentUserOrAbort401()
+
+    if data["routine_id"] == -1:
+        routine = user.activeRoutine()
+    else:
+        with QueryTimer("checkRoutineExistant"):
+            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    with QueryTimer("checkSeanceExistant"):
+        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
+    if not seance:
+        abort(404, message="Séance non trouvée pour ce jour.")
+
+    with QueryTimer("checkExoExiste"):
+        plan = db.session.scalar(
+            sa.select(SeanceExercise).where(
+                SeanceExercise.id == data["seance_exercise_id"], SeanceExercise.seance_id == seance.id
+            )
+        )
+
+    if not plan:
+        abort(404, message="Exercice non trouvée pour ce jour.")
+
+    plan.planned_sets = data["planned_sets"]
+    plan.planned_reps = data["planned_reps"]
+    plan.planned_weight = data["planned_weight"]
+
+    with QueryTimer("commitUpdateExerciseConfig"):
+        db.session.commit()
+
+    route_logger.info(
+        f"SEANCE EXO CONFIG UPDATED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | plan_id={plan.id} | sets={plan.planned_sets} | reps={plan.planned_reps} | weight={plan.planned_weight}"
+    )
+    return {"message": "Configuration de l'exercice mise à jour avec succès."}
