@@ -262,6 +262,7 @@ app-configurer-exo {
     background-color: var(--white2);
     height: 60vh;
     width: 20%;
+    min-width: 150px;
     cursor: pointer;
 }
 
@@ -295,5 +296,5 @@ app-configurer-exo {
 }
 
 td {
-    padding:10px;
+    padding: 10px;
 }

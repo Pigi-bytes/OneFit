@@ -70,6 +70,8 @@ export class ConfigurerExo {
                 this.poids = null;
                 this.backendResponse = "";
                 this.cdr.detectChanges();
+            } else {
+                return;
             }
 
         });
