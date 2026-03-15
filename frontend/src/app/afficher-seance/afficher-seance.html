@@ -13,7 +13,7 @@
         class="card clickable-card d-flex flex-row align-items-center p-2"> 
 
             <!-- exo info -->
-            <div (click)="modifie(exo.exoId,exo.planned_sets,exo.planned_reps,exo.planned_weight)" tooltip>
+            <div (click)="modifie(exo.exoId,exo.planned_sets,exo.planned_reps,exo.planned_weight,exo.seance_exercise_id)" tooltip>
                 <span class="tooltiptext"> Cliquez pour modifier l'exercice </span>
                 <div class="d-flex align-items-center p-2">
                     <img [src]="exo.img_url" alt="{{exo.nom}}" width="20%" class="me-3 rounded">
