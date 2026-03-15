@@ -37,12 +37,17 @@ export class AfficheSceance implements OnInit {
     ngOnInit() {
 
         if (isPlatformBrowser(this.platformId)) {
-
-
             this.jour = localStorage.getItem("jour");
             this.chargeSeance();
-
         }
+
+        this.subscription = this.ei.afficheExercice$.subscribe((id) => {
+            if (id[0] === Message.AFFICHER_SEANCE || id[0] === Message.MODIFIER_EXERCICE) {
+                this.chargeSeance();
+            }
+        });
+
+        this.cdr.detectChanges();
 
         // récupère le paramètre 'id' de la route
 
@@ -164,6 +169,10 @@ export class AfficheSceance implements OnInit {
 
     modifie(id: any, nbRep: any, nbSet: any, poid: any, idSequence: any) {
         this.ei.triggerRefresh([Message.MODIFIER_EXERCICE, id, nbRep, nbSet, poid, idSequence]);
+    }
+
+    ngOnDestroy() {
+        this.subscription?.unsubscribe();
     }
 
 
