@@ -58,7 +58,6 @@ export class AfficheSceance implements OnInit {
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
                 this.exercices = res.seance.exercises.sort((a: any, b: any) => a.ordre - b.ordre);;
-
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },

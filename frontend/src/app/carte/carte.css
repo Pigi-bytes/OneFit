@@ -6,7 +6,7 @@
 
 #map {
     display: flex;
-    border-radius: 15px;
+    border-radius: 0px 15px 15px 0px;
     overflow: hidden;
     flex: 1;
     min-height: 100%;

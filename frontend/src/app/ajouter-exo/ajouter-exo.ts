@@ -90,6 +90,4 @@ export class AjouterExo {
         this.ei.triggerRefresh([Message.AFFICHER_SEANCE, id]);
     }
 
-
-
 }

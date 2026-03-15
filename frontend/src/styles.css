@@ -121,6 +121,7 @@ input {
 }
 
 .btn-principal,
+.card .btn-principal,
 body.dark .card .btn-principal {
     background-color: var(--blue1);
     border-color: var(--blue1);
