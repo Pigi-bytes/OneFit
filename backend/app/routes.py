@@ -19,6 +19,10 @@ from app.schemas import (
     MessageSchema,
     MoveExerciseOrderSchema,
     RegisterSchema,
+    RemoveExerciseFromSeanceSchema,
+    RenameRoutineSchema,
+    RenameSeanceSchema,
+    RoutineSchema,
     RoutinesResponseSchema,
     SalleSchema,
     SalleSchemaByLoc,
@@ -27,6 +31,7 @@ from app.schemas import (
     SearchExoRequestSchema,
     SearchExoResponseSchema,
     TokenSchema,
+    UpdateExerciseConfigSchema,
     UserAjouterPoidsSchema,
     UserChangementMdpSchema,
     UserChangementUsernameSchema,
@@ -36,10 +41,6 @@ from app.schemas import (
     UserSuppPoidSchema,
     ValidationErrorSchema,
     getSeanceByDay,
-    UpdateExerciseConfigSchema,
-    RoutineSchema,
-    RenameRoutineSchema,
-    RenameSeanceSchema,
 )
 from app.smart_client import SmartApiClient
 from app.utils.logger import QueryTimer, auth_logger, db_logger, route_logger
@@ -527,7 +528,6 @@ def getRoutine(data):
     return routine
 
 
-
 @sportBLP.route("/getSeancesPrevu", methods=["POST"])
 @sportBLP.doc(security=[{"bearerAuth": []}])
 @sportBLP.arguments(ActiveRoutineSchema)
@@ -819,6 +819,7 @@ def getSeanceDuJour(data):
 
     return {"seance": res}
 
+
 @sportBLP.route("/changerConfigurationExo", methods=["POST"])
 @sportBLP.doc(security=[{"bearerAuth": []}])
 @sportBLP.arguments(UpdateExerciseConfigSchema)
@@ -892,7 +893,9 @@ def modiferNomRoutine(data):
     with QueryTimer("commitUpdateRoutineName"):
         db.session.commit()
 
-    route_logger.info(f"ROUTINE NAME UPDATED | user_id={user.id} | routine_id={routine.id} | old_name={old_name} | new_name={routine.name}")
+    route_logger.info(
+        f"ROUTINE NAME UPDATED | user_id={user.id} | routine_id={routine.id} | old_name={old_name} | new_name={routine.name}"
+    )
     return {"message": "Nom de la routine mis à jour avec succès."}
 
 
@@ -927,3 +930,69 @@ def modifierNomSeance(data):
         f"SEANCE TITLE UPDATED | user_id={user.id} | seance_id={seance.id} | old_title={old_title} | new_title={seance.title}"
     )
     return {"message": "Nom de la séance mis à jour avec succès."}
+
+
+@sportBLP.route("/supprimerExoSeance", methods=["DELETE"])
+@sportBLP.arguments(RemoveExerciseFromSeanceSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(200, MessageSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Routine, séance ou exercice prévu introuvable")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def supprimerExoSeance(data):
+    """Supprime un exercice prévu d'une séance puis remet l'ordre des exercices"""
+    user = getCurrentUserOrAbort401()
+
+    if data["routine_id"] == -1:
+        routine = user.activeRoutine()
+    else:
+        with QueryTimer("checkRoutineExistant"):
+            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    with QueryTimer("checkSeanceExistant"):
+        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
+    if not seance:
+        abort(404, message="Séance non trouvée pour ce jour.")
+
+    with QueryTimer("checkExoPlanExistant"):
+        plan = db.session.scalar(
+            sa.select(SeanceExercise).where(
+                SeanceExercise.id == data["seance_exercise_id"],
+                SeanceExercise.seance_id == seance.id,
+            )
+        )
+
+    if not plan:
+        abort(404, message="Exercice prévu non trouvé dans cette séance.")
+
+    planIdRemoved = plan.id
+    exerciceIdRemoved = plan.exercise_id
+
+    with QueryTimer("commitDeleteExercisePlan"):
+        db.session.delete(plan)
+        db.session.flush()
+
+        remaining_plans = db.session.scalars(
+            sa.select(SeanceExercise)
+            .where(SeanceExercise.seance_id == seance.id)
+            .order_by(SeanceExercise.ordre, SeanceExercise.id)
+        ).all()
+
+        for index, remaining_plan in enumerate(remaining_plans, start=1):
+            remaining_plan.ordre = index
+
+        if remaining_plans:
+            seance.is_rest_day = False
+        else:
+            seance.is_rest_day = True
+            seance.title = "Jour de Repos"
+
+        db.session.commit()
+
+    route_logger.info(
+        f"SEANCE EXO DELETED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | plan_id={planIdRemoved} | exercise_id={exerciceIdRemoved}"
+    )
+    return {"message": "Exercice supprimé de la séance avec succès."}

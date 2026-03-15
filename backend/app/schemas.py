@@ -309,6 +309,11 @@ class MoveExerciseOrderSchema(Schema):
     seance_exercise_id = _seance_exercise_id()
     direction = _direction()
 
+class RemoveExerciseFromSeanceSchema(Schema):
+    routine_id = _routine()
+    day = _day()
+    seance_exercise_id = _seance_exercise_id()
+
 
 class getSeanceByDay(Schema):
     routine_id = _routine()
