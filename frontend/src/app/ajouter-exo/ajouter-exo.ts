@@ -87,7 +87,7 @@ export class AjouterExo {
     }
 
     AfficherInfosExo(id: any) {
-        this.ei.triggerRefresh([Message.AFFICHER_SEANCE, id]);
+        this.ei.triggerRefresh([Message.AFFICHER_CONFIGURATEUR, id]);
     }
 
 

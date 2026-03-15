@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt';
 import { Subscription } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { Message } from '../../message';
 
 @Component({
     selector: 'app-afficher-exo',
@@ -27,16 +28,23 @@ export class AfficherExo {
     ngOnInit() {
         this.exo = null;
         this.message = null;
+        if (isPlatformBrowser(this.platformId)) {
+            this.message = localStorage.getItem("message");
+            this.cdr.detectChanges();
+            localStorage.removeItem("message");
+        }
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
             if (id[0] !== 1) return;
 
-            if (this.id === id[1]) return;
+            if (this.id === id[1]) return
 
-            if (isPlatformBrowser(this.platformId)) {
-                this.message = localStorage.getItem("message");
+            if (id[0] === Message.AFFICHER_SEANCE) {
+                this.message = null;
+                this.modifId(id[1]);
+                this.chargeExo();
             }
-            this.modifId(id[1]);
-            this.chargeExo();
+
+
         });
     }
 

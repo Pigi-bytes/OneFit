@@ -30,6 +30,7 @@ export class ConfigurerExo {
     modifie: any | null = null;
     requete: boolean = false;
     private platformId = inject(PLATFORM_ID);
+    ancienId = "";
 
 
     constructor(private ei: EnvoyerElt, private http: HttpClient, private cdr: ChangeDetectorRef, private not: Notification) { }
@@ -42,10 +43,10 @@ export class ConfigurerExo {
 
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
-
         }
+
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
-            if (id[0] === Message.MODIFIER_EXERCICE) {
+            if ((id[0] === Message.MODIFIER_EXERCICE)) {
                 this.idExo = id[1];
                 this.exo = "a";
                 this.modifie = "a";
@@ -55,10 +56,11 @@ export class ConfigurerExo {
                 this.requete = true;
                 this.chargeExo();
             }
-            else if (id[0] === Message.AFFICHER_CONFIGURATEUR || id[0] === Message.SELECTION_EXERCICE) {
+            else if ((id[0] === Message.AFFICHER_CONFIGURATEUR || id[0] === Message.SELECTION_EXERCICE) && (id[1] !== this.ancienId)) {
                 this.requete = true;
                 this.idExo = id[1];
                 this.modifie = null;
+                this.ancienId = this.idExo
                 this.chargeExo();
             }
             else if (id[0] === Message.RESET_CONFIGURATEUR) {
@@ -69,16 +71,19 @@ export class ConfigurerExo {
                 this.repNumber = null;
                 this.poids = null;
                 this.backendResponse = "";
+                this.requete = false;
                 this.cdr.detectChanges();
-            } else {
-                return;
             }
-
+            else if (id[0] === Message.AFFICHER_SEANCE) {
+                this.requete = false;
+            }
+            else {
+                this.requete = false;
+            }
         });
     }
-
     async chargeExo() {
-        if (this.requete) {
+        if (this.requete && this.idExo) {
             this.http.post('http://127.0.0.1:5000/externe/getExo', {
                 exoId: this.idExo,
 
@@ -139,6 +144,8 @@ export class ConfigurerExo {
                     this.exo = res;
                     this.backendResponse = res.message;
                     this.cdr.detectChanges();
+                    localStorage.setItem("message", "ajouté avec succès");
+                    this.ei.triggerRefresh([Message.AFFICHER_SEANCE, null]);
                 },
 
                 error: (err: any) => {
@@ -169,8 +176,7 @@ export class ConfigurerExo {
                 }
             });
 
-            localStorage.setItem("message", "ajouté avec sucée");
-            this.ei.triggerRefresh([Message.AFFICHER_SEANCE, null]);
+
         }
     }
 
@@ -183,7 +189,7 @@ export class ConfigurerExo {
             this.ei.triggerRefresh([Message.AFFICHER_SEANCE]);
         } else {
 
-            this.ei.triggerRefresh([Message.RESET_SEANCE]);
+            this.ei.triggerRefresh([Message.RESET_CONFIGURATEUR]);
         }
     }
 

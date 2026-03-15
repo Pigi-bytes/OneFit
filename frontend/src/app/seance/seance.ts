@@ -20,14 +20,6 @@ export class Seance {
 
 
     ngOnInit() {
-        this.subscription = this.elt.afficheExercice$.subscribe((payload) => {
-            if (payload[0] === Message.RESET_SEANCE) {
-                this.elt.triggerRefresh([Message.RESET_CONFIGURATEUR]);
-            }
-
-
-        });
-
     }
 
 }
