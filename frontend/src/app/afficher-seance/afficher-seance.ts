@@ -163,8 +163,8 @@ export class AfficheSceance implements OnInit {
         this.router.navigate(['/exercices']);
     }
 
-    modifie(id: any, nbRep: any, nbSet: any, poid: any) {
-        this.ei.triggerRefresh([Message.MODIFIER_EXERCICE, id, nbRep, nbSet, poid]);
+    modifie(id: any, nbRep: any, nbSet: any, poid: any, idSequence: any) {
+        this.ei.triggerRefresh([Message.MODIFIER_EXERCICE, id, nbRep, nbSet, poid, idSequence]);
     }
 
 

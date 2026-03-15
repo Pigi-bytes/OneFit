@@ -21,6 +21,7 @@ export class ConfigurerExo {
 
     private subscription?: Subscription;
     idExo: any;
+    idSequence: any;
     backendResponse = "";
     exo: any;
     setNumber = null;
@@ -53,6 +54,7 @@ export class ConfigurerExo {
                 this.setNumber = id[2];
                 this.repNumber = id[3];
                 this.poids = id[4];
+                this.idSequence = id[5];
                 this.requete = true;
                 this.chargeExo();
             }
@@ -73,9 +75,6 @@ export class ConfigurerExo {
                 this.backendResponse = "";
                 this.requete = false;
                 this.cdr.detectChanges();
-            }
-            else if (id[0] === Message.AFFICHER_SEANCE) {
-                this.requete = false;
             }
             else {
                 this.requete = false;
@@ -127,56 +126,70 @@ export class ConfigurerExo {
     }
 
     action() {
+        let chemin = "";
         if (!this.modifie) {
-            this.http.post('http://127.0.0.1:5000/sport/ajouterExoSeance', {
-                routine_id: -1,
-                day: this.jour,
-                exercise_id: this.idExo,
-                planned_sets: this.setNumber,
-                planned_reps: this.repNumber,
-                planned_weight: this.poids
+            chemin = 'http://127.0.0.1:5000/sport/ajouterExoSeance'
+        }
+        else {
+            chemin = 'http://127.0.0.1:5000/sport/changerConfigurationExo';
+        }
+        this.http.post(chemin, {
+            routine_id: -1,
+            day: this.jour,
+            ...(!this.modifie ? { exercise_id: this.idExo } : { seance_exercise_id: this.idSequence }),
+            planned_sets: this.setNumber,
+            planned_reps: this.repNumber,
+            planned_weight: this.poids
 
 
-            }).subscribe({
+        }).subscribe({
 
-                next: (res: any) => {
-                    console.log('RESPONSE OK', res);
-                    this.exo = res;
-                    this.backendResponse = res.message;
-                    this.cdr.detectChanges();
+            next: (res: any) => {
+                console.log('RESPONSE OK', res);
+                this.exo = res;
+                this.backendResponse = res.message;
+                this.cdr.detectChanges();
+                if (!this.modifie) {
                     localStorage.setItem("message", "ajouté avec succès");
                     this.ei.triggerRefresh([Message.AFFICHER_SEANCE, null]);
-                },
 
-                error: (err: any) => {
-                    //erreur 422
-                    if (err.status == 422 && err.error.errors) {
-
-                        const errorsObj = err.error.errors;
-                        const messages: string[] = [];
-
-                        for (const key in errorsObj) {
-
-                            const value = errorsObj[key];
-                            Object.values(value).forEach(v => {
-                                if (Array.isArray(v)) messages.push(...v);
-                                else if (typeof v === 'string') messages.push(v);
-                            });
-                        }
-
-                        this.backendResponse = messages.join('\n');
-                    }
-                    // erreurs HTTP (400, 409, 500…)
-                    else if (err.error && err.error.message) {
-                        this.backendResponse = err.error.message; // <- message du backend
-                    } else {
-                        this.backendResponse = 'Erreur serveur';
-                    }
-                    this.cdr.detectChanges();
                 }
-            });
 
+                if (this.modifie) {
+                    this.ei.triggerRefresh([Message.RESET_CONFIGURATEUR, null]);
+                }
+            },
 
+            error: (err: any) => {
+                //erreur 422
+                if (err.status == 422 && err.error.errors) {
+
+                    const errorsObj = err.error.errors;
+                    const messages: string[] = [];
+
+                    for (const key in errorsObj) {
+
+                        const value = errorsObj[key];
+                        Object.values(value).forEach(v => {
+                            if (Array.isArray(v)) messages.push(...v);
+                            else if (typeof v === 'string') messages.push(v);
+                        });
+                    }
+
+                    this.backendResponse = messages.join('\n');
+                }
+                // erreurs HTTP (400, 409, 500…)
+                else if (err.error && err.error.message) {
+                    this.backendResponse = err.error.message; // <- message du backend
+                } else {
+                    this.backendResponse = 'Erreur serveur';
+                }
+                this.cdr.detectChanges();
+            }
+        });
+
+        if (this.modifie) {
+            this.annuler();
         }
     }
 
