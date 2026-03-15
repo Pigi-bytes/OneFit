@@ -71,6 +71,8 @@ export class Utilisateur {
                 next: (res: any) => {
                     console.log('RESPONSE OK', res);
                     this.afficheModif();
+                    this.oldTaille = this.taille;
+                    this.oldDate = this.birthDate;
                 },
 
                 error: (err: any) => {
