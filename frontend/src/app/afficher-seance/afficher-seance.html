@@ -2,7 +2,7 @@
 
     <h1>Séance du {{ jour }}</h1>
 
-    <div class="d-flex flex-column gap-3 w-50" style="overflow-y: auto; max-height: 60vh;">
+    <div class="d-flex flex-column gap-3 w-50 mb-3" style="overflow-y: auto; max-height: 60vh;">
         <div *ngIf="!exercices || exercices.length === 0">
             <p>Aucun exercice.</p>
 
@@ -10,16 +10,17 @@
         </div>
         <div *ngFor="let exo of exercices;let i = index"
         class="card clickable-card d-flex flex-row align-items-center p-2"
-        (click)="modifie(exo.exoId,exo.planned_sets,exo.planned_reps,exo.planned_weight)">
+        (click)="modifie(exo.exoId,exo.planned_sets,exo.planned_reps,exo.planned_weight)" tooltip>
+            <span class="tooltiptext"> Cliquez pour modifier l'exercice </span>
             <p class="mb-0">
                 {{ exo.name }}</p>
 
             <div class="d-flex ms-auto">
-                <button *ngIf="i > 0" type="button" class="btn-principal" (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()">
+                <button *ngIf="i > 0" type="button" class="btn-principal btn-rond" (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()" (mouseenter)="$event.stopPropagation()">
                     &#9650;
                 </button>
-                <button *ngIf="i < exercices.length - 1" type="button" class="btn-principal"
-                    (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()">
+                <button *ngIf="i < exercices.length - 1" type="button" class="btn-principal btn-rond"
+                    (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()" (mouseenter)="$event.stopPropagation()">
                     &#9660;
                 </button>
             </div>
@@ -27,7 +28,11 @@
 
     </div>
 
-    <button type="button" class="btn-principal mb-2" (click)="ajouterExo()">Ajouter un exercice</button>
+    <div tooltip>
+        <span class="tooltiptext"> Ajouter un exercice </span>
+        <button type="button" class="btn-principal mb-2 btn-rond" (click)="ajouterExo()">+</button>
+    </div>
+    
     <button type="button" class="btn-principal mb-2" routerLink="/routine">Retour</button>
 
 </main>

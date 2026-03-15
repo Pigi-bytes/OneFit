@@ -9,11 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Message } from '../../message';
-
+import { TooltipMoveDirective } from '../tooltipmove';
 
 @Component({
     selector: 'app-afficher-seance',
-    imports: [FormsModule, CommonModule, RouterModule],
+    imports: [FormsModule, CommonModule, RouterModule, TooltipMoveDirective],
     templateUrl: './afficher-seance.html',
     styleUrls: ['./afficher-seance.css'],
 })
