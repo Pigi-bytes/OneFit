@@ -1,6 +1,9 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 <main class="d-flex align-items-center justify-content-center min-vh-100">
 
-    <h1>Séance du {{ jour }}</h1>
+    <h1 *ngIf="!commencerSeance">Séance du {{ jour }}</h1>
 
     <div class="d-flex flex-column gap-3 w-50 mb-3" style="overflow-y: auto; max-height: 60vh;">
         <div *ngIf="!exercices || exercices.length === 0">
@@ -10,10 +13,11 @@
         </div>
 
         <div *ngFor="let exo of exercices;let i = index"
-        class="card clickable-card d-flex flex-row align-items-center p-2"> 
+            class="card clickable-card d-flex flex-row align-items-center p-2">
 
             <!-- exo info -->
-            <div (click)="modifie(exo.exoId,exo.planned_sets,exo.planned_reps,exo.planned_weight,exo.seance_exercise_id)" tooltip>
+            <div (click)="modifie(exo.exoId,exo.planned_sets,exo.planned_reps,exo.planned_weight,exo.seance_exercise_id)"
+                tooltip>
                 <span class="tooltiptext"> Cliquez pour modifier l'exercice </span>
                 <div class="d-flex align-items-center p-2">
                     <img [src]="exo.img_url" alt="{{exo.nom}}" width="20%" class="me-3 rounded">
@@ -23,15 +27,14 @@
 
             <!-- boutons -->
             <div class="d-flex ms-auto">
-                <button *ngIf="i > 0" type="button" class="btn-principal btn-rond"
-                (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()"
-                tooltip>
+                <button *ngIf="!commencerSeance && i > 0" type="button" class="btn-principal btn-rond"
+                    (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()" tooltip>
                     <span class="tooltiptext"> Déplacer vers le haut </span>
                     &#9650;
                 </button>
-                <button *ngIf="i < exercices.length - 1" type="button" class="btn-principal btn-rond"
-                (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()"
-                tooltip>
+                <button *ngIf="!commencerSeance  && i < exercices.length - 1" type="button"
+                    class="btn-principal btn-rond"
+                    (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()" tooltip>
                     <span class="tooltiptext"> Déplacer vers le bas </span>
                     &#9660;
                 </button>
@@ -40,11 +43,18 @@
 
     </div>
 
+    @if(!commencerSeance){
     <div tooltip>
         <span class="tooltiptext"> Ajouter un exercice </span>
         <button type="button" class="btn-principal mb-2 btn-rond" (click)="ajouterExo()">+</button>
     </div>
+    }
 
-    <button type="button" class="btn-principal mb-2" routerLink="/routine">Retour</button>
+    @if(!commencerSeance){
+    <button type="button" class="btn-principal mb-2" (click)="retour()">Retour</button>
+    }@else{
+    <button type="button" class="btn-principal mb-2" (click)="retour()">finir seance</button>
+    }
+
 
 </main>

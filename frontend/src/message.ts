@@ -4,4 +4,5 @@ export enum Message {
     SELECTION_EXERCICE = 2,
     MODIFIER_EXERCICE = 3,
     RESET_CONFIGURATEUR = 4,
+    COMMENCER_SEANCE = 5,
 }

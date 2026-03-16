@@ -1,23 +1,23 @@
 <main>
     <div id="side-menu" class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
         <h1 class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
-            <a routerLink="/accueil" class="fs-4" >OneFit</a>
+            <a routerLink="/accueil" class="fs-4">OneFit</a>
         </h1>
 
         <hr>
 
         <ul class="nav nav-pills flex-column mb-auto">
             <li>
-                <a routerLink="/utilisateur" class="nav-link link-dark">Profil</a>
+                <a (click)="resetMessage()" routerLink="/utilisateur" class="nav-link link-dark">Profil</a>
             </li>
             <li>
-                <a routerLink="/poid" class="nav-link link-dark">Historique des poids</a>
+                <a (click)="resetMessage()" routerLink="/poid" class="nav-link link-dark">Historique des poids</a>
             </li>
             <li>
-                <a routerLink="/routine" class="nav-link link-dark">Votre routine</a>
+                <a (click)="resetMessage()" routerLink="/routine" class="nav-link link-dark">Votre routine</a>
             </li>
             <li>
-                <a routerLink="/carte" class="nav-link link-dark">Carte</a>
+                <a (click)="resetMessage()" routerLink="/carte" class="nav-link link-dark">Carte</a>
             </li>
 
             <div class="bottom">
@@ -29,7 +29,7 @@
                 </li>
 
                 <li>
-                    <a (click)="deconnexion()" class="nav-link link-dark">Déconnexion</a>
+                    <a (click)="resetMessage()" (click)="deconnexion()" class="nav-link link-dark">Déconnexion</a>
                 </li>
             </div>
         </ul>

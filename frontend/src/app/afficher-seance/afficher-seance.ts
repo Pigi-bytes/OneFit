@@ -24,6 +24,7 @@ export class AfficheSceance implements OnInit {
     jour: string | null = "";
     exercices: any[] = [];
     backendResponse = "";
+    commencerSeance: boolean = false;
 
     constructor(
         private http: HttpClient,
@@ -36,16 +37,25 @@ export class AfficheSceance implements OnInit {
 
     ngOnInit() {
 
+        if (isPlatformBrowser(this.platformId) && localStorage.getItem("lastMessage")) {
+            if (localStorage.getItem("lastMessage") === Message.COMMENCER_SEANCE.toString()) {
+                this.commencerSeance = true;
+
+            }
+        }
+
+
+        this.subscription = this.ei.afficheExercice$.subscribe((id) => {
+            if (id[0] === Message.COMMENCER_SEANCE) {
+                this.commencerSeance = true;
+                localStorage.setItem("lastMessage", Message.COMMENCER_SEANCE.toString());
+            }
+        });
+
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
             this.chargeSeance();
         }
-
-        this.subscription = this.ei.afficheExercice$.subscribe((id) => {
-            if (id[0] === Message.AFFICHER_SEANCE || id[0] === Message.MODIFIER_EXERCICE) {
-                this.chargeSeance();
-            }
-        });
 
         this.cdr.detectChanges();
 
@@ -169,6 +179,11 @@ export class AfficheSceance implements OnInit {
 
     modifie(id: any, nbRep: any, nbSet: any, poid: any, idSequence: any) {
         this.ei.triggerRefresh([Message.MODIFIER_EXERCICE, id, nbRep, nbSet, poid, idSequence]);
+    }
+
+    retour() {
+        localStorage.removeItem("lastMessage");
+        this.router.navigate(['/routine']);
     }
 
     ngOnDestroy() {

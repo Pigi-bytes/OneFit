@@ -4,37 +4,41 @@ import { RouterModule, Router } from '@angular/router';
 import { Theme } from '../theme';
 
 @Component({
-  selector: 'app-side-menu',
-  standalone:true,
-  imports: [RouterModule],
-  templateUrl: './side-menu.html',
-  styleUrl: './side-menu.css',
-  encapsulation: ViewEncapsulation.None,
+    selector: 'app-side-menu',
+    standalone: true,
+    imports: [RouterModule],
+    templateUrl: './side-menu.html',
+    styleUrl: './side-menu.css',
+    encapsulation: ViewEncapsulation.None,
 })
 export class SideMenu {
-  private http = inject(HttpClient);
-  private platformId = inject(PLATFORM_ID);
-  private router = inject(Router);
-  isDark = false;
+    private http = inject(HttpClient);
+    private platformId = inject(PLATFORM_ID);
+    private router = inject(Router);
+    isDark = false;
 
-  constructor(private theme: Theme) { }
-  name = "";
+    constructor(private theme: Theme) { }
+    name = "";
 
-  deconnexion() {
-    const confirmAction = confirm("Êtes-vous sûr(e) de vouloir vous déconnecter ?");
+    deconnexion() {
+        const confirmAction = confirm("Êtes-vous sûr(e) de vouloir vous déconnecter ?");
 
-    if(confirmAction){
-      localStorage.removeItem("access_token")
-      this.router.navigate(['']);
+        if (confirmAction) {
+            localStorage.removeItem("access_token")
+            this.router.navigate(['']);
+        }
     }
-  }
-  
-  toggleTheme() {
-      this.theme.toggleDark();
-      this.isDark = document.body.classList.contains('dark');
 
-      if (typeof localStorage !== 'undefined') {
-          localStorage.setItem('darkMode', String(this.isDark));
-      }
-  }
+    toggleTheme() {
+        this.theme.toggleDark();
+        this.isDark = document.body.classList.contains('dark');
+
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem('darkMode', String(this.isDark));
+        }
+    }
+
+    resetMessage() {
+        localStorage.removeItem("lastMessage");
+    }
 }
