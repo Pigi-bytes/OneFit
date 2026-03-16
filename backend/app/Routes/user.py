@@ -5,8 +5,8 @@ from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 
 from app import db
+from app.coreRoutes import getCurrentUserOrAbort401, userResponse
 from app.models import HistoriquePoids
-from backend.app.coreRoutes import getCurrentUserOrAbort401, userResponse
 from app.schemas import (
     BaseErrorSchema,
     MessageSchema,

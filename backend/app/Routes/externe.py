@@ -3,8 +3,8 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_smorest import Blueprint, abort
 
 from app import db
+from app.coreRoutes import APISALLE, APISPORT
 from app.models import Exercise
-from backend.app.coreRoutes import APISALLE, APISPORT
 from app.schemas import (
     BaseErrorSchema,
     ExerciceRequestSchema,
