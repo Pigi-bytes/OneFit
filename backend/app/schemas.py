@@ -349,6 +349,16 @@ class AddPerformedExerciseSchema(Schema):
     )
 
 
+class StartEndSeanceEffectueeSchema(Schema):
+    routine_id = _routine()
+    day = _day()
+
+
+class TimeTotakSchema(Schema):
+    message = fields.Str(required=True)
+    time = fields.DateTime(required=True)
+
+
 def _seance_id(**kw):
     d = {"required": True, "metadata": {"description": "ID de la séance"}}
     return fields.Int(**{**d, **kw})

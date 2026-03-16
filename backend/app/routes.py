@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 import sqlalchemy as sa
 from flask import request
@@ -7,7 +7,7 @@ from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
 from app import Config, db
-from app.models import DayOfWeek, Exercise, HistoriquePoids, Routine, Seance, SeanceExercise, User, WorkoutLog
+from app.models import DayOfWeek, Exercise, HistoriquePoids, Routine, Seance, SeanceExercise, User, WorkoutLog, WorkoutSession
 from app.schemas import (
     ActiveRoutineSchema,
     AddExerciseToSeanceSchema,
@@ -31,6 +31,8 @@ from app.schemas import (
     SeancesResponseSchema,
     SearchExoRequestSchema,
     SearchExoResponseSchema,
+    StartEndSeanceEffectueeSchema,
+    TimeTotakSchema,
     TokenSchema,
     UpdateExerciseConfigSchema,
     UserAjouterPoidsSchema,
@@ -1043,3 +1045,112 @@ def ajouterExoEffectue(data):
         f"WORKOUT LOG ADDED | user_id={user.id} | plan_id={plan.id} | seance_id={plan.seance_id} | exercise_id={plan.exercise_id} | sets={len(workout_logs)}"
     )
     return {"message": f"{len(workout_logs)} sets effectués ajoutés."}
+
+
+@sportBLP.route("/startSeanceEffectuee", methods=["POST"])
+@sportBLP.arguments(StartEndSeanceEffectueeSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(201, MessageSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Séance introuvable")
+@sportBLP.alt_response(409, schema=BaseErrorSchema, description="Séance déjà en cours ou jour de repos")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def startSeanceEffectuee(data):
+    """Démarre une séance effectuée en base pour l'utilisateur connecté"""
+    user = getCurrentUserOrAbort401()
+
+    with QueryTimer("checkActiveWorkoutSession"):
+        active_session = db.session.scalar(
+            sa.select(WorkoutSession).where(
+                WorkoutSession.user_id == user.id,
+                WorkoutSession.ended_at.is_(None),
+            )
+        )
+
+    if active_session:
+        abort(409, message="Une séance effectuée est déjà en cours.")
+
+    if data["routine_id"] == -1:
+        routine = user.activeRoutine()
+    else:
+        with QueryTimer("checkRoutineExistant"):
+            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    with QueryTimer("checkSeanceForUser"):
+        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
+
+    if not seance:
+        abort(404, message="Séance non trouvée pour ce jour.")
+
+    if seance.is_rest_day:
+        abort(409, message="Impossible de démarrer une séance sur un jour de repos.")
+
+    session = WorkoutSession(user_id=user.id, seance_id=seance.id)
+
+    with QueryTimer("commitStartWorkoutSession"):
+        db.session.add(session)
+        db.session.commit()
+        db.session.refresh(session)
+
+    route_logger.info(
+        f"WORKOUT SESSION STARTED | user_id={user.id} | session_id={session.id} | seance_id={session.seance_id} | start_time={session.started_at}"
+    )
+    return {"message": "Séance effectuée démarrée."}
+
+
+@sportBLP.route("/endSeanceEffectuee", methods=["POST"])
+@sportBLP.arguments(StartEndSeanceEffectueeSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(200, TimeTotakSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Routine, séance ou session active introuvable")
+@sportBLP.alt_response(409, schema=BaseErrorSchema, description="Séance déjà terminée")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def endSeanceEffectuee(data):
+    """Termine une séance effectuée existante en base pour l'utilisateur connecté"""
+    user = getCurrentUserOrAbort401()
+
+    if data["routine_id"] == -1:
+        routine = user.activeRoutine()
+    else:
+        with QueryTimer("checkRoutineExistant"):
+            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
+
+    if not routine:
+        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+
+    with QueryTimer("checkSeanceForUser"):
+        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
+
+    if not seance:
+        abort(404, message="Séance non trouvée pour ce jour.")
+
+    with QueryTimer("checkWorkoutSessionForUser"):
+        session = db.session.scalar(
+            sa.select(WorkoutSession)
+            .where(
+                WorkoutSession.user_id == user.id,
+                WorkoutSession.seance_id == seance.id,
+                WorkoutSession.ended_at.is_(None),
+            )
+            .order_by(WorkoutSession.started_at.desc())
+        )
+
+    if not session:
+        abort(404, message="Aucune séance effectuée en cours pour cette routine et ce jour.")
+
+    session.ended_at = datetime.utcnow()
+
+    with QueryTimer("commitEndWorkoutSession"):
+        db.session.commit()
+
+    route_logger.info(
+        f"WORKOUT SESSION ENDED | user_id={user.id} | session_id={session.id} | seance_id={session.seance_id} | start_time={session.started_at} | end_time={session.ended_at} "
+    )
+    return {
+        "message": "Séance effectuée terminée.",
+        "time": session.ended_at - session.started_at,
+    }

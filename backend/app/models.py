@@ -35,6 +35,7 @@ class User(db.Model):
 
     historique_poids: so.Mapped[list["HistoriquePoids"]] = so.relationship(back_populates="user", cascade="all, delete-orphan")
     routines: so.Mapped[list["Routine"]] = so.relationship(back_populates="user", cascade="all, delete-orphan")
+    workout_sessions: so.Mapped[list["WorkoutSession"]] = so.relationship(back_populates="user", cascade="all, delete-orphan")
     workout_logs: so.Mapped[list["WorkoutLog"]] = so.relationship(back_populates="user")
 
     def checkPassword(self, password: str) -> bool:
@@ -128,6 +129,18 @@ class SeanceExercise(db.Model):
 
     seance: so.Mapped["Seance"] = so.relationship(back_populates="exercises_plan")
     exercise: so.Mapped["Exercise"] = so.relationship()
+
+class WorkoutSession(db.Model):
+    __tablename__ = "workout_sessions"
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("users.id"), nullable=False)
+    seance_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey("seances.id"), nullable=False)
+    started_at: so.Mapped[datetime] = so.mapped_column(sa.DateTime, default=sa.func.now(), nullable=False)
+    ended_at: so.Mapped[Optional[datetime]] = so.mapped_column(sa.DateTime, nullable=True)
+
+    user: so.Mapped["User"] = so.relationship(back_populates="workout_sessions")
+    seance: so.Mapped["Seance"] = so.relationship()
 
 
 class WorkoutLog(db.Model):
