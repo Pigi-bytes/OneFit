@@ -7,4 +7,5 @@ export enum Message {
     COMMENCER_SEANCE = 5,
     RESET_CHRONO = 6,
     ENVOYER_ID_EXO = 7,
+    CHRONO_EXO = 8,
 }

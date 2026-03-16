@@ -1,1 +1,11 @@
-<h1 id="temps">{{temps}}</h1>
+<div class="position-relative w-100 text-center">
+
+    <button class="btn-principal btn-rond position-absolute start-0" tooltip (click)="retour()">
+        <span class="tooltiptext" *ngIf="coteExo">revenir sur la séance</span>
+        <span class="tooltiptext" *ngIf="!coteExo">annuler séance</span>
+        &#11164;
+    </button>
+
+    <h1 id="temps" class="mb-0">&#9201; {{temps}}</h1>
+
+</div>

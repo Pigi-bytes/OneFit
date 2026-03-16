@@ -23,7 +23,7 @@ export class ExerciceEnCours {
     private subscription?: Subscription;
     exo: any;
     backendResponse = "";
-    seance_exercise_id = 1;
+    seance_exercise_id: any = 1;
 
     constructor(
         private http: HttpClient,
@@ -33,9 +33,13 @@ export class ExerciceEnCours {
     ) { }
 
     ngOnInit() {
+        if (isPlatformBrowser(this.platformId) && localStorage.getItem("lastMessage")) {
+            this.seance_exercise_id = Number(localStorage.getItem("lastSequence"));;
+        }
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
             if (id[0] === Message.ENVOYER_ID_EXO) {
                 this.seance_exercise_id = id[1];
+                localStorage.setItem("lastSequence", this.seance_exercise_id.toString());
                 localStorage.setItem("lastMessage", Message.ENVOYER_ID_EXO.toString());
             }
         });
@@ -43,6 +47,7 @@ export class ExerciceEnCours {
             this.jour = localStorage.getItem("jour");
             this.chargerExo();
         }
+
         this.cdr.detectChanges();
     }
 

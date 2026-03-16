@@ -36,13 +36,13 @@
                 <button *ngIf="!commencerSeance && i > 0" type="button" class="btn-principal btn-rond"
                     (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()" tooltip>
                     <span class="tooltiptext"> Déplacer vers le haut </span>
-                    &#9650;
+                    &#11165;
                 </button>
                 <button *ngIf="!commencerSeance  && i < exercices.length - 1" type="button"
                     class="btn-principal btn-rond"
                     (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()" tooltip>
                     <span class="tooltiptext"> Déplacer vers le bas </span>
-                    &#9660;
+                    &#11167;
                 </button>
             </div>
         </div>
