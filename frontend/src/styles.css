@@ -315,13 +315,3 @@ app-chrono {
 td {
     padding: 10px;
 }
-
-.input-group-text {
-    background-color: var(--white3) !important;
-    color: var(--blue3) !important
-}
-
-main.hideScrolbar {
-    justify-content: flex-start !important;
-    align-items: stretch !important;
-}

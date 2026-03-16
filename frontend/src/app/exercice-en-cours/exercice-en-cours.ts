@@ -82,6 +82,13 @@ export class ExerciceEnCours {
 
 	}
 
+	ajouterSet(){
+		if (this.exo.planned_sets < 30){
+			this.exo.planned_sets += 1;
+			this.cdr.detectChanges();
+		}
+	}
+
 	range(n: number) {
 		return Array.from({ length: n }, (_, i) => i + 1);
 	}
