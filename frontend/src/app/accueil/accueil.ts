@@ -44,8 +44,19 @@ export class Accueil {
     }
 
     commencerSeance() {
-        this.router.navigate(['/seance-en-cours']).then(() => {
-            this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);
-        });
+        const now = new Date();
+        let jour = "";
+        switch (now.getDay()) {
+            case 0: jour = "Dimanche"; break;
+            case 1: jour = "Lundi"; break;
+            case 2: jour = "Mardi"; break;
+            case 3: jour = "Mercredi"; break;
+            case 4: jour = "Jeudi"; break;
+            case 5: jour = "Vendredi"; break;
+            case 6: jour = "Samedi"; break;
+        }
+        localStorage.setItem("jour", jour);
+        this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);
+        this.router.navigate(['/seance-en-cours']);
     }
 }
