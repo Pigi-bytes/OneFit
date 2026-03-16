@@ -140,7 +140,6 @@ class WorkoutLog(db.Model):
     reps: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=False)
     weight: so.Mapped[float] = so.mapped_column(sa.Float, nullable=False)
     date: so.Mapped[datetime] = so.mapped_column(sa.DateTime, default=sa.func.now())
-    note: so.Mapped[Optional[str]] = so.mapped_column(sa.Text)
 
     user: so.Mapped["User"] = so.relationship(back_populates="workout_logs")
     exercise: so.Mapped["Exercise"] = so.relationship()

@@ -7,10 +7,11 @@ from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
 from app import Config, db
-from app.models import DayOfWeek, Exercise, HistoriquePoids, Routine, Seance, SeanceExercise, User
+from app.models import DayOfWeek, Exercise, HistoriquePoids, Routine, Seance, SeanceExercise, User, WorkoutLog
 from app.schemas import (
     ActiveRoutineSchema,
     AddExerciseToSeanceSchema,
+    AddPerformedExerciseSchema,
     BaseErrorSchema,
     CreateRoutineSchema,
     ExerciceRequestSchema,
@@ -996,3 +997,49 @@ def supprimerExoSeance(data):
         f"SEANCE EXO DELETED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | plan_id={planIdRemoved} | exercise_id={exerciceIdRemoved}"
     )
     return {"message": "Exercice supprimé de la séance avec succès."}
+
+
+@sportBLP.route("/ajouterExoEffectue", methods=["POST"])
+@sportBLP.arguments(AddPerformedExerciseSchema)
+@sportBLP.doc(security=[{"bearerAuth": []}])
+@sportBLP.response(201, MessageSchema)
+@sportBLP.alt_response(404, schema=BaseErrorSchema, description="Exercice prévu introuvable")
+@sportBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def ajouterExoEffectue(data):
+    """Ajoute les sets effectués d'un exercice planifié dans WorkoutLog"""
+    user = getCurrentUserOrAbort401()
+
+    with QueryTimer("checkExoPlanForUser"):
+        plan = db.session.scalar(
+            sa.select(SeanceExercise)
+            .join(Seance, SeanceExercise.seance_id == Seance.id)
+            .join(Routine, Seance.routine_id == Routine.id)
+            .where(
+                SeanceExercise.id == data["seance_exercise_id"],
+                Routine.user_id == user.id,
+            )
+        )
+
+    if not plan:
+        abort(404, message="Exercice prévu non trouvé ou n'appartient pas à l'utilisateur")
+
+    workout_logs = [
+        WorkoutLog(
+            user_id=user.id,
+            exercise_id=plan.exercise_id,
+            seance_id=plan.seance_id,
+            reps=set_data["reps"],
+            weight=set_data["weight"],
+        )
+        for set_data in data["sets"]
+    ]
+
+    with QueryTimer("commitAddPerformedSets"):
+        db.session.add_all(workout_logs)
+        db.session.commit()
+
+    route_logger.info(
+        f"WORKOUT LOG ADDED | user_id={user.id} | plan_id={plan.id} | seance_id={plan.seance_id} | exercise_id={plan.exercise_id} | sets={len(workout_logs)}"
+    )
+    return {"message": f"{len(workout_logs)} sets effectués ajoutés."}

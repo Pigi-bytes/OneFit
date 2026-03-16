@@ -309,6 +309,7 @@ class MoveExerciseOrderSchema(Schema):
     seance_exercise_id = _seance_exercise_id()
     direction = _direction()
 
+
 class RemoveExerciseFromSeanceSchema(Schema):
     routine_id = _routine()
     day = _day()
@@ -331,6 +332,21 @@ class UpdateExerciseConfigSchema(Schema):
     planned_sets = _planned_sets(validate=validate.Range(min=1, max=30))
     planned_reps = _planned_reps(validate=validate.Range(min=1, max=200))
     planned_weight = _planned_weight(validate=validate.Range(min=0, max=1000))
+
+
+class PerformedSetSchema(Schema):
+    reps = _planned_reps(validate=validate.Range(min=1), metadata={"description": "Répétitions effectuées"})
+    weight = _planned_weight(validate=validate.Range(min=0), metadata={"description": "Charge effectuée"})
+
+
+class AddPerformedExerciseSchema(Schema):
+    seance_exercise_id = _seance_exercise_id()
+    sets = fields.List(
+        fields.Nested(PerformedSetSchema),
+        required=True,
+        validate=validate.Length(min=1),
+        metadata={"description": "Liste des sets effectués"},
+    )
 
 
 def _seance_id(**kw):
