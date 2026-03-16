@@ -178,7 +178,13 @@ export class AfficheSceance implements OnInit {
     }
 
     modifie(id: any, nbRep: any, nbSet: any, poid: any, idSequence: any) {
-        this.ei.triggerRefresh([Message.MODIFIER_EXERCICE, id, nbRep, nbSet, poid, idSequence]);
+        if (!this.commencerSeance) {
+            this.ei.triggerRefresh([Message.MODIFIER_EXERCICE, id, nbRep, nbSet, poid, idSequence]);
+        } else {
+            this.ei.triggerRefresh([Message.ENVOYER_ID_EXO, idSequence]);
+            this.router.navigate(['/exercice-en-cours']);
+        }
+
     }
 
     retour() {

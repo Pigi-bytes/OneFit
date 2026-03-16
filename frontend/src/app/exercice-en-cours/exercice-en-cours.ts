@@ -8,37 +8,46 @@ import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Message } from '../../message';
 import { TooltipMoveDirective } from '../tooltipmove';
+import { EnvoyerElt } from '../envoyerElt';
 
 @Component({
-	selector: 'app-exercice-en-cours',
-	imports: [FormsModule, CommonModule, RouterModule, TooltipMoveDirective],
-	templateUrl: './exercice-en-cours.html',
-	styleUrl: './exercice-en-cours.css',
+    selector: 'app-exercice-en-cours',
+    imports: [FormsModule, CommonModule, RouterModule, TooltipMoveDirective],
+    templateUrl: './exercice-en-cours.html',
+    styleUrl: './exercice-en-cours.css',
 })
 export class ExerciceEnCours {
-	
+
     jour: string | null = "";
     private platformId = inject(PLATFORM_ID);
+    private subscription?: Subscription;
     exo: any;
     backendResponse = "";
-	seance_exercise_id = 2;
+    seance_exercise_id = 0;
 
-	constructor(
-		private http: HttpClient,
-		private cdr: ChangeDetectorRef,
-		private router: Router,
-	) { }
+    constructor(
+        private http: HttpClient,
+        private cdr: ChangeDetectorRef,
+        private router: Router,
+        private ei: EnvoyerElt,
+    ) { }
 
-	ngOnInit(){
-		if (isPlatformBrowser(this.platformId)) {
+    ngOnInit() {
+        this.subscription = this.ei.afficheExercice$.subscribe((id) => {
+            if (id[0] === Message.ENVOYER_ID_EXO) {
+                this.seance_exercise_id = id[1];
+                localStorage.setItem("lastMessage", Message.ENVOYER_ID_EXO.toString());
+            }
+        });
+        if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
             this.chargerExo();
         }
         this.cdr.detectChanges();
-	}
+    }
 
-	chargerExo(){
-		this.http.post('http://127.0.0.1:5000/sport/getSeanceDuJour', {
+    chargerExo() {
+        this.http.post('http://127.0.0.1:5000/sport/getSeanceDuJour', {
             routine_id: -1,
             day: this.jour
 
@@ -80,16 +89,16 @@ export class ExerciceEnCours {
             }
         });
 
-	}
+    }
 
-	ajouterSet(){
-		if (this.exo.planned_sets < 30){
-			this.exo.planned_sets += 1;
-			this.cdr.detectChanges();
-		}
-	}
+    ajouterSet() {
+        if (this.exo.planned_sets < 30) {
+            this.exo.planned_sets += 1;
+            this.cdr.detectChanges();
+        }
+    }
 
-	range(n: number) {
-		return Array.from({ length: n }, (_, i) => i + 1);
-	}
+    range(n: number) {
+        return Array.from({ length: n }, (_, i) => i + 1);
+    }
 }
