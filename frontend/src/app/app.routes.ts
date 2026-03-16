@@ -38,5 +38,5 @@ export const routes: Routes = [
     { path: "routines-persos", component: RoutinesPersos },
     { path: "seance", component: Seance },
     { path: "exercice-en-cours", component: ExerciceEnCours },
-    { path: "seance-en-cours", component: SeanceEnCours },
+    { path: "seance-en-cours", component: SeanceEnCours, data: { hideMenu: true } },
 ];

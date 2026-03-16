@@ -37,8 +37,4 @@ export class SideMenu {
             localStorage.setItem('darkMode', String(this.isDark));
         }
     }
-
-    resetMessage() {
-        localStorage.removeItem("lastMessage");
-    }
 }
