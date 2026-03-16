@@ -44,7 +44,7 @@ api.spec.components.security_scheme(  # type: ignore
     },
 )
 
-from app.routes import authBLP, externeBLP, sportBLP, userBLP, userOptionBLP  # noqa: E402
+from backend.app.coreRoutes import authBLP, externeBLP, sportBLP, userBLP, userOptionBLP  # noqa: E402
 
 api.register_blueprint(authBLP)
 logger.debug("Blueprint enregistré (/auth)")
