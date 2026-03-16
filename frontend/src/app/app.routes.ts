@@ -17,7 +17,7 @@ import { ChoisirRoutine } from './choisir-routine/choisir-routine';
 import { RoutinesPersos } from './routines-persos/routines-persos';
 import { Seance } from './seance/seance';
 import { ExerciceEnCours } from './exercice-en-cours/exercice-en-cours';
-import { AfficheSceance } from './afficher-seance/afficher-seance';
+import { SeanceEnCours } from './seance-en-cours/seance-en-cours';
 
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },
@@ -38,5 +38,5 @@ export const routes: Routes = [
     { path: "routines-persos", component: RoutinesPersos },
     { path: "seance", component: Seance },
     { path: "exercice-en-cours", component: ExerciceEnCours },
-    { path: "afficher-seance", component: AfficheSceance },
+    { path: "seance-en-cours", component: SeanceEnCours },
 ];
