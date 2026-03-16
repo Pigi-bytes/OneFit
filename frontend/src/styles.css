@@ -303,9 +303,9 @@ app-chrono {
 }
 
 [tooltip] {
-  position: relative;
-  display: inline-block;
-  width: auto;
+    position: relative;
+    display: inline-block;
+    width: auto;
 }
 
 [tooltip]:hover .tooltiptext {
@@ -314,4 +314,9 @@ app-chrono {
 
 td {
     padding: 10px;
+}
+
+main.hideScrolbar {
+    justify-content: flex-start !important;
+    align-items: stretch !important;
 }

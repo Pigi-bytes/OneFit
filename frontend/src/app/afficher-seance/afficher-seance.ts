@@ -182,6 +182,9 @@ export class AfficheSceance implements OnInit {
     }
 
     retour() {
+        if (this.commencerSeance) {
+            this.ei.triggerRefresh([Message.RESET_CHRONO]);
+        }
         localStorage.removeItem("lastMessage");
         this.router.navigate(['/routine']);
     }
