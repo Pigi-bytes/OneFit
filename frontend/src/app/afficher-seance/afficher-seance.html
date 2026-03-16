@@ -4,7 +4,6 @@
 <main class="d-flex align-items-center justify-content-center min-vh-100">
 
     <h1 *ngIf="!commencerSeance">Séance du {{ jour }}</h1>
-
     <div class="d-flex flex-column gap-3 w-50 mb-3" style="overflow-y: auto; max-height: 60vh;">
         <div *ngIf="!exercices || exercices.length === 0">
             <p>Aucun exercice.</p>

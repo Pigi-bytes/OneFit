@@ -127,7 +127,7 @@ input {
 body.dark .card .btn-principal {
     background-color: var(--blue1);
     border-color: var(--blue1);
-    border-radius: 12px ;
+    border-radius: 12px;
     color: var(--white3);
 }
 
@@ -156,7 +156,7 @@ body.dark .btn-principal:hover {
 
 
 .btn-red {
-    border-radius: 12px ;
+    border-radius: 12px;
     background-color: var(--red1);
     border-color: var(--red1);
     color: var(--white3);
@@ -248,7 +248,8 @@ app-afficher-seance {
 app-afficher-exo,
 app-menu-poid,
 app-afficher-routine,
-app-configurer-exo {
+app-configurer-exo,
+app-chrono {
     flex: 3;
     /* 4 parts → ratio 6:4 = 60:40 */
 }
@@ -307,4 +308,9 @@ app-configurer-exo {
 
 td {
     padding: 10px;
+}
+
+main.hideScrolbar {
+    justify-content: flex-start !important;
+    align-items: stretch !important;
 }

@@ -189,6 +189,4 @@ export class AfficheSceance implements OnInit {
     ngOnDestroy() {
         this.subscription?.unsubscribe();
     }
-
-
 }

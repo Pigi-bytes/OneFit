@@ -44,7 +44,7 @@ export class Accueil {
     }
 
     commencerSeance() {
-        this.router.navigate(['/afficher-seance']).then(() => {
+        this.router.navigate(['/seance-en-cours']).then(() => {
             this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);
         });
     }
