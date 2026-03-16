@@ -11,14 +11,44 @@
             <img [src]="exo?.img_url" alt="{{ exo?.name }}" class="img-fluid rounded" style="max-height: 250px;">
         </div>
 
-        <form>
+        <form class="container">
             <!-- liste des sets -->
             @for (i of range(exo.planned_sets); track i) {
-                <div>{{ i }}</div>
+                <div class="row align-items-center g-3 rounded p-2 mb-2">
+
+                    <div class="col-2 fw-semibold">
+                        Set {{ i }}
+                    </div>
+
+                    <div class="col-5">
+                        <div class="input-group">
+                            <input type="number" class="form-control" placeholder="0">
+                            <span class="input-group-text">rép.</span>
+                        </div>
+                    </div>
+
+                    <div class="col-5">
+                        <div class="input-group">
+                            <input type="number" class="form-control" placeholder="0">
+                            <span class="input-group-text">kg</span>
+                        </div>
+                    </div>
+
+                </div>
             }
+
+            <div class="d-flex justify-content-center mb-3 position-relative" >
+                <button type="button" class="btn-principal btn-rond" label="Ajouter un set" tooltip>
+                    +
+                    <span class="tooltiptext">Ajouter un set</span>
+                </button>
+            </div>
+
+            <button type="submit" class="btn btn-principal"> Valider </button>
+
+
         </form>
         
-
     </div>
 
 </main>

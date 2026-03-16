@@ -11,7 +11,7 @@ import { TooltipMoveDirective } from '../tooltipmove';
 
 @Component({
 	selector: 'app-exercice-en-cours',
-	imports: [FormsModule, CommonModule, RouterModule],
+	imports: [FormsModule, CommonModule, RouterModule, TooltipMoveDirective],
 	templateUrl: './exercice-en-cours.html',
 	styleUrl: './exercice-en-cours.css',
 })

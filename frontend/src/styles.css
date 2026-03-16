@@ -287,7 +287,7 @@ app-configurer-exo {
     color: var(--blue3);
 }
 
-.tooltiptext {
+[tooltip] .tooltiptext {
     visibility: hidden;
     width: auto;
     background-color: black;
@@ -301,10 +301,21 @@ app-configurer-exo {
     font-size: 12px;
 }
 
+[tooltip] {
+  position: relative;
+  display: inline-block;
+  width: auto;
+}
+
 [tooltip]:hover .tooltiptext {
     visibility: visible;
 }
 
 td {
     padding: 10px;
+}
+
+.input-group-text {
+    background-color: var(--white3) !important;
+    color: var(--blue3) !important
 }
