@@ -23,7 +23,7 @@ export class ExerciceEnCours {
     private subscription?: Subscription;
     exo: any;
     backendResponse = "";
-    seance_exercise_id = 0;
+    seance_exercise_id = 1;
 
     constructor(
         private http: HttpClient,
