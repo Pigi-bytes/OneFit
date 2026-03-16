@@ -31,7 +31,7 @@ export class ConfigurerExo {
     modifie: any | null = null;
     requete: boolean = false;
     private platformId = inject(PLATFORM_ID);
-    ancienId = "";
+    formKey = 0;
 
 
     constructor(private ei: EnvoyerElt, private http: HttpClient, private cdr: ChangeDetectorRef, private not: Notification) { }
@@ -56,13 +56,14 @@ export class ConfigurerExo {
                 this.poids = id[4];
                 this.idSequence = id[5];
                 this.requete = true;
+                this.cdr.detectChanges();
+                this.formKey++;
                 this.chargeExo();
             }
-            else if ((id[0] === Message.AFFICHER_CONFIGURATEUR || id[0] === Message.SELECTION_EXERCICE) && (id[1] !== this.ancienId)) {
+            else if ((id[0] === Message.AFFICHER_CONFIGURATEUR || id[0] === Message.SELECTION_EXERCICE)) {
                 this.requete = true;
                 this.idExo = id[1];
                 this.modifie = null;
-                this.ancienId = this.idExo
                 this.chargeExo();
             }
             else if (id[0] === Message.RESET_CONFIGURATEUR) {
@@ -156,8 +157,11 @@ export class ConfigurerExo {
                 }
 
                 if (this.modifie) {
-                    this.ei.triggerRefresh([Message.RESET_CONFIGURATEUR, null]);
+                    this.ei.triggerRefresh([Message.AFFICHER_SEANCE, null]);
+                    this.annuler();
                 }
+
+                this.cdr.detectChanges();
             },
 
             error: (err: any) => {
@@ -188,9 +192,6 @@ export class ConfigurerExo {
             }
         });
 
-        if (this.modifie) {
-            this.annuler();
-        }
     }
 
     resetNotif() {
@@ -204,6 +205,55 @@ export class ConfigurerExo {
 
             this.ei.triggerRefresh([Message.RESET_CONFIGURATEUR]);
         }
+    }
+
+    supprimer() {
+        const confirmAction = confirm("Voulez-vous vraiment supprimer cette exercice de la séance ?");
+
+        if (confirmAction) {
+            this.http.delete('http://127.0.0.1:5000/sport/supprimerExoSeance', {
+                body: {
+                    routine_id: -1,
+                    day: this.jour,
+                    seance_exercise_id: this.idSequence,
+                }
+            }).subscribe({
+                next: (res: any) => {
+                    console.log('RESPONSE OK', res);
+                    this.backendResponse = res.message;
+                    this.ei.triggerRefresh([Message.AFFICHER_SEANCE, null]);
+                    this.annuler();
+                },
+
+                error: (err: any) => {
+                    //erreur 422
+                    if (err.status == 422 && err.error.errors) {
+
+                        const errorsObj = err.error.errors;
+                        const messages: string[] = [];
+
+                        for (const key in errorsObj) {
+
+                            const value = errorsObj[key];
+                            Object.values(value).forEach(v => {
+                                if (Array.isArray(v)) messages.push(...v);
+                                else if (typeof v === 'string') messages.push(v);
+                            });
+                        }
+
+                        this.backendResponse = messages.join('\n');
+                    }
+                    // erreurs HTTP (400, 409, 500…)
+                    else if (err.error && err.error.message) {
+                        this.backendResponse = err.error.message; // <- message du backend
+                    } else {
+                        this.backendResponse = 'Erreur serveur';
+                    }
+                    this.cdr.detectChanges();
+                }
+            });
+        }
+
     }
 
     ngOnDestroy() {
