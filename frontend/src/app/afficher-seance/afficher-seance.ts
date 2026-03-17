@@ -38,7 +38,7 @@ export class AfficheSceance implements OnInit {
     ngOnInit() {
 
         if (isPlatformBrowser(this.platformId) && localStorage.getItem("lastMessage")) {
-            if (localStorage.getItem("lastMessage") === Message.COMMENCER_SEANCE.toString()) {
+            if (localStorage.getItem("lastMessage") === Message.SEANCE_EN_COURS.toString()) {
                 this.commencerSeance = true;
 
             }
@@ -46,9 +46,9 @@ export class AfficheSceance implements OnInit {
 
 
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
-            if (id[0] === Message.COMMENCER_SEANCE) {
+            if (id[0] === Message.SEANCE_EN_COURS || id[0] === Message.COMMENCER_SEANCE) {
                 this.commencerSeance = true;
-                localStorage.setItem("lastMessage", Message.COMMENCER_SEANCE.toString());
+                localStorage.setItem("lastMessage", Message.SEANCE_EN_COURS.toString());
             }
         });
 
@@ -190,10 +190,14 @@ export class AfficheSceance implements OnInit {
 
     retour() {
         if (this.commencerSeance) {
-            this.ei.triggerRefresh([Message.RESET_CHRONO]);
+            this.ei.triggerRefresh([Message.FINIR_SEANCE]);
+            localStorage.removeItem("lastMessage");
+            this.router.navigate(['/accueil']);
+        } else {
+            localStorage.removeItem("lastMessage");
+            this.router.navigate(['/routine']);
         }
-        localStorage.removeItem("lastMessage");
-        this.router.navigate(['/routine']);
+
     }
 
     ngOnDestroy() {

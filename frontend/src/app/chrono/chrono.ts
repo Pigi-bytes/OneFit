@@ -6,6 +6,9 @@ import { EnvoyerElt } from '../envoyerElt';
 import { RouterModule, Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Erreur } from '../erreur';
+
 
 @Component({
     selector: 'app-chrono',
@@ -19,12 +22,13 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
     private platformId = inject(PLATFORM_ID);
     private subscription?: Subscription;
 
-    constructor(private elt: EnvoyerElt, private router: Router, private cdr: ChangeDetectorRef) { }
+    constructor(private elt: EnvoyerElt, private router: Router, private cdr: ChangeDetectorRef, private http: HttpClient, private er: Erreur) { }
 
     heure = 0;
     minute = 0;
     seconde = 0;
     temps: string = "00:00:00";
+    backendResponse = "";
 
     coteExo: boolean = false;
 
@@ -55,7 +59,45 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                     localStorage.setItem("coteExo", "true");
                 }
                 this.cdr.detectChanges();
+            } else if (id[0] === Message.COMMENCER_SEANCE && !localStorage.getItem("seanceEnCours")) {
+                alert("coucou");
+                this.http.post('http://127.0.0.1:5000/seanceReelle/startSeanceEffectuee', {
+                    routine_id: -1,
+                    day: localStorage.getItem("jour"),
+
+                }).subscribe({
+                    next: (res: any) => {
+                        console.log('RESPONSE OK', res);
+                        this.backendResponse = res.message;;
+                    },
+
+                    error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
+
+                });
+                localStorage.setItem("seanceEnCours", "enCours");
+            } else if (id[0] === Message.FINIR_SEANCE) {
+                this.http.post('http://127.0.0.1:5000/seanceReelle/endSeanceEffectuee', {
+                    routine_id: -1,
+                    day: localStorage.getItem("jour"),
+
+                }).subscribe({
+                    next: (res: any) => {
+                        console.log('RESPONSE OK', res);
+                        this.backendResponse = res.message;;
+                    },
+
+                    error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
+
+                });
+
+                this.isRunning = false;
+                this.resetChrono();
+                localStorage.removeItem("seanceEnCours");
+                this.router.navigate(['/accueil']);
+
+
             }
+
         });
     }
     ngAfterViewInit() {
@@ -106,7 +148,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
 
     retour() {
         if (this.coteExo) {
-            this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);
+            this.elt.triggerRefresh([Message.SEANCE_EN_COURS]);
             localStorage.removeItem("lastSequence");
             localStorage.removeItem("coteExo");
             this.router.navigate(['/seance-en-cours']);
@@ -114,6 +156,16 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
             if (confirm("voulez vous quitter la séance en cours (elle ne serat pas enregistrée)")) {
                 this.resetChrono();
                 localStorage.removeItem("lastMessage");
+                this.http.delete('http://127.0.0.1:5000/seanceReelle/abandonSeanceReelle', {
+                }).subscribe({
+                    next: (res: any) => {
+                        console.log('RESPONSE OK', res);
+                        this.backendResponse = res.message;;
+                    },
+
+                    error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
+
+                });
                 this.router.navigate(['/accueil']);
 
             }
