@@ -40,7 +40,7 @@ export class AfficherRoutine {
     }
 
     chargerInfosRoutines(){
-        this.http.post('http://127.0.0.1:5000/sport/getRoutine', {
+        this.http.post('http://127.0.0.1:5000/routine/getRoutine', {
             routine_id: this.id,
         }).subscribe({
 
@@ -81,7 +81,7 @@ export class AfficherRoutine {
     }
 
     chargerSeances() {
-        this.http.post('http://127.0.0.1:5000/sport/getSeancesPrevu', {
+        this.http.post('http://127.0.0.1:5000/seance/getSeancesPrevu', {
             routine_id: this.id,
         }).subscribe({
 
@@ -122,7 +122,7 @@ export class AfficherRoutine {
     }
 
     activerRoutine(){
-        this.http.post('http://127.0.0.1:5000/sport/activerRoutine', {
+        this.http.post('http://127.0.0.1:5000/routine/activerRoutine', {
             routine_id: this.id,
         }).subscribe({
             next: (res: any) => {
@@ -165,7 +165,7 @@ export class AfficherRoutine {
         const confirmAction = confirm("Voulez-vous vraiment supprimer cette routine ?");
 
         if (confirmAction){
-            this.http.delete('http://127.0.0.1:5000/sport/supprimerRoutine', {
+            this.http.delete('http://127.0.0.1:5000/routine/supprimerRoutine', {
                 body: {
                     routine_id: this.id
                 }
@@ -214,7 +214,7 @@ export class AfficherRoutine {
     }
 
     renommerRoutine(){
-        this.http.post('http://127.0.0.1:5000/sport/modiferNomRoutine', {
+        this.http.post('http://127.0.0.1:5000/routine/modiferNomRoutine', {
             routine_id: this.id,
             name: this.routine_nom
         }).subscribe({

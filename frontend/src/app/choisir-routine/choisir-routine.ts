@@ -30,7 +30,7 @@ export class ChoisirRoutine {
     }
 
     getRoutines() {
-        this.http.get('http://127.0.0.1:5000/sport/getRoutines', {}).subscribe({
+        this.http.get('http://127.0.0.1:5000/routine/getRoutines', {}).subscribe({
 
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
@@ -81,7 +81,7 @@ export class ChoisirRoutine {
     }
 
     creerRoutine(){
-        this.http.post('http://127.0.0.1:5000/sport/createRoutine', {
+        this.http.post('http://127.0.0.1:5000/routine/createRoutine', {
             name: "Nouvelle Routine"
         }).subscribe({
 

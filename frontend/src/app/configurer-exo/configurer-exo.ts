@@ -129,10 +129,10 @@ export class ConfigurerExo {
     action() {
         let chemin = "";
         if (!this.modifie) {
-            chemin = 'http://127.0.0.1:5000/sport/ajouterExoSeance'
+            chemin = 'http://127.0.0.1:5000/seance/ajouterExoSeance'
         }
         else {
-            chemin = 'http://127.0.0.1:5000/sport/changerConfigurationExo';
+            chemin = 'http://127.0.0.1:5000/seance/changerConfigurationExo';
         }
         this.http.post(chemin, {
             routine_id: -1,
@@ -211,7 +211,7 @@ export class ConfigurerExo {
         const confirmAction = confirm("Voulez-vous vraiment supprimer cette exercice de la séance ?");
 
         if (confirmAction) {
-            this.http.delete('http://127.0.0.1:5000/sport/supprimerExoSeance', {
+            this.http.delete('http://127.0.0.1:5000/seance/supprimerExoSeance', {
                 body: {
                     routine_id: -1,
                     day: this.jour,

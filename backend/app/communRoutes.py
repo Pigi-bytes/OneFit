@@ -44,28 +44,3 @@ def userResponse(user: User) -> dict:
         "taille": user.taille,
         "dernierPoids": dernier_poids,
     }
-
-
-def _load_blueprints():
-    from app.Routes.auth import authBLP as _authBLP
-    from app.Routes.externe import externeBLP as _externeBLP
-    from app.Routes.sport import sportBLP as _sportBLP
-    from app.Routes.user import userBLP as _userBLP
-    from app.Routes.user_option import userOptionBLP as _userOptionBLP
-
-    return _authBLP, _userBLP, _userOptionBLP, _externeBLP, _sportBLP
-
-
-authBLP, userBLP, userOptionBLP, externeBLP, sportBLP = _load_blueprints()
-
-__all__ = [
-    "APISPORT",
-    "APISALLE",
-    "getCurrentUserOrAbort401",
-    "userResponse",
-    "authBLP",
-    "userBLP",
-    "userOptionBLP",
-    "externeBLP",
-    "sportBLP",
-]

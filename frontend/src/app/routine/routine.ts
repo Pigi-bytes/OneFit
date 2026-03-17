@@ -32,7 +32,7 @@ export class Routine {
 
     ngOnInit() {
 
-        this.http.post('http://127.0.0.1:5000/sport/getSeancesPrevu', {
+        this.http.post('http://127.0.0.1:5000/seance/getSeancesPrevu', {
             routine_id: this.id,
 
         }).subscribe({

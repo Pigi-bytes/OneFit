@@ -44,7 +44,14 @@ api.spec.components.security_scheme(  # type: ignore
     },
 )
 
-from app.coreRoutes import authBLP, externeBLP, sportBLP, userBLP, userOptionBLP  # noqa: E402
+
+from app.Routes.auth import authBLP  # noqa: E402
+from app.Routes.externe import externeBLP  # noqa: E402
+from app.Routes.routine import routineBLP  # noqa: E402
+from app.Routes.seance import seanceBLP  # noqa: E402
+from app.Routes.seanceReel import seanceReelleBLP  # noqa: E402
+from app.Routes.user import userBLP  # noqa: E402
+from app.Routes.user_option import userOptionBLP  # noqa: E402
 
 api.register_blueprint(authBLP)
 logger.debug("Blueprint enregistré (/auth)")
@@ -54,8 +61,12 @@ api.register_blueprint(userOptionBLP)
 logger.debug("Blueprint enregistré (/user/option)")
 api.register_blueprint(externeBLP)
 logger.debug("Blueprint enregistré (/externe/)")
-api.register_blueprint(sportBLP)
-logger.debug("Blueprint enregistré (/sport/)")
+api.register_blueprint(routineBLP)
+logger.debug("Blueprint enregistré (/routine/)")
+api.register_blueprint(seanceBLP)
+logger.debug("Blueprint enregistré (/seance/)")
+api.register_blueprint(seanceReelleBLP)
+logger.debug("Blueprint enregistré (/seanceReelle/)")
 
 
 @app.before_request

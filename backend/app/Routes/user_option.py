@@ -5,7 +5,7 @@ from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
 from app import db
-from app.coreRoutes import getCurrentUserOrAbort401, userResponse
+from app.communRoutes import getCurrentUserOrAbort401, userResponse
 from app.models import User
 from app.schemas import (
     BaseErrorSchema,

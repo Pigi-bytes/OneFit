@@ -64,7 +64,7 @@ export class AfficheSceance implements OnInit {
     }
 
     chargeSeance() {
-        this.http.post('http://127.0.0.1:5000/sport/getSeanceDuJour', {
+        this.http.post('http://127.0.0.1:5000/seance/getSeanceDuJour', {
             routine_id: -1,
             day: this.jour
 
@@ -129,7 +129,7 @@ export class AfficheSceance implements OnInit {
 
         }
 
-        this.http.post('http://127.0.0.1:5000/sport/deplacerOrdreExoSeance', {
+        this.http.post('http://127.0.0.1:5000/seance/deplacerOrdreExoSeance', {
             routine_id: -1,
             day: this.jour,
             seance_exercise_id: id,
