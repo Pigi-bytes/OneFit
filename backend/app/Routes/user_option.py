@@ -1,12 +1,10 @@
-import sqlalchemy as sa
 from flask import request
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
 from app import db
-from app.communRoutes import getCurrentUserOrAbort401, userResponse
-from app.models import User
+from app.communRoutes import checkUserExistsByUsername, getCurrentUserOrAbort401, userResponse
 from app.schemas import (
     BaseErrorSchema,
     MessageSchema,
@@ -94,10 +92,7 @@ def modifierUsername(data):
 
     route_logger.info(f"USERNAME CHANGE ATTEMPT | user_id={user.id} | {old_username} -> {new_username}")
 
-    with QueryTimer("checkUsernameExists"):
-        existing = db.session.scalar(sa.select(User).where(User.username == new_username))
-
-    if existing:
+    if checkUserExistsByUsername(data["username"]):
         route_logger.warning(f"USERNAME CHANGE CONFLICT | user_id={user.id} | {new_username} déjà pris")
         abort(409, message="Nom d'utilisateur déjà pris")
 

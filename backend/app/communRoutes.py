@@ -34,6 +34,19 @@ def getCurrentUserOrAbort401() -> User:
     return user
 
 
+def checkUserExistsByUsername(username: str):
+    """Retourne l'utilisateur existant pour un username ou None (utilisé pour inscription/login)"""
+    with QueryTimer("checkUsernameExists"):
+        return db.session.scalar(sa.select(User).where(User.username == username))
+
+
+def addAndCommit(obj, queryNameLog: str):
+    """Ajoute un objet à la session, commit"""
+    with QueryTimer(queryNameLog):
+        db.session.add(obj)
+        db.session.commit()
+
+
 def userResponse(user: User) -> dict:
     """Construit le dict de réponse standard pour un utilisateur"""
     dernier_poids = user.historique_poids[-1].poids if user.historique_poids else None

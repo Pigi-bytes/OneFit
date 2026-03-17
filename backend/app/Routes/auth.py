@@ -1,14 +1,13 @@
 from datetime import date
 
-import sqlalchemy as sa
 from flask_jwt_extended import create_access_token
 from flask_smorest import Blueprint, abort
 from werkzeug.security import generate_password_hash
 
-from app import db
+from app.communRoutes import addAndCommit, checkUserExistsByUsername
 from app.models import User
 from app.schemas import BaseErrorSchema, LoginSchema, MessageSchema, RegisterSchema, TokenSchema, ValidationErrorSchema
-from app.utils.logger import QueryTimer, auth_logger
+from app.utils.logger import auth_logger
 
 authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentification")
 
@@ -20,23 +19,14 @@ authBLP = Blueprint("auth", __name__, url_prefix="/auth", description="Authentif
 @authBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 def login(data):
     """Connexion utilisateur"""
-    username = data["username"]
-    auth_logger.info(f"LOGIN ATTEMPT | username={username}")
+    user = checkUserExistsByUsername(data["username"])
 
-    with QueryTimer("Test Login"):
-        user = db.session.scalar(sa.select(User).where(User.username == username))
-
-    if user is None:
-        auth_logger.warning(f"LOGIN FAIL | Utilisateur inexistant | username={username}")
+    if not user or not user.checkPassword(data["password"]):
+        auth_logger.warning(f"LOGIN FAIL | username={data['username']}")
         abort(401, message="Identifiants invalides")
 
-    if not user.checkPassword(data["password"]):
-        auth_logger.warning(f"LOGIN FAIL | Mot de passe incorrect | username={username} | user_id={user.id}")
-        abort(401, message="Identifiants invalides")
-
-    access_token = create_access_token(identity=str(user.id))
-    auth_logger.info(f"LOGIN SUCCESS | username={username} | user_id={user.id}")
-    return {"access_token": access_token}
+    auth_logger.info(f"LOGIN SUCCESS | username={data['username']} | user_id={user.id}")
+    return {"access_token": create_access_token(identity=str(user.id))}
 
 
 @authBLP.route("/inscription", methods=["POST"])
@@ -46,21 +36,15 @@ def login(data):
 @authBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 def inscription(data):
     """Inscription d'un nouvel utilisateur"""
-    username = data["username"]
-    auth_logger.info(f"REGISTER ATTEMPT | username={username}")
-
-    with QueryTimer("checkUsernameExists"):
-        existing_user = db.session.scalar(sa.select(User).where(User.username == username))
-
-    if existing_user:
-        auth_logger.warning(f"REGISTER CONFLICT | Username déjà pris | username={username}")
+    if checkUserExistsByUsername(data["username"]):
+        auth_logger.warning(f"REGISTER CONFLICT | Username déjà pris | username={data['username']}")
         abort(409, message="Nom d'utilisateur déjà pris")
 
-    user = User(username=username, password=generate_password_hash(data["password"]), date_naissance=date.today(), taille=160)  # type: ignore # TODO CHANGER LES VALEURS DE BASE PLUS TARD
+    user = User(
+        username=data["username"], password=generate_password_hash(data["password"]), date_naissance=date.today(), taille=160
+    )  # type: ignore
 
-    db.session.add(user)
-    with QueryTimer("commitInscription"):
-        db.session.commit()
+    addAndCommit(user, "commitInscription")
 
-    auth_logger.info(f"REGISTER SUCCESS | username={username} | user_id={user.id}")
+    auth_logger.info(f"REGISTER SUCCESS | username={data['username']} | user_id={user.id}")
     return {"message": "User created successfully!"}
