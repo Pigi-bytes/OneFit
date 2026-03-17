@@ -6,6 +6,7 @@ from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 
 from app import db
+from app.communRoutes import getCurrentUserOrAbort401
 from app.models import DayOfWeek, Routine, Seance, SeanceExercise, WorkoutLog, WorkoutSession
 from app.schemas import (
     AddPerformedExerciseSchema,
@@ -16,7 +17,6 @@ from app.schemas import (
     ValidationErrorSchema,
 )
 from app.utils.logger import QueryTimer, route_logger
-from app.communRoutes import getCurrentUserOrAbort401
 
 seanceReelleBLP = Blueprint("seanceReelle", __name__, url_prefix="/seanceReelle", description="Gestion des séances réelles")
 
@@ -147,3 +147,39 @@ def endSeanceEffectuee(data):
         "message": "Séance effectuée terminée.",
         "time": session.ended_at - session.started_at,
     }
+
+
+@seanceReelleBLP.route("/abandonSeanceReelle", methods=["DELETE"])
+@seanceReelleBLP.doc(security=[{"bearerAuth": []}])
+@seanceReelleBLP.response(200, MessageSchema)
+@seanceReelleBLP.alt_response(404, schema=BaseErrorSchema, description="Aucune séance en cours")
+@jwt_required()
+def abandonSeanceReelle():
+    user = getCurrentUserOrAbort401()
+
+    # Récupérer la session active
+    with QueryTimer("findActiveSessionToAbort"):
+        session = db.session.scalar(
+            sa.select(WorkoutSession).where(WorkoutSession.user_id == user.id, WorkoutSession.ended_at.is_(None))
+        )
+
+    if not session:
+        abort(404, message="Aucune séance en cours à annuler.")
+
+    # Supprimer les logs enregistrés durant cette session
+    # On se base sur le seance_id et le fait que les logs soient arrivés après started_at
+    with QueryTimer("deleteWorkoutLogsForAbortedSession"):
+        db.session.execute(
+            sa.delete(WorkoutLog).where(
+                WorkoutLog.user_id == user.id, WorkoutLog.seance_id == session.seance_id, WorkoutLog.date >= session.started_at
+            )
+        )
+
+    # Supprimer la session elle-même
+    with QueryTimer("deleteActiveSession"):
+        db.session.delete(session)
+        db.session.commit()
+
+    route_logger.info(f"WORKOUT SESSION ABORTED | user_id={user.id} | session_id={session.id} | seance_id={session.seance_id}")
+
+    return {"message": "Séance annulée et données supprimées avec succès."}
