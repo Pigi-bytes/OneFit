@@ -4,8 +4,13 @@ from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 
 from app import db
-from app.communRoutes import getCurrentUserOrAbort401
-from app.models import DayOfWeek, Exercise, Routine, Seance, SeanceExercise
+from app.communRoutes import (
+    getCurrentUserOrAbort401,
+    getRoutineForUserOrAbort404,
+    getSeanceForRoutineAndDayOrAbort404,
+    seanceResponse,
+)
+from app.models import Exercise, Routine, Seance, SeanceExercise
 from app.schemas import (
     ActiveRoutineSchema,
     AddExerciseToSeanceSchema,
@@ -33,38 +38,9 @@ seanceBLP = Blueprint("seance", __name__, url_prefix="/seance", description="Ges
 @jwt_required()
 def getSeancesPrevu(data):
     user = getCurrentUserOrAbort401()
-    if data["routine_id"] == -1:
-        routine = user.activeRoutine()
-    else:
-        with QueryTimer("checkRoutineExistant"):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
     route_logger.info(f"GET SEANCES | user_id={user.id} | routine={routine.id}")
-    seances = []
-    for s in routine.seances:
-        seances.append(
-            {
-                "id": s.id,
-                "routine_id": s.routine_id,
-                "day": s.day.value,
-                "title": s.title,
-                "is_rest_day": s.is_rest_day,
-                "exercises": [
-                    {
-                        "seance_exercise_id": plan.id,
-                        "exoId": plan.exercise.id_api,
-                        "name": plan.exercise.name,
-                        "ordre": plan.ordre,
-                        "planned_sets": plan.planned_sets,
-                        "planned_reps": plan.planned_reps,
-                        "planned_weight": plan.planned_weight,
-                        "img_url": plan.exercise.img_url,
-                    }
-                    for plan in s.trieParOrdre()
-                ],
-            }
-        )
+    seances = [seanceResponse(s) for s in routine.seances]
     if not seances:
         abort(404, message="Aucune séance trouvée pour la routine active.")
     return {"seances": seances}
@@ -79,20 +55,11 @@ def getSeancesPrevu(data):
 @jwt_required()
 def ajouterExoSeance(data):
     user = getCurrentUserOrAbort401()
-    if data["routine_id"] == -1:
-        routine = user.activeRoutine()
-    else:
-        with QueryTimer("checkRoutineExistant"):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
     exercise = db.session.scalar(sa.select(Exercise).where(Exercise.id_api == data["exercise_id"]))
     if not exercise:
         abort(404, message="Exercice non trouvé.")
-    day_enum = DayOfWeek(data["day"])
-    seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == day_enum))
-    if not seance:
-        abort(404, message="Séance non trouvée pour ce jour.")
+    seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
     ordre = max((plan.ordre for plan in seance.exercises_plan), default=0) + 1
     plan = SeanceExercise(
         seance_id=seance.id,
@@ -122,17 +89,8 @@ def ajouterExoSeance(data):
 @jwt_required()
 def deplacerOrdreExoSeance(data):
     user = getCurrentUserOrAbort401()
-    if data["routine_id"] == -1:
-        routine = user.activeRoutine()
-    else:
-        with QueryTimer("checkRoutineExistant"):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
-    with QueryTimer("checkSeanceExistant"):
-        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
-    if not seance:
-        abort(404, message="Séance non trouvée pour ce jour.")
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
+    seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
     try:
         moved = seance.moveExercice(data["seance_exercise_id"], data["direction"])
     except ValueError:
@@ -164,38 +122,9 @@ def deplacerOrdreExoSeance(data):
 @jwt_required()
 def getSeanceDuJour(data):
     user = getCurrentUserOrAbort401()
-    if data["routine_id"] == -1:
-        routine = user.activeRoutine()
-    else:
-        with QueryTimer("checkRoutineExistant"):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
-    with QueryTimer("checkSeanceExistant    "):
-        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
-    if not seance:
-        abort(404, message="Séance non trouvée pour ce jour.")
-    res = {
-        "id": seance.id,
-        "routine_id": seance.routine_id,
-        "day": seance.day.value,
-        "title": seance.title,
-        "is_rest_day": seance.is_rest_day,
-        "exercises": [
-            {
-                "seance_exercise_id": plan.id,
-                "exoId": plan.exercise.id_api,
-                "name": plan.exercise.name,
-                "ordre": plan.ordre,
-                "planned_sets": plan.planned_sets,
-                "planned_reps": plan.planned_reps,
-                "planned_weight": plan.planned_weight,
-                "img_url": plan.exercise.img_url,
-            }
-            for plan in seance.trieParOrdre()
-        ],
-    }
-    return {"seance": res}
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
+    seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
+    return {"seance": seanceResponse(seance)}
 
 
 @seanceBLP.route("/changerConfigurationExo", methods=["POST"])
@@ -207,17 +136,8 @@ def getSeanceDuJour(data):
 @jwt_required()
 def changerConfigurationExo(data):
     user = getCurrentUserOrAbort401()
-    if data["routine_id"] == -1:
-        routine = user.activeRoutine()
-    else:
-        with QueryTimer("checkRoutineExistant"):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
-    with QueryTimer("checkSeanceExistant"):
-        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
-    if not seance:
-        abort(404, message="Séance non trouvée pour ce jour.")
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
+    seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
     with QueryTimer("checkExoExiste"):
         plan = db.session.scalar(
             sa.select(SeanceExercise).where(
@@ -273,17 +193,8 @@ def modifierNomSeance(data):
 @jwt_required()
 def supprimerExoSeance(data):
     user = getCurrentUserOrAbort401()
-    if data["routine_id"] == -1:
-        routine = user.activeRoutine()
-    else:
-        with QueryTimer("checkRoutineExistant"):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
-    with QueryTimer("checkSeanceExistant"):
-        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
-    if not seance:
-        abort(404, message="Séance non trouvée pour ce jour.")
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
+    seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
     with QueryTimer("checkExoPlanExistant"):
         plan = db.session.scalar(
             sa.select(SeanceExercise).where(

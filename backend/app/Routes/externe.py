@@ -3,7 +3,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_smorest import Blueprint, abort
 
 from app import db
-from app.communRoutes import APISALLE, APISPORT
+from app.communRoutes import APISALLE, APISPORT, exerciseResponse
 from app.models import Exercise
 from app.schemas import (
     BaseErrorSchema,
@@ -72,15 +72,7 @@ def getExo(data):
 
     if exo:
         route_logger.warning(f"EXO FETCH WIN | user_id={get_jwt_identity()} | exoId={idExo}")
-        return {
-            "idExo": exo.id_api,
-            "name": exo.name,
-            "img_url": exo.img_url,
-            "video_url": exo.video_url,
-            "overview": exo.overview,
-            "instructions": exo.instructions,
-            "body_part": exo.body_part,
-        }
+        return exerciseResponse(exo)
 
     route_logger.warning(f"EXO FETCH FAIL | user_id={get_jwt_identity()} | exoId={idExo}")
     exo = APISPORT.get(f"exercises/{idExo}")
@@ -102,16 +94,7 @@ def getExo(data):
         db.session.commit()
 
     route_logger.info(f"EXO CREATED | user_id={get_jwt_identity()} | exoId={exercise.id_api}")
-
-    return {
-        "idExo": exercise.id_api,
-        "name": exercise.name,
-        "img_url": exercise.img_url,
-        "video_url": exercise.video_url,
-        "overview": exercise.overview,
-        "instructions": exercise.instructions,
-        "body_part": exercise.body_part,
-    }
+    return exerciseResponse(exercise)
 
 
 @externeBLP.route("/searchExo", methods=["POST"])

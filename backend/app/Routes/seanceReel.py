@@ -6,8 +6,8 @@ from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 
 from app import db
-from app.communRoutes import getCurrentUserOrAbort401
-from app.models import DayOfWeek, Routine, Seance, SeanceExercise, WorkoutLog, WorkoutSession
+from app.communRoutes import getCurrentUserOrAbort401, getRoutineForUserOrAbort404, getSeanceForRoutineAndDayOrAbort404
+from app.models import Routine, Seance, SeanceExercise, WorkoutLog, WorkoutSession
 from app.schemas import (
     AddPerformedExerciseSchema,
     BaseErrorSchema,
@@ -80,17 +80,8 @@ def startSeanceEffectuee(data):
         )
     if active_session:
         abort(409, message="Une séance effectuée est déjà en cours.")
-    if data["routine_id"] == -1:
-        routine = user.activeRoutine()
-    else:
-        with QueryTimer("checkRoutineExistant"):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
-    with QueryTimer("checkSeanceForUser"):
-        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
-    if not seance:
-        abort(404, message="Séance non trouvée pour ce jour.")
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
+    seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
     if seance.is_rest_day:
         abort(409, message="Impossible de démarrer une séance sur un jour de repos.")
     session = WorkoutSession(user_id=user.id, seance_id=seance.id)
@@ -114,17 +105,8 @@ def startSeanceEffectuee(data):
 @jwt_required()
 def endSeanceEffectuee(data):
     user = getCurrentUserOrAbort401()
-    if data["routine_id"] == -1:
-        routine = user.activeRoutine()
-    else:
-        with QueryTimer("checkRoutineExistant"):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
-    with QueryTimer("checkSeanceForUser"):
-        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(data["day"])))
-    if not seance:
-        abort(404, message="Séance non trouvée pour ce jour.")
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
+    seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
     with QueryTimer("checkWorkoutSessionForUser"):
         session = db.session.scalar(
             sa.select(WorkoutSession)

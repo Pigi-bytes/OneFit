@@ -1,9 +1,8 @@
-import sqlalchemy as sa
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 
 from app import db
-from app.communRoutes import getCurrentUserOrAbort401
+from app.communRoutes import getCurrentUserOrAbort401, getRoutineForUserOrAbort404
 from app.models import DayOfWeek, Routine, Seance
 from app.schemas import (
     ActiveRoutineSchema,
@@ -45,13 +44,7 @@ def getRoutines():
 @jwt_required()
 def getRoutine(data):
     user = getCurrentUserOrAbort401()
-    if data["routine_id"] == -1:
-        routine = user.activeRoutine()
-    else:
-        with QueryTimer("checkRoutineExistant"):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
     route_logger.info(f"GET ROUTINE | user_id={user.id} | routine={routine.id}")
     return routine
 
@@ -87,11 +80,8 @@ def createRoutine(data):
 def activerRoutine(data):
     user = getCurrentUserOrAbort401()
     routine_id = data["routine_id"]
-    with QueryTimer("checkRoutineExistant"):
-        routine = db.session.scalar(sa.select(Routine).where(Routine.id == routine_id, Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
-    user.setActiveRoutine(routine_id)
+    routine = getRoutineForUserOrAbort404(user, routine_id)
+    user.setActiveRoutine(routine.id)
     db.session.commit()
     route_logger.info(f"ROUTINE ACTIVATED | user_id={user.id} | routine_id={routine.id}")
     return {"message": f"La routine '{routine.name}' est maintenant active !"}
@@ -108,10 +98,7 @@ def activerRoutine(data):
 def supprimerRoutine(data):
     user = getCurrentUserOrAbort401()
     routine_id = data["routine_id"]
-    with QueryTimer("checkRoutineExistant"):
-        routine = db.session.scalar(sa.select(Routine).where(Routine.id == routine_id, Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+    routine = getRoutineForUserOrAbort404(user, routine_id)
     if routine.is_active:
         abort(409, message="Impossible de supprimer une routine active. Veuillez d'abord en activer une autre.")
     with QueryTimer("deleteRoutineDB"):
@@ -130,10 +117,7 @@ def supprimerRoutine(data):
 @jwt_required()
 def modiferNomRoutine(data):
     user = getCurrentUserOrAbort401()
-    with QueryTimer("checkRoutineExistant"):
-        routine = db.session.scalar(sa.select(Routine).where(Routine.id == data["routine_id"], Routine.user_id == user.id))
-    if not routine:
-        abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
     old_name = routine.name
     routine.name = data["name"]
     with QueryTimer("commitUpdateRoutineName"):
