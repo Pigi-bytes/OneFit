@@ -113,6 +113,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
         } else {
             if (confirm("voulez vous quitter la séance en cours (elle ne serat pas enregistrée)")) {
                 this.resetChrono();
+                localStorage.removeItem("lastMessage");
                 this.router.navigate(['/accueil']);
 
             }
