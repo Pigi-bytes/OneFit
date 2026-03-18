@@ -44,6 +44,8 @@ export class Accueil {
     }
 
     commencerSeance() {
+        localStorage.removeItem("seanceEnCours");
+        localStorage.removeItem("seanceFini");
         const now = new Date();
         let jour = "";
         switch (now.getDay()) {

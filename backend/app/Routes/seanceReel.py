@@ -127,7 +127,7 @@ def endSeanceEffectuee(data):
     )
     return {
         "message": "Séance effectuée terminée.",
-        "time": session.ended_at - session.started_at,
+        "time": int((session.ended_at - session.started_at).total_seconds()),
     }
 
 

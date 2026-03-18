@@ -60,7 +60,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                 }
                 this.cdr.detectChanges();
             } else if (id[0] === Message.COMMENCER_SEANCE && !localStorage.getItem("seanceEnCours")) {
-                alert("coucou");
+                localStorage.setItem("seanceEnCours", "enCours");
                 this.http.post('http://127.0.0.1:5000/seanceReelle/startSeanceEffectuee', {
                     routine_id: -1,
                     day: localStorage.getItem("jour"),
@@ -74,8 +74,9 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                     error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
 
                 });
-                localStorage.setItem("seanceEnCours", "enCours");
-            } else if (id[0] === Message.FINIR_SEANCE) {
+
+            } else if (id[0] === Message.FINIR_SEANCE && !localStorage.getItem("seanceFini")) {
+                localStorage.setItem("seanceFini", "fini");
                 this.http.post('http://127.0.0.1:5000/seanceReelle/endSeanceEffectuee', {
                     routine_id: -1,
                     day: localStorage.getItem("jour"),

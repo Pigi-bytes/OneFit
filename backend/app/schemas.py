@@ -356,7 +356,7 @@ class StartEndSeanceEffectueeSchema(Schema):
 
 class TimeTotakSchema(Schema):
     message = fields.Str(required=True)
-    time = fields.DateTime(required=True)
+    time = fields.Int(required=True)
 
 
 def _seance_id(**kw):
