@@ -1,6 +1,6 @@
 <div class="position-relative w-100 text-center">
 
-    <button class="btn-principal btn-rond position-absolute start-0" tooltip (click)="retour()">
+    <button class="btn-principal btn-rond position-absolute start-0" tooltip (click)="retour()" *ngIf="!coteRecap">
         <span class="tooltiptext" *ngIf="coteExo">revenir sur la séance</span>
         <span class="tooltiptext" *ngIf="!coteExo">annuler séance</span>
         &#11164;

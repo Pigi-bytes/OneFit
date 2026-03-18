@@ -18,6 +18,7 @@ import { RoutinesPersos } from './routines-persos/routines-persos';
 import { Seance } from './seance/seance';
 import { ExerciceEnCours } from './exercice-en-cours/exercice-en-cours';
 import { SeanceEnCours } from './seance-en-cours/seance-en-cours';
+import { RecapSceance } from './recap-sceance/recap-sceance';
 
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },
@@ -39,4 +40,5 @@ export const routes: Routes = [
     { path: "seance", component: Seance },
     { path: "exercice-en-cours", component: ExerciceEnCours, data: { hideMenu: true } },
     { path: "seance-en-cours", component: SeanceEnCours, data: { hideMenu: true } },
+    { path: "recap-seance", component: RecapSceance, data: { hideMenu: true } },
 ];

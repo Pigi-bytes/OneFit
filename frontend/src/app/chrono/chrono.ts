@@ -31,11 +31,17 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
     backendResponse = "";
 
     coteExo: boolean = false;
+    coteRecap: boolean = false;
 
     private intervalId: any;
 
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {
+            const savedRecap = localStorage.getItem("coteRecap");
+            if (savedRecap === "true") {
+                this.coteExo = true;
+                localStorage.setItem("coteRecap", "true");
+            }
             const savedCoteExo = localStorage.getItem("coteExo");
             if (savedCoteExo === "true") {
                 this.coteExo = true;
@@ -60,7 +66,10 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                 }
                 this.cdr.detectChanges();
             } else if (id[0] === Message.COMMENCER_SEANCE && !localStorage.getItem("seanceEnCours")) {
-                localStorage.setItem("seanceEnCours", "enCours");
+                if (isPlatformBrowser(this.platformId)) {
+                    localStorage.setItem("seanceEnCours", "enCours");
+                }
+
                 this.http.post('http://127.0.0.1:5000/seanceReelle/startSeanceEffectuee', {
                     routine_id: -1,
                     day: localStorage.getItem("jour"),
@@ -76,7 +85,10 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                 });
 
             } else if (id[0] === Message.FINIR_SEANCE && !localStorage.getItem("seanceFini")) {
-                localStorage.setItem("seanceFini", "fini");
+                if (isPlatformBrowser(this.platformId)) {
+                    localStorage.setItem("seanceFini", "fini");
+                }
+
                 this.http.post('http://127.0.0.1:5000/seanceReelle/endSeanceEffectuee', {
                     routine_id: -1,
                     day: localStorage.getItem("jour"),
@@ -92,11 +104,16 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                 });
 
                 this.isRunning = false;
-                this.resetChrono();
+                this.stopChrono();
                 localStorage.removeItem("seanceEnCours");
                 this.router.navigate(['/accueil']);
-
-
+            } else if (id[0] === Message.CHRONO_RECAP) {
+                this.coteRecap = true;
+                this.isRunning = false;
+                localStorage.setItem("coteRecap", "true");
+            } else if (id[0] === Message.FINIR_RECAP) {
+                this.resetChrono();
+                localStorage.removeItem("coteRecap");
             }
 
         });

@@ -192,7 +192,7 @@ export class AfficheSceance implements OnInit {
         if (this.commencerSeance) {
             this.ei.triggerRefresh([Message.FINIR_SEANCE]);
             localStorage.removeItem("lastMessage");
-            this.router.navigate(['/accueil']);
+            this.router.navigate(['/recap-seance']);
         } else {
             localStorage.removeItem("lastMessage");
             this.router.navigate(['/routine']);

@@ -10,4 +10,6 @@ export enum Message {
     CHRONO_EXO = 8,
     COMMENCER_SEANCE = 9,
     FINIR_SEANCE = 10,
+    CHRONO_RECAP = 11,
+    FINIR_RECAP = 12,
 }
