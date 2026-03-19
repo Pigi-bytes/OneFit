@@ -40,6 +40,12 @@ def checkUserExistsByUsername(username: str):
         return db.session.scalar(sa.select(User).where(User.username == username))
 
 
+def checkExoExists(idExo: str):
+    """Retourne l'exo par son id"""
+    with QueryTimer("getEXoId"):
+        return db.session.scalar(sa.select(Exercise).where(Exercise.id_api == idExo))
+
+
 def addAndCommit(obj, queryNameLog: str):
     """Ajoute un objet à la session, commit"""
     with QueryTimer(queryNameLog):

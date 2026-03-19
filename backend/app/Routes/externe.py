@@ -1,9 +1,8 @@
-import sqlalchemy as sa
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_smorest import Blueprint, abort
 
 from app import db
-from app.communRoutes import APISALLE, APISPORT, exerciseResponse
+from app.communRoutes import APISALLE, APISPORT, checkExoExists, exerciseResponse
 from app.models import Exercise
 from app.schemas import (
     BaseErrorSchema,
@@ -26,13 +25,8 @@ externeBLP = Blueprint("externe", __name__, url_prefix="/externe", description="
 @externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 def getSalle(data):
     "trouve les salles en fonction d'un nom de ville"
-
     route_logger.info(f"SALLE SEARCH | ville={data['ville']}")
-
-    params = {"near": data["ville"], "limit": 50, "query": "gym"}
-    response = APISALLE.get("search", params=params, useCache=True)
-
-    return response
+    return APISALLE.get("search", params={"near": data["ville"], "limit": 50, "query": "gym"}, useCache=True)
 
 
 @externeBLP.route("/salleByLoc", methods=["POST"])
@@ -41,41 +35,28 @@ def getSalle(data):
 @externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 def getSalleLoc(data):
     "trouve les salles en fonction d'un nom de ville"
-
     route_logger.info(f"SALLE LOC SEARCH | lat={data['lat']} | lng={data['lng']}")
-
-    params = {"ll": f"{data['lat']},{data['lng']}", "limit": 50, "query": "gym"}
-    response = APISALLE.get("search", params=params, useCache=True)
-
-    return response
+    return APISALLE.get("search", params={"ll": f"{data['lat']},{data['lng']}", "limit": 50, "query": "gym"}, useCache=True)
 
 
 @externeBLP.route("/getExo", methods=["POST"])
 @externeBLP.arguments(ExerciceRequestSchema)
 @externeBLP.doc(security=[{"bearerAuth": []}])
 @externeBLP.response(200, ExerciceResponseSchema)
-@externeBLP.alt_response(400, schema=BaseErrorSchema, description="Erreur lors de la récupération de l'exercice")
 @externeBLP.alt_response(404, schema=BaseErrorSchema, description="Exercice non trouvé sur l'API externe")
 @externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def getExo(data):
     """Récupère un exercice depuis la BDD si existant, sinon depuis l'API externe puis le sauvegarde"""
+    route_logger.info(f"EXO FETCH ATTEMPT | user_id={get_jwt_identity()} | exoId={data['exoId']}")
 
-    idExo = data["exoId"]
-    if not idExo:
-        abort(400, message="exerciseId manquant")
-
-    route_logger.info(f"EXO FETCH ATTEMPT | user_id={get_jwt_identity()} | exoId={idExo}")
-
-    with QueryTimer("checkExoExistant"):
-        exo = db.session.scalar(sa.select(Exercise).where(Exercise.id_api == idExo))
-
+    exo = checkExoExists(data["exoId"])
     if exo:
-        route_logger.warning(f"EXO FETCH WIN | user_id={get_jwt_identity()} | exoId={idExo}")
+        route_logger.warning(f"EXO FETCH WIN | exoId={data['exoId']}")
         return exerciseResponse(exo)
 
-    route_logger.warning(f"EXO FETCH FAIL | user_id={get_jwt_identity()} | exoId={idExo}")
-    exo = APISPORT.get(f"exercises/{idExo}")
+    route_logger.warning(f"EXO FETCH FAIL | exoId={data['exoId']}")
+    exo = APISPORT.get(f"exercises/{data['exoId']}")
     if not exo:
         abort(404, message="Erreur lors de la récupération de l'exercice externe")
 
@@ -107,16 +88,12 @@ def getExo(data):
 def searchExo(data):
     """Recherche des exercices par nom (fuzzy matching) et retourne les n plus proches."""
 
-    recherche = data["recherche"]
-    n = int(data["limit"])
-
-    route_logger.info(f"EXO SEARCH | recherche={recherche} | limit={n}")
-    params = {"search": recherche, "limit": n}
+    route_logger.info(f"EXO SEARCH | recherche={data['recherche']} | limit={int(data['limit'])}")
+    params = {"search": data["recherche"], "limit": int(data["limit"])}
     response = APISPORT.get("exercises/search", params=params)
 
     if not response:
-        route_logger.warning(f"EXO SEARCH FAIL | recherche={recherche}")
+        route_logger.warning(f"EXO SEARCH FAIL | recherche={data['recherche']}")
         abort(400, message="Erreur")
 
-    resultat = [(exo["name"], exo["exerciseId"], exo["imageUrl"]) for exo in response]
-    return {"resultats": resultat}
+    return {"resultats": [(exo["name"], exo["exerciseId"], exo["imageUrl"]) for exo in response]}
