@@ -18,6 +18,38 @@ from app.utils.logger import QueryTimer, route_logger
 
 externeBLP = Blueprint("externe", __name__, url_prefix="/externe", description="Call a l'autre api")
 
+TEMPS_DISTANCE_MOTS = {
+    "run",
+    "running",
+    "jog",
+    "sprint",
+    "walk",
+    "treadmill",
+    "bike",
+    "cycling",
+    "cycle",
+    "elliptical",
+    "rowing",
+    "jump rope",
+    "skip",
+    "skipping",
+    "stair",
+    "step",
+    "cardio",
+    "hiit",
+    "burpee",
+    "mountain climber",
+    "box jump",
+    "plank",
+    "hold",
+    "isometric",
+    "wall sit",
+    "static",
+    "flutter kick",
+    "hollow body",
+    "dead hang",
+}
+
 
 @externeBLP.route("/salle", methods=["POST"])
 @externeBLP.arguments(SalleSchema)
@@ -96,4 +128,13 @@ def searchExo(data):
         route_logger.warning(f"EXO SEARCH FAIL | recherche={data['recherche']}")
         abort(400, message="Erreur")
 
-    return {"resultats": [(exo["name"], exo["exerciseId"], exo["imageUrl"]) for exo in response]}
+    # FIX LE CARDIO !! PAS PARFAIT. La base de donnée n'a pas été designé pour du cardio alors on exclu la plupart des exercices de cardio
+    # Lors de la recherche
+    resultats = []
+    for exo in response:
+        if not any(mot in exo["name"].lower() for mot in TEMPS_DISTANCE_MOTS):
+            resultats.append((exo["name"], exo["exerciseId"], exo["imageUrl"]))
+        else:
+            route_logger.debug(f"EXO EXCLUDED | name={exo['name']}")
+
+    return {"resultats": resultats}
