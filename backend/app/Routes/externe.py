@@ -1,8 +1,7 @@
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 
-from app import db
-from app.communRoutes import APISALLE, APISPORT, checkExoExists, exerciseResponse
+from app.communRoutes import APISALLE, APISPORT, addAndCommit, checkExoExists, exerciseResponse
 from app.models import Exercise
 from app.schemas import (
     BaseErrorSchema,
@@ -14,7 +13,7 @@ from app.schemas import (
     SearchExoResponseSchema,
     ValidationErrorSchema,
 )
-from app.utils.logger import QueryTimer, route_logger
+from app.utils.logger import route_logger
 
 externeBLP = Blueprint("externe", __name__, url_prefix="/externe", description="Call a l'autre api")
 
@@ -80,7 +79,7 @@ def getSalleLoc(data):
 @jwt_required()
 def getExo(data):
     """Récupère un exercice depuis la BDD si existant, sinon depuis l'API externe puis le sauvegarde"""
-    route_logger.info(f"EXO FETCH ATTEMPT | user_id={get_jwt_identity()} | exoId={data['exoId']}")
+    route_logger.info(f"EXO FETCH ATTEMPT | exoId={data['exoId']}")
 
     exo = checkExoExists(data["exoId"])
     if exo:
@@ -102,11 +101,9 @@ def getExo(data):
         body_part=", ".join(exo["bodyParts"]) if isinstance(exo["bodyParts"], list) else exo["bodyParts"],
     )
 
-    with QueryTimer("addExo"):
-        db.session.add(exercise)
-        db.session.commit()
+    addAndCommit(exercise, "addExo")
 
-    route_logger.info(f"EXO CREATED | user_id={get_jwt_identity()} | exoId={exercise.id_api}")
+    route_logger.info(f"EXO CREATED | exoId={exercise.id_api}")
     return exerciseResponse(exercise)
 
 

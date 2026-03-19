@@ -65,13 +65,12 @@ def userResponse(user: User) -> dict:
     }
 
 
-def getRoutineForUserOrAbort404(user: User, routineId: int, queryNameLog: str = "checkRoutineExistant"):
+def getRoutineForUserOrAbort404(user: User, routineId: int):
     """Récupère une routine de l'utilisateur (ou active si -1) et abort 404 si introuvable"""
     if routineId == -1:
         routine = user.activeRoutine()
     else:
-        with QueryTimer(queryNameLog):
-            routine = db.session.scalar(sa.select(Routine).where(Routine.id == routineId, Routine.user_id == user.id))
+        routine = next((r for r in user.routines if r.id == routineId), None)
 
     if routine is None:
         abort(404, message="Routine non trouvée ou n'appartient pas à l'utilisateur.")
@@ -79,15 +78,27 @@ def getRoutineForUserOrAbort404(user: User, routineId: int, queryNameLog: str = 
     return routine
 
 
-def getSeanceForRoutineAndDayOrAbort404(routine: Routine, day: str, queryNameLog: str = "checkSeanceExistant"):
-    """Récupère la séance d'une routine pour un jour donné ou abort 404"""
-    with QueryTimer(queryNameLog):
-        seance = db.session.scalar(sa.select(Seance).where(Seance.routine_id == routine.id, Seance.day == DayOfWeek(day)))
-
+def getSeanceForRoutineAndDayOrAbort404(routine: Routine, day: str):
+    seance = next((s for s in routine.seances if s.day == DayOfWeek(day)), None)
     if seance is None:
         abort(404, message="Séance non trouvée pour ce jour.")
 
     return seance
+
+
+def getSeanceByIdForUserOrAbort404(user: User, seanceId: int) -> Seance:
+    for routine in user.routines:
+        seance = next((s for s in routine.seances if s.id == seanceId), None)
+        if seance:
+            return seance
+    abort(404, message="Séance non trouvée ou n'appartient pas à l'utilisateur.")
+
+
+def getPlanForSeanceOrAbort404(seance: Seance, seance_exercise_id: int) -> SeanceExercise:
+    plan = next((p for p in seance.exercises_plan if p.id == seance_exercise_id), None)
+    if plan is None:
+        abort(404, message="Exercice non trouvé dans cette séance.")
+    return plan
 
 
 def exerciseResponse(exercise: Exercise):

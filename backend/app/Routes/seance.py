@@ -5,12 +5,15 @@ from flask_smorest import Blueprint, abort
 
 from app import db
 from app.communRoutes import (
+    checkExoExists,
     getCurrentUserOrAbort401,
+    getPlanForSeanceOrAbort404,
     getRoutineForUserOrAbort404,
+    getSeanceByIdForUserOrAbort404,
     getSeanceForRoutineAndDayOrAbort404,
     seanceResponse,
 )
-from app.models import Exercise, Routine, Seance, SeanceExercise
+from app.models import SeanceExercise
 from app.schemas import (
     ActiveRoutineSchema,
     AddExerciseToSeanceSchema,
@@ -56,26 +59,16 @@ def getSeancesPrevu(data):
 def ajouterExoSeance(data):
     user = getCurrentUserOrAbort401()
     routine = getRoutineForUserOrAbort404(user, data["routine_id"])
-    exercise = db.session.scalar(sa.select(Exercise).where(Exercise.id_api == data["exercise_id"]))
+    exercise = checkExoExists(data["exercise_id"])
     if not exercise:
         abort(404, message="Exercice non trouvé.")
+
     seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
-    ordre = max((plan.ordre for plan in seance.exercises_plan), default=0) + 1
-    plan = SeanceExercise(
-        seance_id=seance.id,
-        exercise_id=exercise.id,
-        ordre=ordre,
-        planned_sets=data["planned_sets"],
-        planned_reps=data["planned_reps"],
-        planned_weight=data["planned_weight"],
-    )
-    with QueryTimer("addExoPlan"):
-        db.session.add(plan)
-        seance.is_rest_day = False
-        seance.title = f"Séance {seance.day.value}"
-        db.session.commit()
+    plan = seance.ajouterPlan(exercise, data["planned_sets"], data["planned_reps"], data["planned_weight"])
+
+    db.session.commit()
     route_logger.info(
-        f"SEANCE EXO ADDED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | day={seance.day.value} | exercise_id={exercise.id} | ordre={ordre}"
+        f"SEANCE EXO ADDED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | day={seance.day.value} | exercise_id={exercise.id} | ordre={plan.ordre}"
     )
     return {"message": "Exercice ajouté à la séance avec succès."}
 
@@ -138,19 +131,9 @@ def changerConfigurationExo(data):
     user = getCurrentUserOrAbort401()
     routine = getRoutineForUserOrAbort404(user, data["routine_id"])
     seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
-    with QueryTimer("checkExoExiste"):
-        plan = db.session.scalar(
-            sa.select(SeanceExercise).where(
-                SeanceExercise.id == data["seance_exercise_id"], SeanceExercise.seance_id == seance.id
-            )
-        )
-    if not plan:
-        abort(404, message="Exercice non trouvée pour ce jour.")
-    plan.planned_sets = data["planned_sets"]
-    plan.planned_reps = data["planned_reps"]
-    plan.planned_weight = data["planned_weight"]
-    with QueryTimer("commitUpdateExerciseConfig"):
-        db.session.commit()
+    plan = getPlanForSeanceOrAbort404(seance, data["seance_exercise_id"])
+    plan.updateConfig(data["planned_sets"], data["planned_reps"], data["planned_weight"])
+    db.session.commit()
     route_logger.info(
         f"SEANCE EXO CONFIG UPDATED | user_id={user.id} | routine_id={routine.id} | seance_id={seance.id} | plan_id={plan.id} | sets={plan.planned_sets} | reps={plan.planned_reps} | weight={plan.planned_weight}"
     )
@@ -166,14 +149,7 @@ def changerConfigurationExo(data):
 @jwt_required()
 def modifierNomSeance(data):
     user = getCurrentUserOrAbort401()
-    with QueryTimer("checkSeanceExistant"):
-        seance = db.session.scalar(
-            sa.select(Seance)
-            .join(Routine, Seance.routine_id == Routine.id)
-            .where(Seance.id == data["seance_id"], Routine.user_id == user.id)
-        )
-    if not seance:
-        abort(404, message="Séance non trouvée ou n'appartient pas à l'utilisateur.")
+    seance = getSeanceByIdForUserOrAbort404(user, data["seance_id"])
     old_title = seance.title
     seance.title = data["title"]
     with QueryTimer("commitUpdateSeanceTitle"):

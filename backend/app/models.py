@@ -115,6 +115,21 @@ class Seance(db.Model):
         plans[current_index].ordre, plans[other_index].ordre = plans[other_index].ordre, plans[current_index].ordre
         return True
 
+    def ajouterPlan(self, exercise: "Exercise", sets: int, reps: int, weight: float):
+        ordre = max((p.ordre for p in self.exercises_plan), default=0) + 1
+        plan = SeanceExercise(
+            seance_id=self.id,
+            exercise_id=exercise.id,
+            ordre=ordre,
+            planned_sets=sets,
+            planned_reps=reps,
+            planned_weight=weight,
+        )
+        self.exercises_plan.append(plan)
+        self.is_rest_day = False
+        self.title = f"Séance {self.day.value}"
+        return plan
+
 
 class SeanceExercise(db.Model):
     __tablename__ = "seance_exercises"
@@ -129,6 +144,11 @@ class SeanceExercise(db.Model):
 
     seance: so.Mapped["Seance"] = so.relationship(back_populates="exercises_plan")
     exercise: so.Mapped["Exercise"] = so.relationship()
+
+    def updateConfig(self, sets, reps, weight):
+        self.planned_sets = sets
+        self.planned_reps = reps
+        self.planned_weight = weight
 
 class WorkoutSession(db.Model):
     __tablename__ = "workout_sessions"
