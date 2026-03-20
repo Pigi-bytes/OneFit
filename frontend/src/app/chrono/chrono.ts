@@ -184,6 +184,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                     error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
 
                 });
+                this.elt.blockSeance();
                 this.router.navigate(['/accueil']);
 
             }

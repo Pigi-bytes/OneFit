@@ -44,6 +44,7 @@ export class Accueil {
     }
 
     commencerSeance() {
+
         localStorage.removeItem("seanceEnCours");
         localStorage.removeItem("seanceFini");
         const now = new Date();
@@ -57,8 +58,11 @@ export class Accueil {
             case 5: jour = "Vendredi"; break;
             case 6: jour = "Samedi"; break;
         }
+
         localStorage.setItem("jour", jour);
         this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);
+        this.elt.unblockSeance();
+        this.elt.startSeance();
         this.router.navigate(['/seance-en-cours']);
     }
 }

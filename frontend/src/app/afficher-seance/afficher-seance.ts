@@ -10,6 +10,7 @@ import { RouterModule, Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Message } from '../../message';
 import { TooltipMoveDirective } from '../tooltipmove';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
     selector: 'app-afficher-seance',
@@ -46,26 +47,18 @@ export class AfficheSceance implements OnInit {
         }
 
 
-        this.subscription = this.ei.afficheExercice$.subscribe((id) => {
-            if (id[0] === Message.SEANCE_EN_COURS || id[0] === Message.COMMENCER_SEANCE) {
+        this.subscription = this.ei.commencerSceance$
+            .subscribe(() => {
                 this.commencerSeance = true;
                 localStorage.setItem("lastMessage", Message.SEANCE_EN_COURS.toString());
-            }
-        });
+            });
 
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
             this.chargeSeance();
         }
 
-        if (this.exercices.length === 0 && this.commencerSeance) {
-            this.seanceRepos = true;
-            this.ei.triggerRefresh([Message.RESET_CHRONO]);
-        }
-
         this.cdr.detectChanges();
-
-        // récupère le paramètre 'id' de la route
 
     }
 
@@ -78,7 +71,11 @@ export class AfficheSceance implements OnInit {
 
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
-                this.exercices = res.seance.exercises.sort((a: any, b: any) => a.ordre - b.ordre);;
+                this.exercices = res.seance.exercises.sort((a: any, b: any) => a.ordre - b.ordre);
+                if (this.exercices.length === 0 && this.commencerSeance) {
+                    this.seanceRepos = true;
+                    this.ei.triggerRefresh([Message.RESET_CHRONO]);
+                }
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },
@@ -197,10 +194,12 @@ export class AfficheSceance implements OnInit {
     retour() {
         if (this.commencerSeance && !this.seanceRepos) {
             this.ei.triggerRefresh([Message.FINIR_SEANCE]);
+            this.ei.blockSeance();
             localStorage.removeItem("lastMessage");
             this.router.navigate(['/recap-seance']);
         } else if (this.seanceRepos) {
             localStorage.removeItem("lastMessage");
+            this.ei.blockSeance();
             this.router.navigate(['/accueil']);
         } else {
             localStorage.removeItem("lastMessage");
