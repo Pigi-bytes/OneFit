@@ -60,6 +60,7 @@ export class Accueil {
         }
 
         localStorage.setItem("jour", jour);
+        this.elt.reset();
         this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);
         this.elt.unblockSeance();
         this.elt.startSeance();

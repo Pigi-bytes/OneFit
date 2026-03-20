@@ -110,7 +110,10 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
             } else if (id[0] === Message.CHRONO_RECAP) {
                 this.coteRecap = true;
                 this.isRunning = false;
-                localStorage.setItem("coteRecap", "true");
+                if (this.platformId) {
+                    localStorage.setItem("coteRecap", "true");
+                }
+
             } else if (id[0] === Message.FINIR_RECAP) {
                 this.resetChrono();
                 localStorage.removeItem("coteRecap");

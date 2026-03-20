@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ReplaySubject, Subject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
+
 
 @Injectable({
     providedIn: 'root',
@@ -25,9 +26,16 @@ export class EnvoyerElt {
 
     blockSeance() {
         this.blocked = true;
+        this.commencerSeance = new ReplaySubject<void>(1);
+        this.commencerSceance$ = this.commencerSeance.asObservable();
     }
 
     unblockSeance() {
         this.blocked = false;
+    }
+
+    reset() {
+        this.afficheExercice = new ReplaySubject<any[]>(1);
+        this.afficheExercice$ = this.afficheExercice.asObservable();
     }
 }

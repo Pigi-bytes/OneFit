@@ -40,7 +40,9 @@ export class AfficheSceance implements OnInit {
     ngOnInit() {
 
         if (isPlatformBrowser(this.platformId) && localStorage.getItem("lastMessage")) {
+
             if (localStorage.getItem("lastMessage") === Message.SEANCE_EN_COURS.toString()) {
+                alert("ici");
                 this.commencerSeance = true;
 
             }
@@ -193,8 +195,9 @@ export class AfficheSceance implements OnInit {
 
     retour() {
         if (this.commencerSeance && !this.seanceRepos) {
-            this.ei.triggerRefresh([Message.FINIR_SEANCE]);
+
             this.ei.blockSeance();
+            this.ei.triggerRefresh([Message.FINIR_SEANCE]);
             localStorage.removeItem("lastMessage");
             this.router.navigate(['/recap-seance']);
         } else if (this.seanceRepos) {
