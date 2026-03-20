@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
 /* You can add global styles to this file, and also import other style files */
 /* style pour la page d'accueil */
 
@@ -25,7 +26,7 @@ html,
 body {
     height: 100%;
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Space Grotesk' !important; 
 }
 
 main {
