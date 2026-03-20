@@ -321,3 +321,47 @@ main.hideScrolbar {
     justify-content: flex-start !important;
     align-items: stretch !important;
 }
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+        ". title ."
+        "chrono . strick"
+        ". recap ."
+        ". button .";
+
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    height: 100vh;
+}
+
+.chrono {
+    grid-area: chrono;
+    text-align: left;
+    border: 2px solid var(--blue1);
+    border-radius: 6px;
+}
+
+.strick {
+    grid-area: strick;
+    text-align: left;
+    border: 2px solid var(--blue1);
+    border-radius: 6px;
+}
+
+.recap {
+    grid-area: recap;
+    border: 2px solid var(--blue1);
+    border-radius: 6px;
+}
+
+.btnRecap {
+    grid-area: button;
+
+}
+
+.titreRecap {
+    grid-area: title;
+}

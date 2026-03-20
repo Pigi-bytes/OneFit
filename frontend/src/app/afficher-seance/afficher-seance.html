@@ -5,10 +5,12 @@
 
     <h1>Séance du {{ jour }}</h1>
     <div class="d-flex flex-column gap-3 w-50 mb-3" style="overflow-y: auto; max-height: 60vh;">
-        <div *ngIf="!exercices || exercices.length === 0">
+        <div *ngIf="!exercices || exercices.length === 0 && !seanceRepos">
             <p>Aucun exercice.</p>
+        </div>
 
-
+        <div *ngIf="seanceRepos">
+            <p> jour de repos</p>
         </div>
 
         <div *ngFor="let exo of exercices;let i = index"
@@ -49,18 +51,15 @@
 
     </div>
 
-    @if(!commencerSeance){
-    <div tooltip>
+    <div tooltip *ngIf="!commencerSeance">
         <span class="tooltiptext"> Ajouter un exercice </span>
         <button type="button" class="btn-principal mb-2 btn-rond" (click)="ajouterExo()">+</button>
     </div>
-    }
 
-    @if(!commencerSeance){
-    <button type="button" class="btn-principal mb-2" (click)="retour()">Retour</button>
-    }@else{
-    <button type="button" class="btn-principal mb-2" (click)="retour()">finir seance</button>
-    }
+    <button type="button" class="btn-principal mb-2" (click)="retour()"
+        *ngIf="!commencerSeance || seanceRepos ">Retour</button>
+    <button type="button" class="btn-principal mb-2" (click)="retour()" *ngIf="commencerSeance && !seanceRepos">finir
+        seance</button>
 
 
 </main>

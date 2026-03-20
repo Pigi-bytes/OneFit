@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EnvoyerElt } from './envoyer-id';
+import { EnvoyerElt } from './envoyerElt';
 
 describe('EnvoyerElt', () => {
     let service: EnvoyerElt;
