@@ -1,6 +1,3 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-3">
 
     <div class="card p-4 text-center" style="max-width: 600px; width:100%;" *ngIf="!seances">
@@ -11,14 +8,14 @@
 
     <div *ngIf="!is_renaming && routine" class="mb-2 d-flex gap-3">
         <h2>{{ routine.name }}</h2>
-        <button class="btn-principal" (click)="ouvrirFormulaireRenommerRoutine()"> Renommer </button>
+        <button class="btn btnPrimaire" (click)="ouvrirFormulaireRenommerRoutine()"> Renommer </button>
     </div>
 
     <div class="mb-2 d-flex gap-3">
         <form *ngIf="is_renaming" (ngSubmit)="renommerRoutine()" class="d-flex align-items-center gap-2 mb-2">
             <input type="text" id="routine_nom" name="routine_nom" [(ngModel)]="routine_nom" required class="form-control"
             [placeholder]="routine.name" />
-            <button type="submit" class="btn-principal">Valider</button>
+            <button type="submit" class="btn btnPrimaire">Valider</button>
         </form>
     </div>
     
@@ -42,7 +39,7 @@
             </div>
         </div>
         <div class="button-group">
-            <button class="btn-principal" (click)="activerRoutine()">Activer cette routine</button>
+            <button class="btn btnPrimaire" (click)="activerRoutine()">Activer cette routine</button>
             <button class="btn-red" (click)="supprimerRoutine()">Supprimer</button>
         </div>
     </div>

@@ -1,6 +1,3 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
 
     <h1 class="mb-4">Votre profil d'utilisateur</h1>
@@ -38,15 +35,15 @@
                 </tr>
 
                 <tr>
-                    <td colspan="2"><button type="submit" class="btn-principal w-auto">Enregistrer les modifications</button></td>
+                    <td colspan="2"><button type="submit" class="btn btnPrimaire w-auto">Enregistrer les modifications</button></td>
                 </tr>
             </table>
 
         </form>
 
         <div class="button-group mb-4">
-            <button type="button" class="btn-principal" routerLink="/modif-password">Modifier le mot de passe</button>
-            <button type="button" class="btn-red" (click)="supprimer()">Supprimer votre compte</button>
+            <button type="button" class="btn btnPrimaire" routerLink="/modif-password">Modifier le mot de passe</button>
+            <button type="button" class="btn btnDanger " (click)="supprimer()">Supprimer votre compte</button>
         </div>
 
         <div *ngIf="backendResponse" class="mt-2 alert alert-info">

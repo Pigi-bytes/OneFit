@@ -1,4 +1,8 @@
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css');
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
+
+@import './styles/buttons.css';
 /* You can add global styles to this file, and also import other style files */
 /* style pour la page d'accueil */
 
@@ -123,51 +127,6 @@ input {
     transition-duration: 0.3s;
 }
 
-.btn-principal,
-.card .btn-principal,
-body.dark .card .btn-principal {
-    background-color: var(--blue1);
-    border-color: var(--blue1);
-    border-radius: 12px;
-    color: var(--white3);
-}
-
-.btn-rond {
-    border-radius: 1000px !important;
-}
-
-body.dark .btn-principal {
-    background-color: var(--white3);
-    border-color: var(--white3);
-    color: var(--blue1);
-}
-
-.btn-principal:hover,
-body.dark .card .btn-principal:hover {
-    background-color: var(--blue3);
-    border-color: var(--blue3);
-    color: var(--white3);
-}
-
-body.dark .btn-principal:hover {
-    background-color: var(--silver3);
-    border-color: var(--silver3);
-    color: var(--blue1);
-}
-
-
-.btn-red {
-    border-radius: 12px;
-    background-color: var(--red1);
-    border-color: var(--red1);
-    color: var(--white3);
-}
-
-.btn-red:hover {
-    background-color: var(--red2) !important;
-    border-color: var(--red2) !important;
-    color: #fff !important;
-}
 
 form {
     display: block;
@@ -198,11 +157,6 @@ form button {
     width: 20%;
     min-width: 100px;
     margin: 0 auto;
-}
-
-form .btn-principal,
-form .btn-red {
-    padding: 5px 10px;
 }
 
 .imgLogo {
