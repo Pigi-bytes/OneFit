@@ -25,6 +25,7 @@ export class AfficheSceance implements OnInit {
     exercices: any[] = [];
     backendResponse = "";
     commencerSeance: boolean = false;
+    seanceRepos: boolean = false;
 
     constructor(
         private http: HttpClient,
@@ -55,6 +56,11 @@ export class AfficheSceance implements OnInit {
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
             this.chargeSeance();
+        }
+
+        if (this.exercices.length === 0 && this.commencerSeance) {
+            this.seanceRepos = true;
+            this.ei.triggerRefresh([Message.RESET_CHRONO]);
         }
 
         this.cdr.detectChanges();
@@ -189,10 +195,13 @@ export class AfficheSceance implements OnInit {
     }
 
     retour() {
-        if (this.commencerSeance) {
+        if (this.commencerSeance && !this.seanceRepos) {
             this.ei.triggerRefresh([Message.FINIR_SEANCE]);
             localStorage.removeItem("lastMessage");
             this.router.navigate(['/recap-seance']);
+        } else if (this.seanceRepos) {
+            localStorage.removeItem("lastMessage");
+            this.router.navigate(['/accueil']);
         } else {
             localStorage.removeItem("lastMessage");
             this.router.navigate(['/routine']);
