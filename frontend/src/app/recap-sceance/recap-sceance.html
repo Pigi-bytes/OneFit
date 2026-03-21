@@ -1,18 +1,18 @@
-<main class="container">
+<main class="page-container align-items-center justify-content-center min-vh-100">
 
     <h1 class="titreRecap">Bien joué {{ name }} !</h1>
 
-    <div class="chrono">
+    <div class="chrono card">
         <p>temps :</p>
         <app-chrono></app-chrono>
     </div>
 
-    <div class="strick">
+    <div class="streak card">
         <p>streak :</p>
         <p>votre streak est de {{streak}} jours </p>
     </div>
 
-    <div class="recap" style="max-width: 600px; overflow-y: auto; max-height: 80vh">
+    <div class="recap card" style="max-width: 600px; overflow-y: auto; max-height: 80vh">
         <p>recap exo :</p>
         <div *ngFor="let exo of exercices;let i = index" class="d-flex flex-row align-items-center p-2">
 

@@ -30,7 +30,7 @@ html,
 body {
     height: 100%;
     margin: 0;
-    font-family: 'Space Grotesk' !important; 
+    font-family: 'Space Grotesk' !important;
 }
 
 main {
@@ -276,31 +276,32 @@ main.hideScrolbar {
     align-items: stretch !important;
 }
 
-.container {
+.page-container {
     display: grid;
+    padding: 0 40px;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:
         ". title ."
-        "chrono . strick"
+        "chrono . streak"
         ". recap ."
         ". button .";
 
     align-items: center;
     text-align: center;
     gap: 20px;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .chrono {
     grid-area: chrono;
-    text-align: left;
+    text-align: center;
     border: 2px solid var(--blue1);
     border-radius: 6px;
 }
 
-.strick {
-    grid-area: strick;
-    text-align: left;
+.streak {
+    grid-area: streak;
+    text-align: center;
     border: 2px solid var(--blue1);
     border-radius: 6px;
 }
