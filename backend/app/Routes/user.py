@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 import sqlalchemy as sa
 from flask_jwt_extended import jwt_required
@@ -6,7 +6,7 @@ from flask_smorest import Blueprint, abort
 
 from app import db
 from app.communRoutes import getCurrentUserOrAbort401, userResponse
-from app.models import HistoriquePoids
+from app.models import HistoriquePoids, WorkoutSession
 from app.schemas import (
     BaseErrorSchema,
     MessageSchema,
@@ -14,6 +14,7 @@ from app.schemas import (
     UserHistoriqueResponseSchema,
     UserSchema,
     UserSuppPoidSchema,
+    UserWorkoutStreakResponseSchema,
     ValidationErrorSchema,
 )
 from app.utils.logger import QueryTimer, db_logger, route_logger
@@ -127,6 +128,40 @@ def getAllPoids():
     historique = df.to_dict(orient="records") if not df.empty else []
 
     return {"historique": historique}
+
+
+@userBLP.route("/getStreak", methods=["GET"])
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, UserWorkoutStreakResponseSchema)
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@jwt_required()
+def getStreak():
+    """Récupère les jours avec séance réelle et la streak en cours"""
+    user = getCurrentUserOrAbort401()
+    route_logger.debug(f"GET STREAK | user_id={user.id}")
+
+    started_day_expr = sa.cast(WorkoutSession.started_at, sa.Date)
+    with QueryTimer("getWorkoutDays"):
+        raw_days = db.session.scalars(
+            sa.select(started_day_expr).where(WorkoutSession.user_id == user.id).distinct().order_by(started_day_expr.asc())
+        ).all()
+
+    days = []
+    for day_value in raw_days:
+        if isinstance(day_value, date):
+            days.append(day_value)
+        elif isinstance(day_value, str):
+            days.append(date.fromisoformat(day_value))
+
+    days_set = set(days)
+    current_streak = 0
+    cursor = date.today()
+    while cursor in days_set:
+        current_streak += 1
+        cursor -= timedelta(days=1)
+
+    route_logger.info(f"GET STREAK | user_id={user.id} | days={len(days)} | current_streak={current_streak}")
+    return {"days": days, "current_streak": current_streak}
 
 
 @userBLP.route("/supprimer", methods=["DELETE"])

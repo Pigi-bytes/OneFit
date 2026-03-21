@@ -202,6 +202,18 @@ class UserHistoriqueItemSchema(Schema):
 class UserHistoriqueResponseSchema(Schema):
     historique = fields.List(fields.Nested(UserHistoriqueItemSchema), required=True)
 
+class UserWorkoutStreakResponseSchema(Schema):
+    days = fields.List(
+        fields.Date(),
+        required=True,
+        metadata={"description": "Liste des jours (YYYY-MM-DD) où l'utilisateur a une séance réelle"},
+    )
+    current_streak = fields.Int(
+        required=True,
+        validate=validate.Range(min=0),
+        metadata={"description": "Streak en cours (nombre de jours consécutifs jusqu'à aujourd'hui)"},
+    )
+
 
 # ---------------------------------------------------------------------------
 # API Salle de sport
