@@ -217,11 +217,7 @@ class UserWorkoutStreakResponseSchema(Schema):
 
 
 class ExoStatQuerySchema(Schema):
-    exercise_id = fields.Int(
-        required=True,
-        validate=validate.Range(min=1),
-        metadata={"description": "ID interne de l'exercice"},
-    )
+    exoId = _exo(required=True)
 
 
 class ExoStatItemSchema(Schema):
@@ -233,6 +229,16 @@ class ExoStatItemSchema(Schema):
 
 class ExoStatResponseSchema(Schema):
     stats = fields.List(fields.Nested(ExoStatItemSchema), required=True)
+
+
+class LoggedExerciseItemSchema(Schema):
+    exoId = _exo(required=True)
+    name = fields.Str(required=True)
+    img = fields.Str(required=True)
+
+
+class LoggedExercisesResponseSchema(Schema):
+    exercises = fields.List(fields.Nested(LoggedExerciseItemSchema), required=True)
 
 
 # ---------------------------------------------------------------------------

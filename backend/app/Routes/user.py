@@ -6,11 +6,12 @@ from flask_smorest import Blueprint, abort
 
 from app import db
 from app.communRoutes import getCurrentUserOrAbort401, userResponse
-from app.models import HistoriquePoids, WorkoutLog, WorkoutSession
+from app.models import Exercise, HistoriquePoids, WorkoutLog, WorkoutSession
 from app.schemas import (
     BaseErrorSchema,
     ExoStatQuerySchema,
     ExoStatResponseSchema,
+    LoggedExercisesResponseSchema,
     MessageSchema,
     UserAjouterPoidsSchema,
     UserHistoriqueResponseSchema,
@@ -170,22 +171,54 @@ def getStreak():
 @userBLP.arguments(ExoStatQuerySchema, location="query")
 @userBLP.response(200, ExoStatResponseSchema)
 @userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(404, schema=BaseErrorSchema, description="Exercice introuvable")
 @userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def getExoStat(data):
     """Récupère les statistiques d'un exercice pour l'utilisateur connecté"""
     user = getCurrentUserOrAbort401()
-    exercise_id = data["exercise_id"]
+    exo_id = data["exoId"]
 
-    route_logger.debug(f"GET EXO STAT | user_id={user.id} | exercise_id={exercise_id}")
+    with QueryTimer("checkExerciseByApiId"):
+        exercise = db.session.scalar(sa.select(Exercise).where(Exercise.id_api == exo_id))
+    if not exercise:
+        abort(404, message="Exercice introuvable")
+
+    route_logger.debug(f"GET EXO STAT | user_id={user.id} | exo_id={exo_id} | exercise_id={exercise.id}")
 
     with QueryTimer("getExoStat"):
-        df = WorkoutLog.getExoStat(user.id, exercise_id)
+        df = WorkoutLog.getExoStat(user.id, exercise.id)
 
     stats = [] if df.empty else df.to_dict(orient="records")
 
-    route_logger.info(f"GET EXO STAT | user_id={user.id} | exercise_id={exercise_id} | rows={len(stats)}")
+    route_logger.info(f"GET EXO STAT | user_id={user.id} | exo_id={exo_id} | rows={len(stats)}")
     return {"stats": stats}
+
+
+@userBLP.route("/getLoggedExercises", methods=["GET"])
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.response(200, LoggedExercisesResponseSchema)
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@jwt_required()
+def getLoggedExercises():
+    """Récupère les exercices distincts présents dans les logs de l'utilisateur connecté"""
+    user = getCurrentUserOrAbort401()
+
+    with QueryTimer("getLoggedExercises"):
+        rows = db.session.execute(
+            sa.select(Exercise.id_api, Exercise.name, Exercise.img_url)
+            .join(WorkoutLog, WorkoutLog.exercise_id == Exercise.id)
+            .where(
+                WorkoutLog.user_id == user.id,
+                Exercise.id_api.is_not(None),
+            )
+            .distinct()
+            .order_by(Exercise.name.asc())
+        ).all()
+
+    exercises = [{"exoId": exo_id, "name": name, "img": img} for exo_id, name, img in rows]
+    route_logger.info(f"GET LOGGED EXERCISES | user_id={user.id} | count={len(exercises)}")
+    return {"exercises": exercises}
 
 
 @userBLP.route("/supprimer", methods=["DELETE"])
