@@ -202,6 +202,7 @@ class UserHistoriqueItemSchema(Schema):
 class UserHistoriqueResponseSchema(Schema):
     historique = fields.List(fields.Nested(UserHistoriqueItemSchema), required=True)
 
+
 class UserWorkoutStreakResponseSchema(Schema):
     days = fields.List(
         fields.Date(),
@@ -213,6 +214,25 @@ class UserWorkoutStreakResponseSchema(Schema):
         validate=validate.Range(min=0),
         metadata={"description": "Streak en cours (nombre de jours consécutifs jusqu'à aujourd'hui)"},
     )
+
+
+class ExoStatQuerySchema(Schema):
+    exercise_id = fields.Int(
+        required=True,
+        validate=validate.Range(min=1),
+        metadata={"description": "ID interne de l'exercice"},
+    )
+
+
+class ExoStatItemSchema(Schema):
+    day = fields.Date(required=True, metadata={"description": "Jour de la statistique (YYYY-MM-DD)"})
+    estimated_1rm = fields.Float(required=True, metadata={"description": "1RM estimé"})
+    volume = fields.Float(required=True, metadata={"description": "Volume total (poids * reps)"})
+    max_weight = fields.Float(required=True, metadata={"description": "Charge max du jour"})
+
+
+class ExoStatResponseSchema(Schema):
+    stats = fields.List(fields.Nested(ExoStatItemSchema), required=True)
 
 
 # ---------------------------------------------------------------------------

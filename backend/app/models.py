@@ -150,6 +150,7 @@ class SeanceExercise(db.Model):
         self.planned_reps = reps
         self.planned_weight = weight
 
+
 class WorkoutSession(db.Model):
     __tablename__ = "workout_sessions"
 
@@ -176,6 +177,27 @@ class WorkoutLog(db.Model):
 
     user: so.Mapped["User"] = so.relationship(back_populates="workout_logs")
     exercise: so.Mapped["Exercise"] = so.relationship()
+
+    @classmethod
+    def getExoStat(cls, userId: int, exoId: int) -> pd.DataFrame:
+        rows = (
+            db.session.query(
+                sa.func.date(cls.date).label("day"),
+                sa.func.max(cls.weight * (1 + cls.reps / 30.0)).label("estimated_1rm"),
+                sa.func.sum(cls.weight * cls.reps).label("volume"),
+                sa.func.max(cls.weight).label("max_weight"),
+            )
+            .filter(cls.user_id == userId, cls.exercise_id == exoId)
+            .group_by(sa.func.date(cls.date))
+            .order_by(sa.func.date(cls.date))
+            .all()
+        )
+
+        df = pd.DataFrame(rows, columns=["day", "estimated_1rm", "volume", "max_weight"])
+        df["day"] = pd.to_datetime(df["day"])
+        df = df.round({"estimated_1rm": 2, "volume": 2, "max_weight": 2})
+
+        return df
 
 
 class HistoriquePoids(db.Model):

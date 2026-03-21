@@ -6,9 +6,11 @@ from flask_smorest import Blueprint, abort
 
 from app import db
 from app.communRoutes import getCurrentUserOrAbort401, userResponse
-from app.models import HistoriquePoids, WorkoutSession
+from app.models import HistoriquePoids, WorkoutLog, WorkoutSession
 from app.schemas import (
     BaseErrorSchema,
+    ExoStatQuerySchema,
+    ExoStatResponseSchema,
     MessageSchema,
     UserAjouterPoidsSchema,
     UserHistoriqueResponseSchema,
@@ -161,6 +163,29 @@ def getStreak():
 
     route_logger.info(f"GET STREAK | user_id={user.id} | days={len(days)} | current_streak={current_streak}")
     return {"days": days, "current_streak": current_streak}
+
+
+@userBLP.route("/getExoStat", methods=["GET"])
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.arguments(ExoStatQuerySchema, location="query")
+@userBLP.response(200, ExoStatResponseSchema)
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def getExoStat(data):
+    """Récupère les statistiques d'un exercice pour l'utilisateur connecté"""
+    user = getCurrentUserOrAbort401()
+    exercise_id = data["exercise_id"]
+
+    route_logger.debug(f"GET EXO STAT | user_id={user.id} | exercise_id={exercise_id}")
+
+    with QueryTimer("getExoStat"):
+        df = WorkoutLog.getExoStat(user.id, exercise_id)
+
+    stats = [] if df.empty else df.to_dict(orient="records")
+
+    route_logger.info(f"GET EXO STAT | user_id={user.id} | exercise_id={exercise_id} | rows={len(stats)}")
+    return {"stats": stats}
 
 
 @userBLP.route("/supprimer", methods=["DELETE"])
