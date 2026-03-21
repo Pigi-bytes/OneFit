@@ -222,6 +222,7 @@ export class ConfigurerExo {
                     console.log('RESPONSE OK', res);
                     this.backendResponse = res.message;
                     this.ei.triggerRefresh([Message.AFFICHER_SEANCE, null]);
+                    this.cdr.detectChanges();
                     this.annuler();
                 },
 

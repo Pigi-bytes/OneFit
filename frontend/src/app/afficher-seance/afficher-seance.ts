@@ -27,6 +27,7 @@ export class AfficheSceance implements OnInit {
     backendResponse = "";
     commencerSeance: boolean = false;
     seanceRepos: boolean = false;
+    private subscriptions: Subscription[] = [];
 
     constructor(
         private http: HttpClient,
@@ -48,11 +49,20 @@ export class AfficheSceance implements OnInit {
         }
 
 
-        this.subscription = this.ei.commencerSceance$
-            .subscribe(() => {
+        this.subscriptions.push(
+            this.ei.commencerSceance$.subscribe(() => {
                 this.commencerSeance = true;
                 localStorage.setItem("lastMessage", Message.SEANCE_EN_COURS.toString());
-            });
+            })
+        );
+
+        this.subscriptions.push(
+            this.ei.afficheExercice$.subscribe((msg) => {
+                if (msg[0] === Message.AFFICHER_SEANCE) {
+                    this.chargeSeance();
+                }
+            })
+        );
 
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
@@ -213,6 +223,7 @@ export class AfficheSceance implements OnInit {
     }
 
     ngOnDestroy() {
-        this.subscription?.unsubscribe();
+        this.subscriptions.map((sub) => sub.unsubscribe());
+
     }
 }
