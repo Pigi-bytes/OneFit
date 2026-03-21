@@ -36,10 +36,12 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
     private intervalId: any;
 
     ngOnInit() {
+        this.coteExo = false;
+        this.coteRecap = false;
         if (isPlatformBrowser(this.platformId)) {
             const savedRecap = localStorage.getItem("coteRecap");
             if (savedRecap === "true") {
-                this.coteExo = true;
+                this.coteRecap = true;
                 localStorage.setItem("coteRecap", "true");
             }
             const savedCoteExo = localStorage.getItem("coteExo");
@@ -57,8 +59,8 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
         this.subscription = this.elt.afficheExercice$.subscribe((id) => {
             if (id[0] === Message.RESET_CHRONO) {
                 this.isRunning = false;
+                this.stopChrono();
                 this.resetChrono();
-                return;
             } else if (id[0] === Message.CHRONO_EXO) {
                 this.coteExo = true;
                 if (isPlatformBrowser(this.platformId)) {

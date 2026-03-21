@@ -42,7 +42,6 @@ export class AfficheSceance implements OnInit {
         if (isPlatformBrowser(this.platformId) && localStorage.getItem("lastMessage")) {
 
             if (localStorage.getItem("lastMessage") === Message.SEANCE_EN_COURS.toString()) {
-                alert("ici");
                 this.commencerSeance = true;
 
             }
@@ -75,11 +74,13 @@ export class AfficheSceance implements OnInit {
                 console.log('RESPONSE OK', res);
                 this.exercices = res.seance.exercises.sort((a: any, b: any) => a.ordre - b.ordre);
                 if (this.exercices.length === 0 && this.commencerSeance) {
+
                     this.seanceRepos = true;
                     this.ei.triggerRefresh([Message.RESET_CHRONO]);
+                    this.cdr.detectChanges();
                 }
                 this.backendResponse = res.message;
-                this.cdr.detectChanges();
+
             },
 
             error: (err: any) => {
