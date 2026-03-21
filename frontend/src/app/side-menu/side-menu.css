@@ -3,30 +3,42 @@
     width: 280px;
     top: 0;
     left: 0;
-    background-color: var(--blue2);
+    background-color: var(--blue1);
     overflow-x: hidden;
-    transition: 0.5s;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     z-index: 1;
+    padding: 1rem 0.85rem !important;
 }
 
-#side-menu a,
-#side-menu h1,
-#side-menu p {
+body.dark #side-menu {
+    background-color: var(--blue2);
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
     padding: 8px 0;
     text-decoration: none;
-    font-size: 25px;
     color: var(--white1);
-    display: flex;
-    justify-content: center;
-    width: 100%;
     transition: 0.3s;
 }
 
-#side-menu a:hover {
-    color: var(--white3);
+.brand-link:hover {
+    color: var(--red3);
+}
+
+.brand-logo {
+    width: 50%;
+}
+
+.brand-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    font-family: 'Space Mono';
 }
 
 #side-menu hr {
@@ -39,21 +51,61 @@
     width: 100%;
 }
 
-ul {
-    height: 100%;
-    padding-left: 0;
+.menu-nav {
+    gap: 1rem !important;
+}
+
+.menu-nav .btnGhostLarge {
+    color: var(--white2);
+    background: var(--blue2);
+    justify-content: space-between;
+    padding: 1rem 1rem;
+}
+
+.menu-nav .btnGhostLarge:hover {
+    background: var(--blue3);
+    color: var(--white3);
+}
+
+body.dark .menu-nav .btnGhostLarge {
+    background: var(--blue3);
+    color: var(--white3);
+}
+
+body.dark .menu-nav .btnGhostLarge:hover {
+    background: var(--blue1);
+    color: var(--white3);
 }
 
 .bottom {
     margin-top: auto;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.theme-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.theme-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--white2);
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .switch {
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 52px;
+    height: 30px;
 }
 
 .switch input {
@@ -70,15 +122,15 @@ ul {
     right: 0;
     bottom: 0;
     background-color: var(--silver1);
-    transition: 0.4s;
-    border-radius: 34px;
+    transition: 0.25s;
+    border-radius: 999px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 22px;
+    width: 22px;
     left: 4px;
     bottom: 4px;
     background-color: var(--white3);
@@ -91,5 +143,5 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-    transform: translateX(26px);
+    transform: translateX(22px);
 }
