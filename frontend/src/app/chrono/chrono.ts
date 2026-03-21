@@ -59,6 +59,8 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
         this.subscription = this.elt.afficheExercice$.subscribe((id) => {
             if (id[0] === Message.RESET_CHRONO) {
                 this.isRunning = false;
+                this.commencerEnrgScenace();
+                this.finirEnrgSceance();
                 this.stopChrono();
                 this.resetChrono();
             } else if (id[0] === Message.CHRONO_EXO) {
@@ -72,38 +74,16 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                     localStorage.setItem("seanceEnCours", "enCours");
                 }
 
-                this.http.post('http://127.0.0.1:5000/seanceReelle/startSeanceEffectuee', {
-                    routine_id: -1,
-                    day: localStorage.getItem("jour"),
+                this.commencerEnrgScenace();
 
-                }).subscribe({
-                    next: (res: any) => {
-                        console.log('RESPONSE OK', res);
-                        this.backendResponse = res.message;;
-                    },
 
-                    error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
-
-                });
 
             } else if (id[0] === Message.FINIR_SEANCE && !localStorage.getItem("seanceFini")) {
                 if (isPlatformBrowser(this.platformId)) {
                     localStorage.setItem("seanceFini", "fini");
                 }
+                this.finirEnrgSceance();
 
-                this.http.post('http://127.0.0.1:5000/seanceReelle/endSeanceEffectuee', {
-                    routine_id: -1,
-                    day: localStorage.getItem("jour"),
-
-                }).subscribe({
-                    next: (res: any) => {
-                        console.log('RESPONSE OK', res);
-                        this.backendResponse = res.message;;
-                    },
-
-                    error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
-
-                });
 
                 this.isRunning = false;
                 this.stopChrono();
@@ -194,5 +174,40 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
 
             }
         }
+    }
+
+
+    commencerEnrgScenace() {
+        this.http.post('http://127.0.0.1:5000/seanceReelle/startSeanceEffectuee', {
+            routine_id: -1,
+            day: localStorage.getItem("jour"),
+
+        }).subscribe({
+            next: (res: any) => {
+                console.log('RESPONSE OK', res);
+                this.backendResponse = res.message;;
+            },
+
+            error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
+
+        });
+
+    }
+
+    finirEnrgSceance() {
+        this.http.post('http://127.0.0.1:5000/seanceReelle/endSeanceEffectuee', {
+            routine_id: -1,
+            day: localStorage.getItem("jour"),
+
+        }).subscribe({
+            next: (res: any) => {
+                console.log('RESPONSE OK', res);
+                this.backendResponse = res.message;;
+            },
+
+            error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
+
+        });
+
     }
 }
