@@ -11,8 +11,18 @@
         <p>strick :</p>
     </div>
 
-    <div class="recap">
+    <div class="recap" style="max-width: 600px; overflow-y: auto; max-height: 80vh">
         <p>recap exo :</p>
+        <div *ngFor="let exo of exercices;let i = index" class="d-flex flex-row align-items-center p-2">
+
+            <!-- exo info -->
+            <div>
+                <div class="d-flex align-items-center p-2">
+                    <img [src]="exo.img_url" alt="{{exo.nom}}" width="20%" class="me-3 rounded">
+                    <p class="mb-0">{{ exo.name }} </p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <button class="btn btnPrimaire btnRecap" (click)="terminer()">super</button>

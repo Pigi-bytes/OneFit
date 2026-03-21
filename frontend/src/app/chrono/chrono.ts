@@ -112,7 +112,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
             } else if (id[0] === Message.CHRONO_RECAP) {
                 this.coteRecap = true;
                 this.isRunning = false;
-                if (this.platformId) {
+                if (isPlatformBrowser(this.platformId)) {
                     localStorage.setItem("coteRecap", "true");
                 }
 
