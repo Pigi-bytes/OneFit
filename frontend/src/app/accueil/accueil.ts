@@ -60,6 +60,8 @@ export class Accueil {
         }
 
         localStorage.setItem("jour", jour);
+        localStorage.removeItem("coteExo");
+        localStorage.removeItem("coteRecap");
         this.elt.reset();
         this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);
         this.elt.unblockSeance();
