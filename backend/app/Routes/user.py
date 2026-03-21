@@ -140,20 +140,19 @@ def getStreak():
     user = getCurrentUserOrAbort401()
     route_logger.debug(f"GET STREAK | user_id={user.id}")
 
-    started_day_expr = sa.cast(WorkoutSession.started_at, sa.Date)
     with QueryTimer("getWorkoutDays"):
-        raw_days = db.session.scalars(
-            sa.select(started_day_expr).where(WorkoutSession.user_id == user.id).distinct().order_by(started_day_expr.asc())
+        started_at_values = db.session.scalars(
+            sa.select(WorkoutSession.started_at)
+            .where(
+                WorkoutSession.user_id == user.id,
+                WorkoutSession.started_at.is_not(None),
+            )
+            .order_by(WorkoutSession.started_at.asc())
         ).all()
 
-    days = []
-    for day_value in raw_days:
-        if isinstance(day_value, date):
-            days.append(day_value)
-        elif isinstance(day_value, str):
-            days.append(date.fromisoformat(day_value))
+    days_set = {started_at.date() for started_at in started_at_values}
+    days = sorted(days_set)
 
-    days_set = set(days)
     current_streak = 0
     cursor = date.today()
     while cursor in days_set:
