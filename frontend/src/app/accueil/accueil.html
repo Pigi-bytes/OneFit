@@ -4,9 +4,9 @@
     <div class="card">
         <h2>Votre streak</h2>
         <div class="changeMois">
-            <button (click)="prevMonth()">&#8592;</button>
+            <button (click)="prevMonth()" class="btn btnPrimaire">&#8592;</button>
             <span>{{ monthLabel }}</span>
-            <button (click)="nextMonth()">&#8594;</button>
+            <button (click)="nextMonth()" class="btn btnPrimaire">&#8594;</button>
         </div>
 
         <div class="calendrier-grille">
@@ -20,9 +20,13 @@
 
 
             @for (day of calendarDays; track $index) {
-            <span [class.aujourd-hui]="isToday(day)" [class.vide]="!day">
-                {{ day ?? '' }}
-            </span>
+            <div class="card" [class.actif]="verifStreak(day)">
+                <span [class.aujourd-hui]="isToday(day)" [class.vide]="!day">
+                    {{ day ?? '' }}
+                </span>
+
+            </div>
+
             }
         </div>
     </div>

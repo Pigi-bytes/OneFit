@@ -5,10 +5,13 @@ import { isPlatformBrowser } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { EnvoyerElt } from '../envoyerElt';
 import { Message } from '../../message';
+import { CommonModule } from '@angular/common';
+import { Erreur } from '../erreur';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'app-accueil',
-    imports: [RouterModule],
+    imports: [RouterModule, CommonModule],
     templateUrl: './accueil.html',
     styleUrl: './accueil.css',
 })
@@ -17,25 +20,35 @@ export class Accueil {
     private platformId = inject(PLATFORM_ID);
     private router = inject(Router);
     private elt = inject(EnvoyerElt);
+    private cdr = inject(ChangeDetectorRef);
+    private erreur = inject(Erreur);
 
     name = "";
 
     // Calendrier
     today = new Date();
+
     currentMonth = new Date(this.today.getFullYear(), this.today.getMonth(), 1);
+    year = this.currentMonth.getFullYear();
+    month = this.currentMonth.getMonth();
+
+    backendResponse = "";
+
+    allDate: any[] = []
+
 
     get monthLabel(): string {
         return this.currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
     }
 
     get calendarDays(): (number | null)[] {
-        const year = this.currentMonth.getFullYear();
-        const month = this.currentMonth.getMonth();
-        const firstDay = (new Date(year, month, 1).getDay() + 6) % 7; // lundi = 0
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDay = (new Date(this.year, this.month, 1).getDay() + 6) % 7; // lundi = 0
+        const daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
         const days: (number | null)[] = [];
         for (let i = 0; i < firstDay; i++) days.push(null);
-        for (let d = 1; d <= daysInMonth; d++) days.push(d);
+        for (let d = 1; d <= daysInMonth; d++) {
+            days.push(d);
+        }
         return days;
     }
 
@@ -54,6 +67,16 @@ export class Accueil {
         this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1);
     }
 
+    verifStreak(day: any) {
+        if (!day) return false;
+
+        const date = new Date(this.year, this.month, day).toISOString().split('T')[0];
+
+
+        return this.allDate.includes(date);
+
+    }
+
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {
             const token = localStorage.getItem('access_token');
@@ -64,6 +87,7 @@ export class Accueil {
             }
             this.getUserName();
         }
+        this.recupStrick();
     }
 
     getUserName() {
@@ -99,5 +123,20 @@ export class Accueil {
         this.elt.unblockSeance();
         this.elt.startSeance();
         this.router.navigate(['/seance-en-cours']);
+    }
+
+    recupStrick() {
+        this.http.get('http://127.0.0.1:5000/user/getStreak', {}).subscribe({
+
+            next: (res: any) => {
+                console.log('RESPONSE OK', res);
+                this.allDate = res['days'];
+                this.backendResponse = res.message;
+                this.cdr.detectChanges();
+            },
+
+            error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
+        });
+
     }
 }

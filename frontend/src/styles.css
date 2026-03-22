@@ -333,3 +333,7 @@ main.hideScrolbar {
     display: flex;
     gap: 10px;
 }
+
+.actif {
+    background-color: #b5ffa3;
+}
