@@ -19,6 +19,20 @@ from app.utils.logger import QueryTimer, route_logger
 routineBLP = Blueprint("routine", __name__, url_prefix="/routine", description="Gestion des routines")
 
 
+def create_routine_for_user(user, routine_name):
+    routine = Routine(user_id=user.id, name=routine_name, is_active=False)
+    with QueryTimer("ajoutRoutineDatabase"):
+        db.session.add(routine)
+        db.session.flush()
+    for day in DayOfWeek:
+        seance = Seance(routine_id=routine.id, day=day, title="Jour de Repos", is_rest_day=True)
+        db.session.add(seance)
+    user.setActiveRoutine(routine.id)
+    db.session.commit()
+    route_logger.info(f"ROUTINE CREATED | user_id={user.id} | routine_id={routine.id}")
+    return routine
+
+
 @routineBLP.route("/getRoutines", methods=["GET"])
 @routineBLP.doc(security=[{"bearerAuth": []}])
 @routineBLP.response(200, RoutinesResponseSchema)

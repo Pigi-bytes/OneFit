@@ -1,4 +1,5 @@
 from datetime import date
+from app.Routes.routine import create_routine_for_user
 
 from flask_jwt_extended import create_access_token
 from flask_smorest import Blueprint, abort
@@ -47,4 +48,5 @@ def inscription(data):
     addAndCommit(user, "commitInscription")
 
     auth_logger.info(f"REGISTER SUCCESS | username={data['username']} | user_id={user.id}")
+    create_routine_for_user(user,"routine1")
     return {"message": "User created successfully!"}
