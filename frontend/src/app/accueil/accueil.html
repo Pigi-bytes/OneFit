@@ -1,9 +1,33 @@
 <main>
-
     <h1>Bonjour, {{ name }} !</h1>
+
+    <div class="card">
+        <h2>Votre streak</h2>
+        <div class="changeMois">
+            <button (click)="prevMonth()">&#8592;</button>
+            <span>{{ monthLabel }}</span>
+            <button (click)="nextMonth()">&#8594;</button>
+        </div>
+
+        <div class="calendrier-grille">
+            <span class="jour-semaine">Lun</span>
+            <span class="jour-semaine">Mar</span>
+            <span class="jour-semaine">Mer</span>
+            <span class="jour-semaine">Jeu</span>
+            <span class="jour-semaine">Ven</span>
+            <span class="jour-semaine">Sam</span>
+            <span class="jour-semaine">Dim</span>
+
+
+            @for (day of calendarDays; track $index) {
+            <span [class.aujourd-hui]="isToday(day)" [class.vide]="!day">
+                {{ day ?? '' }}
+            </span>
+            }
+        </div>
+    </div>
 
     <div class="button-group">
         <button class="btn btnPrimaire" (click)="commencerSeance()">Commencer une séance</button>
     </div>
-
 </main>

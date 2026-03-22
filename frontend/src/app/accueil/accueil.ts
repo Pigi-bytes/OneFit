@@ -20,12 +20,46 @@ export class Accueil {
 
     name = "";
 
+    // Calendrier
+    today = new Date();
+    currentMonth = new Date(this.today.getFullYear(), this.today.getMonth(), 1);
+
+    get monthLabel(): string {
+        return this.currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    }
+
+    get calendarDays(): (number | null)[] {
+        const year = this.currentMonth.getFullYear();
+        const month = this.currentMonth.getMonth();
+        const firstDay = (new Date(year, month, 1).getDay() + 6) % 7; // lundi = 0
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const days: (number | null)[] = [];
+        for (let i = 0; i < firstDay; i++) days.push(null);
+        for (let d = 1; d <= daysInMonth; d++) days.push(d);
+        return days;
+    }
+
+    isToday(day: number | null): boolean {
+        if (!day) return false;
+        return day === this.today.getDate()
+            && this.currentMonth.getMonth() === this.today.getMonth()
+            && this.currentMonth.getFullYear() === this.today.getFullYear();
+    }
+
+    prevMonth() {
+        this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1, 1);
+    }
+
+    nextMonth() {
+        this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1);
+    }
+
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {
             const token = localStorage.getItem('access_token');
             if (!token) {
                 this.router.navigate(['']);
-                alert("veuillez vous connecter")
+                alert("veuillez vous connecter");
                 return;
             }
             this.getUserName();
@@ -39,12 +73,11 @@ export class Accueil {
     }
 
     deconnexion() {
-        localStorage.removeItem("access_token")
+        localStorage.removeItem("access_token");
         this.router.navigate(['']);
     }
 
     commencerSeance() {
-
         localStorage.removeItem("seanceEnCours");
         localStorage.removeItem("seanceFini");
         const now = new Date();
@@ -58,7 +91,6 @@ export class Accueil {
             case 5: jour = "Vendredi"; break;
             case 6: jour = "Samedi"; break;
         }
-
         localStorage.setItem("jour", jour);
         localStorage.removeItem("coteExo");
         localStorage.removeItem("coteRecap");

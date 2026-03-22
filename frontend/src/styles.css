@@ -320,3 +320,16 @@ main.hideScrolbar {
 .titreRecap {
     grid-area: title;
 }
+
+.calendrier-grille {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+
+.changeMois {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    gap: 10px;
+}
