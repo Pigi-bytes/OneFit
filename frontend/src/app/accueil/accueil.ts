@@ -29,8 +29,8 @@ export class Accueil {
     today = new Date();
 
     currentMonth = new Date(this.today.getFullYear(), this.today.getMonth(), 1);
-    year = this.currentMonth.getFullYear();
-    month = this.currentMonth.getMonth();
+
+
 
     backendResponse = "";
 
@@ -42,8 +42,10 @@ export class Accueil {
     }
 
     get calendarDays(): (number | null)[] {
-        const firstDay = (new Date(this.year, this.month, 1).getDay() + 6) % 7; // lundi = 0
-        const daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
+        const year = this.currentMonth.getFullYear();
+        const month = this.currentMonth.getMonth();
+        const firstDay = (new Date(year, month, 1).getDay() + 6) % 7; // lundi = 0
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
         const days: (number | null)[] = [];
         for (let i = 0; i < firstDay; i++) days.push(null);
         for (let d = 1; d <= daysInMonth; d++) {
@@ -70,7 +72,7 @@ export class Accueil {
     verifStreak(day: any) {
         if (!day) return false;
 
-        const date = new Date(this.year, this.month, day).toISOString().split('T')[0];
+        const date = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), day).toISOString().split('T')[0];
 
 
         return this.allDate.includes(date);
