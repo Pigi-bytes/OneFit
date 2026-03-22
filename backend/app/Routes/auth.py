@@ -48,5 +48,5 @@ def inscription(data):
     addAndCommit(user, "commitInscription")
 
     auth_logger.info(f"REGISTER SUCCESS | username={data['username']} | user_id={user.id}")
-    create_routine_for_user(user,"routine1")
+    create_routine_for_user(user,"Nouvelle routine")
     return {"message": "User created successfully!"}
