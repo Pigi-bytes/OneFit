@@ -51,7 +51,7 @@ body.dark .btnGhostLarge i     { color: var(--silver2); }
 .btnGhostLarge.router-link-active,
 .btnGhostLarge.active { background: var(--white3) !important; color: var(--blue1) !important; }
 body.dark .btnGhostLarge.router-link-active i,
-body.dark .btnGhostLarge.active i { color: var(--red3); }
+body.dark .btnGhostLarge.active i { color: var(--blue1); }
 
 .btnDanger       { background: var(--red1); color: var(--white3); border-color: var(--red1); }
 .btnDanger:hover { background: var(--red2); border-color: var(--red2); }
