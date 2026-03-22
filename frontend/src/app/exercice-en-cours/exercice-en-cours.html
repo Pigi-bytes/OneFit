@@ -34,7 +34,8 @@
 
                 @if (i >= exo.planned_sets) {
                 <div class="col-2 d-flex justify-content-center">
-                    <button type="button" class="btnDanger btn-rond" (click)="supprimerSet()">
+                    <button type="button" class="btnDanger btn" (click)="supprimerSet()" tooltip>
+                        <span class="tooltiptext">Supprimer un set</span>
                         -
                     </button>
                 </div>
@@ -44,7 +45,8 @@
 
             <!-- bouton pour ajouter un set en bas -->
             <div class="d-flex justify-content-center mb-3 position-relative">
-                <button type="button" class="btn btnPrimaire btn-rond" (click)="ajouterSet()">
+                <button type="button" class="btn btnPrimaire" (click)="ajouterSet()" tooltip>
+                    <span class="tooltiptext">Ajouter un set</span>
                     +
                 </button>
             </div>

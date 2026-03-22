@@ -9,10 +9,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { Message } from '../../message';
 import { EnvoyerElt } from '../envoyerElt';
 import { Chrono } from '../chrono/chrono';
+import { TooltipMoveDirective } from '../tooltipmove';
 
 @Component({
     selector: 'app-exercice-en-cours',
-    imports: [Chrono, FormsModule, CommonModule, RouterModule],
+    imports: [Chrono, FormsModule, CommonModule, RouterModule, TooltipMoveDirective],
     templateUrl: './exercice-en-cours.html',
     styleUrl: './exercice-en-cours.css',
 })

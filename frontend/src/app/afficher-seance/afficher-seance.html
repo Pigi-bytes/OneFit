@@ -20,7 +20,7 @@
                     @if(!commencerSeance){
                     Cliquez pour modifier l'exercice
                     }@else{
-                    valider exercice
+                    Commencer l'exercice
                     }
 
                 </span>
@@ -32,13 +32,13 @@
 
             <!-- boutons -->
             <div class="d-flex ms-auto">
-                <button *ngIf="!commencerSeance && i > 0" type="button" class="btn btnPrimaire btn-rond"
+                <button *ngIf="!commencerSeance && i > 0" type="button" class="btn btnPrimaire "
                     (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()" tooltip>
                     <span class="tooltiptext"> Déplacer vers le haut </span>
                     &#11165;
                 </button>
                 <button *ngIf="!commencerSeance  && i < exercices.length - 1" type="button"
-                    class="btn btnPrimaire btn-rond"
+                    class="btn btnPrimaire "
                     (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()" tooltip>
                     <span class="tooltiptext"> Déplacer vers le bas </span>
                     &#11167;
@@ -50,7 +50,7 @@
 
     <div tooltip *ngIf="!commencerSeance">
         <span class="tooltiptext"> Ajouter un exercice </span>
-        <button type="button" class="btn btnPrimaire mb-2 btn-rond" (click)="ajouterExo()">+</button>
+        <button type="button" class="btn btnPrimaire mb-2 " (click)="ajouterExo()">+</button>
     </div>
 
     <button type="button" class="btn btnPrimaire mb-2" (click)="retour()"
