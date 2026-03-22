@@ -8,11 +8,12 @@ import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Erreur } from '../erreur';
+import { TooltipMoveDirective } from '../tooltipmove';
 
 
 @Component({
     selector: 'app-chrono',
-    imports: [RouterModule, CommonModule],
+    imports: [RouterModule, CommonModule, TooltipMoveDirective],
     templateUrl: './chrono.html',
     styleUrl: './chrono.css',
 })

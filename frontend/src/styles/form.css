@@ -1,0 +1,30 @@
+form {
+    display: block;
+    margin: 0 auto;
+
+}
+
+.form-group {
+    text-align: center;
+    min-width: 100px;
+}
+
+form input {
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    text-align: center;
+}
+
+form input[type=submit] {
+    width: 20%;
+    text-align: center;
+    min-width: 100px;
+    box-sizing: border-box;
+}
+
+form button {
+    width: 20%;
+    min-width: 100px;
+    margin: 0 auto;
+}

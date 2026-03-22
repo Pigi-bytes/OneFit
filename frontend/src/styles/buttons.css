@@ -55,3 +55,7 @@ body.dark .btnGhostLarge.active i { color: var(--red3); }
 
 .btnDanger       { background: var(--red1); color: var(--white3); border-color: var(--red1); }
 .btnDanger:hover { background: var(--red2); border-color: var(--red2); }
+
+.btnRecap { grid-area: button; }
+
+.routineBtn { display: flex; padding: 10px 15px; margin-right: 10px; gap: 10px; }

@@ -3,7 +3,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
 
 @import './styles/buttons.css';
-/* You can add global styles to this file, and also import other style files */
+@import './styles/tooltip.css';
+@import './styles/form.css';
+
 /* style pour la page d'accueil */
 
 /* 1 est la teinte la plus foncée, 3 la plus claire*/
@@ -128,37 +130,6 @@ input {
 }
 
 
-form {
-    display: block;
-    margin: 0 auto;
-
-}
-
-.form-group {
-    text-align: center;
-    min-width: 100px;
-}
-
-form input {
-    display: block;
-    margin: 0 auto;
-    width: 50%;
-    text-align: center;
-}
-
-form input[type=submit] {
-    width: 20%;
-    text-align: center;
-    min-width: 100px;
-    box-sizing: border-box;
-}
-
-form button {
-    width: 20%;
-    min-width: 100px;
-    margin: 0 auto;
-}
-
 .imgLogo {
     height: 150px;
 }
@@ -232,39 +203,8 @@ app-chrono {
     cursor: pointer;
 }
 
-.routineBtn {
-    display: flex;
-    padding: 10px 15px;
-    margin-right: 10px;
-    gap: 10px;
-}
-
 .card .text-gray {
     color: var(--blue3);
-}
-
-[tooltip] .tooltiptext {
-    visibility: hidden;
-    width: auto;
-    background-color: black;
-    color: var(--silver3);
-    text-align: center;
-    padding: 10px;
-    border-radius: 6px;
-    position: fixed;
-    z-index: 1000;
-    pointer-events: none;
-    font-size: 12px;
-}
-
-[tooltip] {
-    position: relative;
-    display: inline-block;
-    width: auto;
-}
-
-[tooltip]:hover .tooltiptext {
-    visibility: visible;
 }
 
 td {
@@ -310,11 +250,6 @@ main.hideScrolbar {
     grid-area: recap;
     border: 2px solid var(--blue1);
     border-radius: 6px;
-}
-
-.btnRecap {
-    grid-area: button;
-
 }
 
 .titreRecap {
