@@ -59,3 +59,17 @@ body.dark .btnGhostLarge.active i { color: var(--blue1); }
 .btnRecap { grid-area: button; }
 
 .routineBtn { display: flex; padding: 10px 15px; margin-right: 10px; gap: 10px; }
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+button,
+input {
+    border-radius: 12px;
+    padding: 10px 20px;
+    transition-duration: 0.3s;
+}

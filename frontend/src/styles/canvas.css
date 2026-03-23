@@ -1,0 +1,11 @@
+canvas {
+    width: 800px;
+    height: 500px;
+    align-items: right;
+}
+
+body.dark canvas {
+    width: 800px;
+    height: 500px;
+    align-items: right;
+}

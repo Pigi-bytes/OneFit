@@ -1,0 +1,16 @@
+.streak {
+    grid-area: streak;
+    text-align: center;
+    border: 2px solid var(--blue1);
+    border-radius: 6px;
+}
+
+.recap {
+    grid-area: recap;
+    border: 2px solid var(--blue1);
+    border-radius: 6px;
+}
+
+.titreRecap {
+    grid-area: title;
+}

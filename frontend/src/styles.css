@@ -5,6 +5,7 @@
 @import './styles/buttons.css';
 @import './styles/tooltip.css';
 @import './styles/form.css';
+@import './styles/canvas.css';
 
 /* style pour la page d'accueil */
 
@@ -52,6 +53,33 @@ body.dark main {
     background-color: var(--blue1);
 }
 
+.layout {
+    display: flex;
+    gap: 0px;
+    padding: 0px;
+}
+
+.page {
+    flex: 1;
+    overflow: auto;
+}
+
+.page-container {
+    display: grid;
+    padding: 0 40px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+        ". title ."
+        "chrono . streak"
+        ". recap ."
+        ". button .";
+
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    min-height: 100vh;
+}
+
 main .card {
     border: 4px solid var(--white1);
     background-color: var(--white2);
@@ -80,8 +108,7 @@ body.dark main .clickable-card:hover {
 p,
 label,
 body.dark main .card p,
-body.dark main .card label,
-body.dark main .routine p {
+body.dark main .card label {
     color: var(--blue1);
 }
 
@@ -111,55 +138,14 @@ body.dark label {
     color: var(--white3);
 }
 
-.button-group {
-    display: flex;
-    /* met les boutons côte à côte */
-    gap: 10px;
-    /* espace entre les boutons */
-    justify-content: center;
-    /* centrer horizontalement */
-    margin-top: 20px;
-}
-
-button,
-input {
-    border-radius: 12px;
-    padding: 10px 20px;
-    transition-duration: 0.3s;
-}
-
-
 .imgLogo {
     height: 150px;
-}
-
-canvas {
-    width: 800px;
-    height: 500px;
-    align-items: right;
-}
-
-body.dark canvas {
-    width: 800px;
-    height: 500px;
-    align-items: right;
 }
 
 .hbox {
     display: flex;
     flex-direction: row;
     gap: 10px;
-}
-
-.layout {
-    display: flex;
-    gap: 0px;
-    padding: 0px;
-}
-
-.page {
-    flex: 1;
-    overflow: auto;
 }
 
 app-ajouter-exo,
@@ -179,19 +165,6 @@ app-chrono {
     /* 4 parts → ratio 6:4 = 60:40 */
 }
 
-
-.routine .card {
-    border: 4px solid var(--white1);
-    padding: 10px 15px;
-    text-align: center;
-    border-radius: 8px;
-    background-color: var(--white2);
-    height: 60vh;
-    width: 20%;
-    min-width: 150px;
-    cursor: pointer;
-}
-
 .card .text-gray {
     color: var(--blue3);
 }
@@ -203,59 +176,6 @@ td {
 main.hideScrolbar {
     justify-content: flex-start !important;
     align-items: stretch !important;
-}
-
-.page-container {
-    display: grid;
-    padding: 0 40px;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas:
-        ". title ."
-        "chrono . streak"
-        ". recap ."
-        ". button .";
-
-    align-items: center;
-    text-align: center;
-    gap: 20px;
-    min-height: 100vh;
-}
-
-.chrono {
-    grid-area: chrono;
-    text-align: center;
-    border: 2px solid var(--blue1);
-    border-radius: 6px;
-}
-
-.streak {
-    grid-area: streak;
-    text-align: center;
-    border: 2px solid var(--blue1);
-    border-radius: 6px;
-}
-
-.recap {
-    grid-area: recap;
-    border: 2px solid var(--blue1);
-    border-radius: 6px;
-}
-
-.titreRecap {
-    grid-area: title;
-}
-
-.calendrier-grille {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-}
-
-.changeMois {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    gap: 10px;
 }
 
 .actif {
