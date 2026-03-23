@@ -10,6 +10,7 @@ import { Message } from '../../message';
 import { EnvoyerElt } from '../envoyerElt';
 import { Chrono } from '../chrono/chrono';
 import { TooltipMoveDirective } from '../tooltipmove';
+import { Erreur } from '../erreur';
 
 @Component({
     selector: 'app-exercice-en-cours',
@@ -25,12 +26,14 @@ export class ExerciceEnCours {
     exo: any;
     backendResponse = "";
     seance_exercise_id: any = 1;
+    setsValides: { reps: any, weight: any }[] = [];
 
     constructor(
         private http: HttpClient,
         private cdr: ChangeDetectorRef,
         private router: Router,
         private ei: EnvoyerElt,
+        private erreur: Erreur
     ) { }
 
     ngOnInit() {
@@ -47,8 +50,8 @@ export class ExerciceEnCours {
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
             this.chargerExo();
-        }
-
+        }        
+        
         this.cdr.detectChanges();
     }
 
@@ -62,6 +65,12 @@ export class ExerciceEnCours {
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
                 this.exo = res.seance.exercises.find((e: { seance_exercise_id: any; }) => e.seance_exercise_id === this.seance_exercise_id) ?? null;
+
+                // remplir setsvalides avec sets vides
+                if (this.exo) {
+                    this.setsValides = Array.from({ length: this.exo.planned_sets }, () => ({ reps: null, weight: null }));
+                }
+                
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },
@@ -100,6 +109,7 @@ export class ExerciceEnCours {
     ajouterSet() {
         if (this.exo.planned_sets < 30) {
             this.exo.planned_sets += 1;
+            this.setsValides.push({ reps: null, weight: null });
             this.cdr.detectChanges();
         }
     }
@@ -107,10 +117,25 @@ export class ExerciceEnCours {
     supprimerSet() {
         if (this.exo.planned_sets > 1) {
             this.exo.planned_sets -= 1;
+            this.setsValides.pop();
             this.cdr.detectChanges();
         }
     }
 
+    validerExo(){
+        this.http.post('http://127.0.0.1:5000/seanceReelle/ajouterExoEffectue', {
+            seance_exercise_id: this.exo.seance_exercise_id,
+            sets: this.setsValides
+        }).subscribe({
+
+            next: (res: any) => {
+                console.log('RESPONSE OK', res);
+                this.backendResponse = res.message;
+            },
+
+            error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
+        });
+    }
 
     range(n: number) {
         return Array.from({ length: n }, (_, i) => i + 1);

@@ -77,7 +77,6 @@ export class RecapSceance {
             error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
 
-
     }
 
     recupStrick() {
