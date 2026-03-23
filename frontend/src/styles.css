@@ -28,12 +28,17 @@
     --blue3: #44596bff;
 }
 
-
 html,
 body {
     height: 100%;
+    width:100%;
     margin: 0;
     font-family: 'Space Grotesk' !important;
+}
+
+.dark,
+.dark main {
+    background-color: var(--blue1);
 }
 
 main {
@@ -47,10 +52,6 @@ main {
     justify-content: center;
     align-items: center;
     text-align: center;
-}
-
-body.dark main {
-    background-color: var(--blue1);
 }
 
 .layout {
@@ -96,34 +97,34 @@ main .card li {
 }
 
 
-body.dark main .card li,
-body.dark main .card {
+.dark main .card li,
+.dark main .card {
     background-color: var(--white3);
 }
 
-body.dark main .clickable-card:hover {
+.dark main .clickable-card:hover {
     background-color: var(--white1);
 }
 
 p,
 label,
-body.dark main .card p,
-body.dark main .card label {
+.dark main .card p,
+.dark main .card label {
     color: var(--blue1);
 }
 
-body.dark p {
+.dark p {
     color: var(--white3);
 }
 
 h1,
-body.dark main .card h1 {
+.dark main .card h1 {
     color: var(--red1);
     margin-bottom: 20px;
 }
 
 h2,
-body.dark main .card h2 {
+.dark main .card h2 {
     color: var(--blue1);
     font-weight: normal;
 }
@@ -132,9 +133,9 @@ main .card h1 {
     color: var(--blue1);
 }
 
-body.dark h1,
-body.dark h2,
-body.dark label {
+.dark h1,
+.dark h2,
+.dark label {
     color: var(--white3);
 }
 

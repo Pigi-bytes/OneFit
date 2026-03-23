@@ -12,7 +12,7 @@
     padding: 1rem 0.85rem !important;
 }
 
-body.dark #side-menu {
+.dark #side-menu {
     background-color: var(--blue2);
 }
 
@@ -67,12 +67,12 @@ body.dark #side-menu {
     color: var(--white3);
 }
 
-body.dark .menu-nav .btnGhostLarge {
+.dark .menu-nav .btnGhostLarge {
     background: var(--blue3);
     color: var(--white3);
 }
 
-body.dark .menu-nav .btnGhostLarge:hover {
+.dark .menu-nav .btnGhostLarge:hover {
     background: var(--blue1);
     color: var(--white3);
 }

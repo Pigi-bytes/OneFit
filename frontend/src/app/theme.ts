@@ -23,11 +23,13 @@ export class Theme {
     toggleDark() {
         if (!isPlatformBrowser(this.platformId)) return;
 
-        document.body.classList.toggle('dark');
+        const page = document.querySelector('.layout');
+        if (page) {
+            page.classList.toggle('dark');
+            const isDark = page.classList.contains('dark');   
+            localStorage.setItem('darkMode', String(isDark));
+            this.themeChangeSource.next(isDark);
+        }
 
-        const isDark = document.body.classList.contains('dark');
-        localStorage.setItem('darkMode', String(isDark));
-
-        this.themeChangeSource.next(isDark);
     }
 }
