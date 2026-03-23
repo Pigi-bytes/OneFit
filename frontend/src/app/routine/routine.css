@@ -21,6 +21,12 @@
     align-items: center;
 }
 
+.week-btn-row .btn.active {
+    background: var(--red2) !important;
+    color: var(--white3) !important;
+    font-weight: 700;
+}
+
 .routine {
     display: flex;
     justify-content: flex-start;
