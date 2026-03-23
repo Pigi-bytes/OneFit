@@ -37,6 +37,7 @@
 
 .routine-main-card {
     padding: 2.5rem 2.2rem 2.5rem 2.2rem;
+    max-height: 70vh;
 }
 
 .routine-2col {
