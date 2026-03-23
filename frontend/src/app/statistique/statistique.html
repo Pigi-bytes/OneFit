@@ -1,0 +1,41 @@
+<main>
+
+    <form (ngSubmit)="getInformation()" #loginForm="ngForm" id="login_form" class="gap-3">
+
+        <div style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
+            <div>
+                <select *ngIf="exercices.length > 0" [(ngModel)]="exoChoisit" name="exercices">
+                    <option value="" disabled selected>Choisir un exercice</option>
+                    <option *ngFor="let exo of exercices" [value]="exo.exoId">{{ exo.name }}</option>
+                </select>
+                <p *ngIf="exercices.length == 0">Aucun exercices réalisé</p>
+
+            </div>
+
+            @if(exercices.length > 0){
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="radio" name="type" value="1" />
+                    <span>Graphe truc 1</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="radio" name="type" value="2" />
+                    <span>Graphe truc 2</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="radio" name="type" value="3" />
+                    <span>Graphe truc 3</span>
+                </label>
+            </div>
+
+            <input class="btnPrimaire" type="submit" value="valider" />
+            }
+
+        </div>
+
+    </form>
+
+    <div class="chart-container">
+        <canvas #myChart>{{chart}}</canvas>
+    </div>
+</main>
