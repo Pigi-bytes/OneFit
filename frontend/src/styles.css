@@ -259,5 +259,5 @@ main.hideScrolbar {
 }
 
 .actif {
-    background-color: #b5ffa3;
+    background-color: #b5ffa3 !important;
 }
