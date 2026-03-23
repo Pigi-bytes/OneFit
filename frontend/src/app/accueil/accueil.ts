@@ -72,11 +72,14 @@ export class Accueil {
     verifStreak(day: any) {
         if (!day) return false;
 
-        const date = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth(), day).toISOString().split('T')[0];
+        const year = this.currentMonth.getFullYear();
+        const month = this.currentMonth.getMonth() + 1;
+        const dayStr = String(day).padStart(2, '0');
+        const monthStr = String(month).padStart(2, '0');
 
+        const date = `${year}-${monthStr}-${dayStr}`;
 
         return this.allDate.includes(date);
-
     }
 
     ngOnInit() {
