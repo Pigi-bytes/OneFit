@@ -10,7 +10,7 @@
             <img [src]="exo?.img_url" alt="{{ exo?.name }}" class="img-fluid rounded" style="max-height: 250px;">
         </div>
 
-        <form class="container">
+        <form class="container" (ngSubmit)="validerExo()">
             <!-- liste des sets -->
             @for (i of range(exo.planned_sets); track i) {
             <div class="row align-items-center g-3 rounded p-2 mb-2">
@@ -20,14 +20,16 @@
 
                 <div class="col-4">
                     <div class="input-group">
-                        <input type="number" class="form-control" [placeholder]="exo.planned_reps">
+                        <input type="number" class="form-control" [(ngModel)]="setsValides[i-1].reps"
+                        name="reps{{i}}" [placeholder]="exo.planned_reps">
                         <span class="input-group-text">rép.</span>
                     </div>
                 </div>
 
                 <div class="col-4">
                     <div class="input-group">
-                        <input type="number" class="form-control" [placeholder]="exo.planned_weight">
+                        <input type="number" class="form-control" [(ngModel)]="setsValides[i-1].weight"
+                        name="weight{{i}}" [placeholder]="exo.planned_weight">
                         <span class="input-group-text">kg</span>
                     </div>
                 </div>
@@ -51,7 +53,7 @@
                 </button>
             </div>
 
-            <button type="submit" class="btn btn-principal">Valider</button>
+            <button type="submit" class="btn btnPrimaire">Valider</button>
         </form>
     </div>
 </main>

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt'
 import { TooltipMoveDirective } from '../tooltipmove';
 import { Message } from '../../message';
+import { Erreur } from '../erreur';
 
 @Component({
     selector: 'app-ajouter-exo',
@@ -22,7 +23,7 @@ export class AjouterExo {
     exercices: any[] = [];
 
 
-    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
+    constructor(private http: HttpClient, private erreur: Erreur, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
 
     trouverExo() {
         this.http.post('http://127.0.0.1:5000/externe/searchExo', {
@@ -43,34 +44,7 @@ export class AjouterExo {
 
             },
 
-            error: (err: any) => {
-                //erreur 422
-                if (err.status == 422 && err.error.errors) {
-
-                    const errorsObj = err.error.errors;
-                    const messages: string[] = [];
-
-
-
-                    for (const key in errorsObj) {
-
-                        const value = errorsObj[key];
-                        Object.values(value).forEach(v => {
-                            if (Array.isArray(v)) messages.push(...v);
-                            else if (typeof v === 'string') messages.push(v);
-                        });
-                    }
-
-                    this.backendResponse = messages.join('\n');
-                }
-                // erreurs HTTP (400, 409, 500…)
-                else if (err.error && err.error.message) {
-                    this.backendResponse = err.error.message; // <- message du backend
-                } else {
-                    this.backendResponse = 'Erreur serveur';
-                }
-                this.cdr.detectChanges();
-            }
+            error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
 
     }

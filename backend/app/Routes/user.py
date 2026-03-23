@@ -166,9 +166,9 @@ def getStreak():
     return {"days": days, "current_streak": current_streak}
 
 
-@userBLP.route("/getExoStat", methods=["GET"])
+@userBLP.route("/getExoStat", methods=["POST"])
 @userBLP.doc(security=[{"bearerAuth": []}])
-@userBLP.arguments(ExoStatQuerySchema, location="query")
+@userBLP.arguments(ExoStatQuerySchema)
 @userBLP.response(200, ExoStatResponseSchema)
 @userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
 @userBLP.alt_response(404, schema=BaseErrorSchema, description="Exercice introuvable")
