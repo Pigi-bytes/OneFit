@@ -5,6 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { Erreur } from '../erreur';
 import { ChangeDetectorRef } from '@angular/core';
 import { Chart, registerables, ChartConfiguration } from 'chart.js';
+import { Theme } from '../theme';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-statistique',
@@ -13,6 +15,7 @@ import { Chart, registerables, ChartConfiguration } from 'chart.js';
     styleUrl: './statistique.css',
 })
 export class Statistique {
+    private themeSubscription?: Subscription;
 
     exoChoisit: string = '';
     exercices: any[] = [];
@@ -20,12 +23,16 @@ export class Statistique {
     chart!: Chart<'line'>;
     stat: any[] = [];
 
-    constructor(private http: HttpClient, private erreur: Erreur, private cdr: ChangeDetectorRef) { Chart.register(...registerables); }
+    constructor(private http: HttpClient, private erreur: Erreur, private cdr: ChangeDetectorRef, private theme: Theme) { Chart.register(...registerables); }
     @ViewChild('myChart', { static: false }) myChart!: ElementRef<HTMLCanvasElement>;
 
 
 
     ngOnInit() {
+        this.themeSubscription = this.theme.themeChange$.subscribe(() => {
+            this.updateChartColors();
+        });
+
         this.http.get('http://127.0.0.1:5000/user/getLoggedExercises', {}).subscribe({
 
             next: (res: any) => {
@@ -112,6 +119,37 @@ export class Statistique {
             }
         });
     }
+
+    private updateChartColors() {
+        if (!this.chart) return;
+
+        const isDark = this.theme.isItDark();
+
+        this.chart.data.datasets[0].borderColor = isDark ? '#4ade80' : '#2563eb';
+        this.chart.data.datasets[0].pointBackgroundColor = isDark ? '#ffffff' : '#333333';
+
+        if (this.chart.options.scales) {
+            if (this.chart.options.scales['x']) {
+                this.chart.options.scales['x'].grid = {
+                    color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
+                };
+                this.chart.options.scales['x'].ticks = {
+                    color: isDark ? '#ffffff' : '#333333'
+                };
+            }
+            if (this.chart.options.scales['y']) {
+                this.chart.options.scales['y'].grid = {
+                    color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
+                };
+                this.chart.options.scales['y'].ticks = {
+                    color: isDark ? '#ffffff' : '#333333'
+                };
+            }
+        }
+
+        this.chart.update();
+    }
+
 
 
 }
