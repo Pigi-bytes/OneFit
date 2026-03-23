@@ -1,70 +1,47 @@
-<main class="d-flex align-items-center justify-content-center min-vh-100 rout">
+<main>
+    <h1>Ma routine</h1>
 
-    <h1> Votre routine active</h1>
-
-    <div class="routine">
-        <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
-            (click)="afficherSeance('Lundi')"
-            tooltip>
-            <span class="tooltiptext">Cliquez pour modifier la séance du lundi</span>
-            <h5> Lundi </h5>
-            <p *ngFor="let m of message[0]" [innerHTML]="m"></p>
-        </div>
-
-        <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
-            (click)="afficherSeance('Mardi')"
-            tooltip>
-            <span class="tooltiptext">Cliquez pour modifier la séance du mardi</span>
-            <h5> Mardi </h5>
-            <p *ngFor="let m of message[1]" [innerHTML]="m"></p>
-        </div>
-
-        <div class="card clickable-card jour" style="overflow-y: auto; max-height: 60vh;"
-            (click)="afficherSeance('Mercredi')"
-            tooltip>
-            <span class="tooltiptext">Cliquez pour modifier la séance du mercredi</span>
-            <h5> Mercredi </h5>
-            <p *ngFor="let m of message[2]" [innerHTML]="m"></p>
-        </div>
-
-        <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
-            (click)="afficherSeance('Jeudi')"
-            tooltip>
-            <span class="tooltiptext">Cliquez pour modifier la séance du jeudi</span>
-            <h5> Jeudi </h5>
-            <p *ngFor="let m of message[3]" [innerHTML]="m"></p>
-        </div>
-
-        <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
-            (click)="afficherSeance('Vendredi')"
-            tooltip>
-            <span class="tooltiptext">Cliquez pour modifier la séance du vendredi</span>
-            <h5> Vendredi </h5>
-            <p *ngFor="let m of message[4]" [innerHTML]="m"></p>
-        </div>
-
-        <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
-            (click)="afficherSeance('Samedi')"
-            tooltip>
-            <span class="tooltiptext">Cliquez pour modifier la séance du samedi</span>
-            <h5> Samedi </h5>
-            <p *ngFor="let m of message[5]" [innerHTML]="m"></p>
-        </div>
-
-        <div class="card clickable-card" style="overflow-y: auto; max-height: 60vh;"
-            (click)="afficherSeance('Dimanche')"
-            tooltip>
-            <span class="tooltiptext">Cliquez pour modifier la séance du dimanche</span>
-            <h5> Dimanche </h5>
-            <p *ngFor="let m of message[6]" [innerHTML]="m"></p>
-        </div>
+    <div class="week-btn-row">
+        <button class="btn btnPrimaire" *ngFor="let jour of jours; let i = index" [class.active]="selectedDay === i" (click)="selectDay(i)">
+            {{ jour.short }} <br> <i class="bi" [ngClass]="seances[i]?.isRestDay ? 'bi-moon-fill' : 'bi-lightning-charge-fill'"></i>
+        </button>
     </div>
 
-    <div class="routineBtn">
-        <button class="btn btnPrimaire" routerLink="/routines-persos">Vos routines enregistrées</button>
-        <button class="btn btnPrimaire">Routines préfaites</button>
+    <div class="routine routine-2col">
+        <div class="card routine-main-card">
+            <div class="routine-header">
+                <div class="routine-title">{{ seances[selectedDay]?.title }}</div>
+                
+                    <button class="btn btnPrimaire" (click)="afficherSeance(jours[selectedDay]?.full || '')">
+                        <i class="bi bi-pencil"></i> Éditer le jour
+                    </button>
+            </div>
+
+            <div class="routine-exo-list">
+                <div class="routine-exo-item" *ngFor="let exo of seances[selectedDay]?.exercises; let idx = index">
+                    <div class="routine-exo-num">{{ (idx+1) | number:'2.0' }}</div>
+
+                    <div class="routine-exo-main">
+                        <div class="routine-exo-name">{{ exo.name }}</div>
+                        <div class="routine-exo-details">{{ exo.planned_sets }} sets de {{ exo.planned_reps }} reps à {{ exo.planned_weight }} kg</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card routine-side-card">
+            <div class="routine-title">Changer de routine</div>
+
+            <div class="routine-side-btns">
+                <button class="btn btnPrimaire" routerLink="/routines-persos">
+                    <i class="bi bi-grid-3x3-gap"></i> Mes routines
+                </button>
+                <button class="btn btnPrimaire">
+                    <i class="bi bi-box-arrow-in-right"></i> Routines préfaites
+                </button>
+            </div>
+
+        </div>
     </div>
-
-
-
 </main>

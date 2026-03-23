@@ -1,0 +1,120 @@
+:host {
+    display: block;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0;
+    text-align: left;
+}
+
+.week-btn-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.week-btn-row .btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.routine {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 1.2rem 1.2rem 0 1.2rem;
+    padding: 0;
+}
+
+.routine-main-card {
+    padding: 2.5rem 2.2rem 2.5rem 2.2rem;
+}
+
+.routine-2col {
+    flex-direction: row;
+    gap: 1.1rem;
+}
+
+.routine-main-card {
+    flex: 7 1 0;
+    padding: 2.5rem 2.2rem 2.5rem 2.2rem;
+    box-sizing: border-box;
+}
+
+.routine-side-card {
+    width: 320px;
+    padding: 1.5rem 1.5rem 2.2rem 1.5rem;
+    background: var(--white3);
+    flex-direction: column;
+    height: fit-content;
+}
+
+.routine-side-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--red2);
+    display: flex;
+}
+
+.routine-side-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding-top: 2rem;
+}
+
+.routine-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: left;
+    margin-bottom: 0.5rem;
+}
+
+.routine-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--blue1);
+}
+
+.routine-exo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.routine-exo-item {
+    display: flex;
+    align-items: center;
+    background: var(--silver3);
+    border-radius: 1rem;
+    padding: 0.7rem 1.1rem;
+    gap: 1.1rem;
+}
+
+.routine-exo-num {
+    font-weight: 800;
+    color: var(--blue3);
+    font-size: 1.5rem;
+}
+
+.routine-exo-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.routine-exo-name {
+    font-weight: 600;
+    color: var(--blue1);
+    font-size: 1.5rem;
+}
+
+.routine-exo-details {
+    color: var(--blue3);
+    font-size: 1rem;
+}

@@ -29,6 +29,21 @@ export class Routine {
     seances: any[] = [];
 
 
+    jours = [
+        { short: 'Lun', full: 'Lundi' },
+        { short: 'Mar', full: 'Mardi' },
+        { short: 'Mer', full: 'Mercredi' },
+        { short: 'Jeu', full: 'Jeudi' },
+        { short: 'Ven', full: 'Vendredi' },
+        { short: 'Sam', full: 'Samedi' },
+        { short: 'Dim', full: 'Dimanche' },
+    ];
+    selectedDay = 0;
+
+    selectDay(i: number) {
+        this.selectedDay = i;
+    }
+
 
     ngOnInit() {
 
