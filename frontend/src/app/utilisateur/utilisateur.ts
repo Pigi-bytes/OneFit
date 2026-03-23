@@ -7,6 +7,7 @@ import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 import { Notification } from '../notification';
+import { Erreur } from '../erreur';
 
 @Component({
     selector: 'app-utilisateur',
@@ -30,7 +31,7 @@ export class Utilisateur {
     private oldDate = '';
     private oldTaille = '';
 
-    constructor(private cdr: ChangeDetectorRef, private not: Notification) { }
+    constructor(private cdr: ChangeDetectorRef, private not: Notification, private erreur: Erreur) { }
 
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {
@@ -97,32 +98,7 @@ export class Utilisateur {
 
                 },
 
-                error: (err: any) => {
-                    //422
-                    if (err.status == 422 && err.error.errors) {
-
-                        const errorsObj = err.error.errors;
-                        const messages: string[] = [];
-
-                        for (const key in errorsObj) {
-                            const value = errorsObj[key];
-                            Object.values(value).forEach(v => {
-                                if (Array.isArray(v)) messages.push(...v);
-                                else if (typeof v === 'string') messages.push(v);
-                                messages.push("\n");
-                            });
-                        }
-
-                        this.backendResponse = messages.join('\n');
-                    }
-                    // erreurs HTTP (400, 409, 500…)
-                    else if (err.error && err.error.message) {
-                        this.backendResponse = err.error.message; // <- message du backend
-                        this.cdr.detectChanges();
-                    } else {
-                        this.backendResponse = 'Erreur serveur';
-                    }
-                }
+                error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
             });
         }
     }

@@ -8,7 +8,7 @@ import { Theme } from '../theme';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-
+import { Erreur } from '../erreur';
 
 @Component({
     selector: 'app-carte',
@@ -34,7 +34,7 @@ export class Carte implements AfterViewInit {
     markers: L.Marker[] = [];
     couleur = '#b83100';
 
-    constructor(@Inject(PLATFORM_ID) private platformId: Object, private not: Notification, private cdr: ChangeDetectorRef, private http: HttpClient, private theme: Theme) { }
+    constructor(@Inject(PLATFORM_ID) private platformId: Object, private erreur: Erreur, private not: Notification, private cdr: ChangeDetectorRef, private http: HttpClient, private theme: Theme) { }
 
     async ngAfterViewInit(): Promise<void> {
         this.themeSubscription = this.theme.themeChange$.subscribe(() => {
@@ -93,35 +93,7 @@ export class Carte implements AfterViewInit {
                 this.cdr.detectChanges();
             },
 
-
-            error: (err: any) => {
-                //erreur 422
-                if (err.status == 422 && err.error.errors) {
-
-                    const errorsObj = err.error.errors;
-                    const messages: string[] = [];
-
-
-
-                    for (const key in errorsObj) {
-
-                        const value = errorsObj[key];
-                        Object.values(value).forEach(v => {
-                            if (Array.isArray(v)) messages.push(...v);
-                            else if (typeof v === 'string') messages.push(v);
-                        });
-                    }
-
-                    this.backendResponse = messages.join('\n');
-                }
-                // erreurs HTTP (400, 409, 500…)
-                else if (err.error && err.error.message) {
-                    this.backendResponse = err.error.message; // <- message du backend
-                } else {
-                    this.backendResponse = 'Erreur serveur';
-                }
-                this.cdr.detectChanges();
-            }
+            error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
     }
     findByLoc() {
@@ -142,34 +114,7 @@ export class Carte implements AfterViewInit {
                 this.cdr.detectChanges();
             },
 
-            error: (err: any) => {
-                //erreur 422
-                if (err.status == 422 && err.error.errors) {
-
-                    const errorsObj = err.error.errors;
-                    const messages: string[] = [];
-
-
-
-                    for (const key in errorsObj) {
-
-                        const value = errorsObj[key];
-                        Object.values(value).forEach(v => {
-                            if (Array.isArray(v)) messages.push(...v);
-                            else if (typeof v === 'string') messages.push(v);
-                        });
-                    }
-
-                    this.backendResponse = messages.join('\n');
-                }
-                // erreurs HTTP (400, 409, 500…)
-                else if (err.error && err.error.message) {
-                    this.backendResponse = err.error.message; // <- message du backend
-                } else {
-                    this.backendResponse = 'Erreur serveur';
-                }
-                this.cdr.detectChanges();
-            }
+            error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
     }
 

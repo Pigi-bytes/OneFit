@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 import { Notification } from '../notification';
+import { Erreur } from '../erreur';
 
 @Component({
     selector: 'app-configurer-compte',
@@ -18,7 +19,7 @@ export class ConfigurerCompte {
     birthDate = '';
     backendResponse = '';
 
-    constructor(private http: HttpClient, private router: Router, private cdr: ChangeDetectorRef, private not: Notification) { }
+    constructor(private http: HttpClient, private router: Router, private erreur: Erreur, private cdr: ChangeDetectorRef, private not: Notification) { }
 
     configurer() {
         this.http.post('http://127.0.0.1:5000/user/option/configurer', {
@@ -30,35 +31,7 @@ export class ConfigurerCompte {
                 this.cdr.detectChanges();
                 this.router.navigate(['/accueil']);
             },
-            error: (err: any) => {
-                //erreur 422
-                if (err.error.code == 422 && err.error?.errors) {
-
-                    const errorsObj = err.error.errors;
-                    const messages: string[] = [];
-
-
-
-                    for (const key in errorsObj) {
-
-                        const value = errorsObj[key];
-                        Object.values(value).forEach(v => {
-                            if (Array.isArray(v)) messages.push(...v);
-                            else if (typeof v === 'string') messages.push(v);
-                            messages.push("\n");
-                        });
-                    }
-
-                    this.backendResponse = messages.join('\n');
-                }
-                // erreurs HTTP (400, 409, 500…)
-                else if (err.error && err.error.message) {
-                    this.backendResponse = err.error.message; // <- message du backend
-                } else {
-                    this.backendResponse = 'Erreur serveur';
-                }
-                this.cdr.detectChanges();
-            }
+            error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
     }
 

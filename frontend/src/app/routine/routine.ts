@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt';
 import { TooltipMoveDirective } from '../tooltipmove';
 import { Message } from '../../message';
-
+import { Erreur } from '../erreur';
 
 @Component({
     selector: 'app-routine',
@@ -18,7 +18,7 @@ import { Message } from '../../message';
 })
 export class Routine {
 
-    constructor(private http: HttpClient, private not: Notification, private cdr: ChangeDetectorRef, private elt: EnvoyerElt, private router: Router) { }
+    constructor(private http: HttpClient, private not: Notification, private erreur: Erreur, private cdr: ChangeDetectorRef, private elt: EnvoyerElt, private router: Router) { }
 
 
     seance = []
@@ -89,35 +89,7 @@ export class Routine {
 
             },
 
-            error: (err: any) => {
-                //erreur 422
-                if (err.status == 422 && err.error.errors) {
-
-                    const errorsObj = err.error.errors;
-                    const messages: string[] = [];
-
-                    for (const key in errorsObj) {
-
-                        const value = errorsObj[key];
-                        Object.values(value).forEach(v => {
-                            if (Array.isArray(v)) messages.push(...v);
-                            else if (typeof v === 'string') messages.push(v);
-                        });
-                    }
-
-                    this.backendResponse = messages.join('\n');
-                }
-                else if (err.status == 404 && err.error.errors) {
-
-                }
-                // erreurs HTTP (400, 409, 500…)
-                else if (err.error && err.error.message) {
-                    this.backendResponse = err.error.message; // <- message du backend
-                } else {
-                    this.backendResponse = 'Erreur serveur';
-                }
-                this.cdr.detectChanges();
-            }
+            error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
 
     }
