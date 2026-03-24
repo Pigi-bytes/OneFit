@@ -1,59 +1,63 @@
-<main class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-3 ">
+<main class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-3">
+	<!-- Chrono -->
+	<app-chrono class="w-100 mb-4"></app-chrono>
 
-    <app-chrono class="w-100 mb-3"></app-chrono>
+	<form (ngSubmit)="validerExo()">
 
-    <div class="card p-4" style="max-width: 70%; overflow-y: auto; overflow-x: hidden; max-height: 80vh" *ngIf="exo">
+		<div class="card p-4 w-100 mx-auto" *ngIf="exo">
+			<div class="row g-4">
+				<!-- image de lexo et nom de l'exo-->
+				<div class="col-md-5 text-center d-flex flex-column align-items-center justify-content-center">
+					<img [src]="exo?.img_url" alt="{{ exo?.name }}" class="img-fluid rounded mb-2">
+					<h2 class="text-center mb-4 fw-bold">{{ exo?.name }}</h2>
+                    <!-- !!!!!!! A FAIRE: bouton aide -->
+				</div>
 
-        <h1 class="text-center mb-4">{{ exo?.name }}</h1>
+				<!-- form sets -->
+				<div class="col-md-7">
 
-        <div class="text-center mb-4">
-            <img [src]="exo?.img_url" alt="{{ exo?.name }}" class="img-fluid rounded" style="max-height: 250px;">
-        </div>
+					<div>
+						<!-- titre sets -->
+						<h2 class="mb-3 fw-bold">Sets effectués</h2>
+					</div>
 
-        <form class="container" (ngSubmit)="validerExo()">
-            <!-- liste des sets -->
-            @for (i of range(exo.planned_sets); track i) {
-            <div class="row align-items-center g-3 rounded p-2 mb-2">
-                <div class="col-2 fw-semibold">
-                    Set {{ i }}
-                </div>
+					<div class="card p-4" style="overflow-y: auto; max-height: 60vh;">
+						<!-- Liste des sets -->
+                         @for (i of range(exo.planned_sets); track i) {
+                        <div class="row align-items-center g-2 mb-2">
+							<!-- numéro -->
+							<div class="col-2 fw-semibold text-center"> Set {{ i }}
+							</div>
+							<!-- reps -->
+							<div class="col-4 d-flex">
+								<input type="number" class="form-control text-center" [(ngModel)]="setsValides[i-1].reps" name="reps{{i}}" [placeholder]="exo.planned_reps">
+								<span class="input-group-text">réps</span>
+							</div>
+							<!-- poids -->
+							<div class="col-4 d-flex">
+								<input type="number" class="form-control text-center" [(ngModel)]="setsValides[i-1].weight" name="weight{{i}}" [placeholder]="exo.planned_weight">
+								<span class="input-group-text">kg</span>
+							</div>
+							<!-- delete --> @if (i >= exo.planned_sets) { <div class="col-2 text-center">
+								<button type="button" class="btn btnDanger btn-sm" (click)="supprimerSet()"> × </button>
+							</div> }
+						</div> }
 
-                <div class="col-4">
-                    <div class="input-group">
-                        <input type="number" class="form-control" [(ngModel)]="setsValides[i-1].reps"
-                        name="reps{{i}}" [placeholder]="exo.planned_reps">
-                        <span class="input-group-text">rép.</span>
-                    </div>
-                </div>
+						<!-- bouton ajouter -->
+						<div class="d-flex justify-content-center my-3">
+							<button type="button" class="btn btnPrimaire" (click)="ajouterSet()"> + </button>
+						</div>
 
-                <div class="col-4">
-                    <div class="input-group">
-                        <input type="number" class="form-control" [(ngModel)]="setsValides[i-1].weight"
-                        name="weight{{i}}" [placeholder]="exo.planned_weight">
-                        <span class="input-group-text">kg</span>
-                    </div>
-                </div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-                @if (i >= exo.planned_sets) {
-                <div class="col-2 d-flex justify-content-center">
-                    <button type="button" class="btnDanger btn" (click)="supprimerSet()" tooltip>
-                        <span class="tooltiptext">Supprimer un set</span>
-                        -
-                    </button>
-                </div>
-                }
-            </div>
-            }
+		<!-- bouton valider -->
+		<div class="text-center p-3">
+			<button type="submit" class="btn btnPrimaire px-4"> Valider </button>
+		</div>
 
-            <!-- bouton pour ajouter un set en bas -->
-            <div class="d-flex justify-content-center mb-3 position-relative">
-                <button type="button" class="btn btnPrimaire" (click)="ajouterSet()" tooltip>
-                    <span class="tooltiptext">Ajouter un set</span>
-                    +
-                </button>
-            </div>
+	</form>
 
-            <button type="submit" class="btn btnPrimaire">Valider</button>
-        </form>
-    </div>
 </main>
