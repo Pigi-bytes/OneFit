@@ -121,7 +121,6 @@ label,
 h1,
 .dark main .card h1 {
     color: var(--red1);
-    margin-bottom: 20px;
 }
 
 h2,

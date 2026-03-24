@@ -1,11 +1,11 @@
-<div class="position-relative w-100 text-center">
+<div class="position-relative w-auto text-center">
 
-    <button class="btn btnPrimaire position-absolute start-0" tooltip (click)="retour()" *ngIf="!coteRecap">
+    <button class="btn btnPrimaire position-absolute start-0 w-auto" (click)="retour()" *ngIf="!coteRecap" tooltip>
         <span class="tooltiptext" *ngIf="coteExo">Revenir à la séance</span>
         <span class="tooltiptext" *ngIf="!coteExo">Annuler la séance</span>
         &#11164;
     </button>
 
-    <h1 id="temps" class="mb-0">&#9201; {{temps}}</h1>
+    <h1 id="temps">&#9201; {{temps}}</h1>
 
 </div>
