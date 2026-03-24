@@ -11,8 +11,10 @@ import { Erreur } from '../erreur';
     selector: 'app-connexion',
     standalone: true,
     imports: [RouterModule, FormsModule, CommonModule],
-    templateUrl: './connexion.html'
+    templateUrl: './connexion.html',
+    styleUrl: './connexion.css'
 })
+
 export class Connexion {
     username = '';
     password = '';

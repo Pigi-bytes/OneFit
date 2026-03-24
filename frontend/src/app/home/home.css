@@ -1,0 +1,30 @@
+.home-page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.home-card {
+	width: 40%;
+	padding: 2.25rem 2.5rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.25rem;
+}
+
+.imgLogo {
+	display: block;
+	margin: 0 auto;
+	max-width: 200px;
+	height: auto;
+}
+
+.home-card h1,
+.home-card h2 {
+	margin: 0;
+}
+
+.home-actions {
+	margin-top: 0.75rem;
+}

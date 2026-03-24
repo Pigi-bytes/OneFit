@@ -1,33 +1,64 @@
-<main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
-    <form (ngSubmit)="creer()" #loginForm="ngForm" id="signup_form" class="d-flex flex-column gap-3 w-50">
-        <div class="form-group">
-            <label for="username">Nom d'utilisateur:</label>
-            <input type="text" id="username" name="username" [(ngModel)]="username" required class="form-control"
-                (click)="resetNotif()" />
+<main class="creer-page">
+    <div class="card creer-card">
+        <img src="/img/onefit_logo_couleurs.png" class="imgLogo" alt="OneFit">
+        <h1>Créer un compte</h1>
+
+        <form (ngSubmit)="creer()" #loginForm="ngForm" id="signup_form" class="formCreerCompte">
+            <div class="creer-input-group">
+                <label class="input-label" for="username">Nom d'utilisateur</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    class="input-field"
+                    placeholder="Ex: Jean Dupont"
+                    [(ngModel)]="username"
+                    required
+                    (click)="resetNotif()"
+                >
+            </div>
+
+            <div class="creer-input-group">
+                <label class="input-label" for="password">Mot de passe</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="input-field"
+                    placeholder="*******"
+                    [(ngModel)]="password"
+                    required
+                    (click)="resetNotif()"
+                >
+            </div>
+
+            <div class="creer-input-group">
+                <label class="input-label" for="confirmPassword">Confirmer le mot de passe</label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    class="input-field"
+                    placeholder="*******"
+                    [(ngModel)]="confirmPassword"
+                    required
+                    (click)="resetNotif()"
+                >
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btnSecondaire" routerLink="/">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </button>
+
+                <button type="submit" class="btn btnPrimaire">
+                    <i class="bi bi-person-plus"></i> Créer un compte
+                </button>
+            </div>
+        </form>
+
+        <div *ngIf="backendResponse" class="mt-2 alert alert-info">
+            {{ backendResponse }}
         </div>
-
-        <div class="form-group">
-            <label for="password">Mot de passe:</label>
-            <input type="password" id="password" name="password" [(ngModel)]="password" required class="form-control"
-                (click)="resetNotif()" />
-        </div>
-
-        <div class="form-group">
-            <label for="confirmPassword">Confirmer password:</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword"
-                class="form-control" (click)="resetNotif()" required />
-        </div>
-
-        <button type="submit" class="btn btnPrimaire">Créer compte</button>
-
-        <button type="button" class="btn btnPrimaire" routerLink="/">Retour</button>
-
-    </form>
-
-
-
-
-    <div *ngIf="backendResponse" class="mt-2 alert alert-info">
-        {{ backendResponse }}
     </div>
 </main>
