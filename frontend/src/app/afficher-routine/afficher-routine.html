@@ -1,48 +1,42 @@
-<main class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-3">
+<main class="d-flex flex-column w-100">
 
-    <div class="card p-4 text-center" style="max-width: 600px; width:100%;" *ngIf="!seances">
-        <p class="mb-0 text-gray">
-            Sélectionnez une routine
-        </p>
+    <div class="card text-center mb-0 p-4 w-auto" *ngIf="!seances">
+        <p class="mb-0 text-gray">Sélectionnez une routine</p>
     </div>
 
-    <div *ngIf="!is_renaming && routine" class="mb-2 d-flex gap-3">
-        <h2>{{ routine.name }}</h2>
-        <button class="btn btnPrimaire" (click)="ouvrirFormulaireRenommerRoutine()"> Renommer </button>
+    <!-- affichage routine -->
+    <div *ngIf="!is_renaming && routine" class="d-flex flex-column flex-md-row align-items-md-center gap-3 w-100">
+        <h2 class="mb-0 fw-bold">{{ routine.name }}</h2>
+        <div class="button-group d-flex gap-2 mt-2 mt-md-0">
+            <button class="btn btnIcon btnPrimaire" (click)="ouvrirFormulaireRenommerRoutine()">
+                <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btnIcon btnDanger" (click)="supprimerRoutine()">
+                <i class="bi bi-trash"></i>
+            </button>
+            <button class="btn btnIcon btnPrimaire w-auto" (click)="activerRoutine()">Activer</button>
+        </div>
     </div>
 
-    <div class="mb-2 d-flex gap-3">
-        <form *ngIf="is_renaming" (ngSubmit)="renommerRoutine()" class="d-flex align-items-center gap-2 mb-2">
-            <input type="text" id="routine_nom" name="routine_nom" [(ngModel)]="routine_nom" required class="form-control"
-            [placeholder]="routine.name" />
-            <button type="submit" class="btn btnPrimaire">Valider</button>
-        </form>
-    </div>
-    
-    
-    <div *ngIf="seances">
-        <div style="overflow-y: auto; max-height: 60vh;">
-            <div class="card p-3" style="max-width: 600px; width:100%;">
+    <!-- form renommage -->
+    <form *ngIf="is_renaming" (ngSubmit)="renommerRoutine()" class="d-flex flex-column flex-md-row align-items-md-center gap-3 w-100">
+        <input type="text" id="routine_nom" name="routine_nom" [(ngModel)]="routine_nom" required 
+        class="form-control" [placeholder]="routine.name" />
+        <button type="submit" class="btn btnPrimaire btnIcon">
+            <i class="bi bi-check-lg"></i>
+        </button>
+    </form>
 
-                <div *ngFor="let s of seances" class="card border-0 p-3">
-                    <p class="fw-bold">{{ s.title }}</p>
-
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item border-0 p-0" *ngFor="let exo of s.exercises">
-                            <p>{{ exo.name }} - <span class="text-gray"> {{ exo.planned_sets}} sets de {{
-                                    exo.planned_reps}}
-                                    reps à {{ exo.planned_weight}}kg</span></p>
-                        </li>
-                    </ul>
+    <!-- Liste des séances -->
+    <div *ngIf="seances" class="w-100">
+        <div class="card p-3">
+            <div style="max-height: 60vh; overflow-y: auto;">
+                <div *ngFor="let s of seances" class="routine-exo-item p-2 mb-2">
+                    <p class="h5 mb-0 p-2 text-start">{{ s.title }}</p>
                 </div>
-
             </div>
-        </div>
-        <div class="button-group">
-            <button class="btn btnPrimaire" (click)="activerRoutine()">Activer cette routine</button>
-            <button class="btnDanger" (click)="supprimerRoutine()">Supprimer</button>
+            
         </div>
     </div>
-
 
 </main>
