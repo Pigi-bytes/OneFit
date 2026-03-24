@@ -46,8 +46,7 @@ main {
     background-color: var(--white3);
     height: 100%;
     overflow: hidden;
-    transition: background-color 0.2s ease;
-    animation: fadeIn 0.25s ease;
+    transition: background-color 0.25s ease, color 0.25s ease;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -58,6 +57,7 @@ main {
     display: flex;
     gap: 0px;
     padding: 0px;
+    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .page {
