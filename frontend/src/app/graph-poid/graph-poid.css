@@ -1,0 +1,17 @@
+.chart-card {
+	width: 100%;
+	padding: 0.75rem;
+	min-height: 0;
+	display: block;
+}
+
+.chart-container {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 16 / 9;
+}
+
+.chart-container canvas {
+	width: 100% !important;
+	height: 100% !important;
+}

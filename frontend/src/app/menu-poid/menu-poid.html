@@ -1,29 +1,32 @@
-<main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
-    <form (ngSubmit)="ajouterPoid()" #loginForm="ngForm" id="signup_form" class="d-flex flex-column gap-3 w-50">
+<section class="weight-menu-card">
+    <form (ngSubmit)="ajouterPoid()" #loginForm="ngForm" id="signup_form" class="weight-form">
+
         <div class="form-group">
-            <label for="poid">Poids:</label>
-            <input type="text" id="poid" name="poid" [(ngModel)]="poid" required class="form-control"
-                (click)="resetNotif()" />
+            <label for="pDate">Date de pesée :</label>
+            <input type="date" id="pDate" name="pDate" [(ngModel)]="pDate" required class="form-control" (click)="resetNotif()" />
         </div>
 
         <div class="form-group">
-            <label for="pDate">Date de pesé:</label>
-            <input type="date" id="pDate" name="pDate" [(ngModel)]="pDate" required class="form-control"
-                (click)="resetNotif()" />
+            <label for="poid">Poids :</label>
+            <input type="number" id="poid" name="poid" [(ngModel)]="poid" required class="form-control" (click)="resetNotif()" />
         </div>
 
         <div class="form-group">
-            <label for="note">Note:</label>
-            <input type="text" id="note" name="note" [(ngModel)]="note" required class="form-control"
-                (click)="resetNotif()" />
+            <label for="note">Note :</label>
+            <input type="text" id="note" name="note" [(ngModel)]="note" required class="form-control" placeholder="Ex: Repas de famille" (click)="resetNotif()" />
         </div>
 
-        <button type="submit" class="btn btnPrimaire">ajouter</button>
-        <button type="button" class="btnDanger" (click)="supprimer()">supprimer poids</button>
-
+        <div class="actions">
+            <button type="submit" class="btn btnPrimaire action-btn">
+                <i class="bi bi-plus-lg"></i> Ajouter
+            </button>
+            <button type="button" class="btn btnDanger action-btn" (click)="supprimer()">
+                <i class="bi bi-trash"></i> Supprimer
+            </button>
+        </div>
     </form>
 
-    <div *ngIf="backendResponse" class="mt-2 alert alert-info">
+    <div *ngIf="backendResponse" class="alert alert-info response-message">
         {{ backendResponse }}
     </div>
-</main>
+</section>
