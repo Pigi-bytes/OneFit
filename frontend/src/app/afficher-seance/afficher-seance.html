@@ -55,8 +55,10 @@
 
     <button type="button" class="btn btnPrimaire mb-2" (click)="retour()"
         *ngIf="!commencerSeance || seanceRepos ">Retour</button>
-    <button type="button" class="btn btnPrimaire mb-2" (click)="retour()" *ngIf="commencerSeance && !seanceRepos">finir
-        seance</button>
+    <button type="button" class="btn btnPrimaire mb-2" (click)="retour()" *ngIf="commencerSeance && !seanceRepos">
+        <i class="bi bi-check-lg"></i>
+        Finir la séance
+    </button>
 
 
 </main>

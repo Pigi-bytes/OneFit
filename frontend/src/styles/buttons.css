@@ -20,27 +20,40 @@
 .btn:hover  { transform: scale(1.04); }
 .btn:active { transform: scale(0.93); filter: brightness(1.3); }
 
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* bouton icone */
 .btnIcon { padding: 0.75rem; width: 42px; height: 42px; }
 .btnIcon i { font-size: 18px; }
 
+/* bouton primaire */
 .btnPrimaire       { background: var(--blue1); color: var(--white3); border-color: var(--blue1); }
-.btnPrimaire:hover { background: var(--blue2); border-color: var(--blue2); }
+.btnPrimaire:hover { background: var(--blue2); color: var(--white3); border-color: var(--blue2); }
 
 .dark .btnPrimaire       { background: var(--blue3); border-color: var(--blue3); }
 .dark .btnPrimaire:hover { background: var(--white1); color: var(--blue1); border-color: var(--white1); }
 
+/* bouton secondaire*/
 .btnSecondaire       { background: var(--blue3); color: var(--white3); border-color: var(--blue3); }
-.btnSecondaire:hover { background: var(--blue2); border-color: var(--blue2); }
+.btnSecondaire:hover { background: var(--blue2); color: var(--white3); border-color: var(--blue2); }
 
 .dark .btnSecondaire       { background: var(--blue2); border-color: var(--blue2); }
 .dark .btnSecondaire:hover { background: var(--blue3); border-color: var(--blue3); }
 
+/* bouton tertiaire*/
 .btnTertiaire       { background: transparent; color: var(--blue1); border-color: var(--blue1); }
-.btnTertiaire:hover { background: var(--blue1); color: var(--white3); }
+.btnTertiaire:hover { background: var(--blue1); color: var(--blue1); color: var(--white3); }
 
 .dark .btnTertiaire       { color: var(--white1); border-color: var(--white1); }
 .dark .btnTertiaire:hover { background: var(--white1); color: var(--blue1); }
 
+/* bouton ghost */
 .btnGhostLarge       { background: transparent; color: var(--blue1); width: 100%; min-height: 64px; text-align: left; justify-content: space-between; }
 .btnGhostLarge:hover { background: var(--silver3); }
 
@@ -53,23 +66,12 @@
 .dark .btnGhostLarge.router-link-active i,
 .dark .btnGhostLarge.active i { color: var(--blue1); }
 
+/* bouton danger */
 .btnDanger       { background: var(--red1); color: var(--white3); border-color: var(--red1); }
-.btnDanger:hover { background: var(--red2); border-color: var(--red2); }
+.btnDanger:hover { background: var(--red2); color: var(--white3); border-color: var(--red2); }
 
+/* bouton recap */
 .btnRecap { grid-area: button; }
 
+/* bouton routine */
 .routineBtn { display: flex; padding: 10px 15px; margin-right: 10px; gap: 10px; }
-
-.button-group {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-button,
-input {
-    border-radius: 12px;
-    padding: 10px 20px;
-    transition-duration: 0.3s;
-}

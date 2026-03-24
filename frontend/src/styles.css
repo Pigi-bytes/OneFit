@@ -87,6 +87,7 @@ main .card {
     background-color: var(--white2);
     transition: background-color 0.3s ease, box-shadow 0.2s ease;
     will-change: background-color;
+    border-radius: 18px;
 }
 
 main .clickable-card:hover {

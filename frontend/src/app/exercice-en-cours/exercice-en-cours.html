@@ -38,14 +38,20 @@
 								<input type="number" class="form-control text-center" [(ngModel)]="setsValides[i-1].weight" name="weight{{i}}" [placeholder]="exo.planned_weight">
 								<span class="input-group-text">kg</span>
 							</div>
-							<!-- delete --> @if (i >= exo.planned_sets) { <div class="col-2 text-center">
-								<button type="button" class="btn btnDanger btn-sm" (click)="supprimerSet()"> × </button>
+							<!-- bouton supprimer set -->
+							 @if (i >= exo.planned_sets) {
+							<div class="col-1 text-center">
+								<button type="button" class="btn btnDanger btnIcon" (click)="supprimerSet()">
+									<i class="bi bi-x-lg"></i>
+								</button>
 							</div> }
 						</div> }
 
 						<!-- bouton ajouter -->
 						<div class="d-flex justify-content-center my-3">
-							<button type="button" class="btn btnPrimaire" (click)="ajouterSet()"> + </button>
+							<button type="button" class="btn btnPrimaire btnIcon" (click)="ajouterSet()">
+								<i class="bi bi-plus-lg"></i>
+							</button>
 						</div>
 
 					</div>
@@ -55,7 +61,10 @@
 
 		<!-- bouton valider -->
 		<div class="text-center p-3">
-			<button type="submit" class="btn btnPrimaire px-4"> Valider </button>
+			<button type="submit" class="btn btnPrimaire px-4">
+				<i class="bi bi-check-lg"></i>
+				Valider
+			</button>
 		</div>
 
 	</form>
