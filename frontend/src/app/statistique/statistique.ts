@@ -22,7 +22,6 @@ export class Statistique {
     backendResponse = "";
     chart!: Chart<'line'>;
     stat: any[] = [];
-    typeGraphe: number = 1;
 
     titreGraphe = "Sélectionnez un graphe à afficher";
 
@@ -51,21 +50,21 @@ export class Statistique {
 
     }
 
-    public getInformation() {
-        const isDark = localStorage.getItem('darkMode') === 'true';
+    public getInformation(typeGraphe: any) {
         console.log(this.exoChoisit);
+
 
         if (this.exoChoisit === "") {
             return;
         }
 
-
-        switch (this.typeGraphe) {
+        switch (typeGraphe) {
             case 1: this.titreGraphe = "Volume"; break;
             case 2: this.titreGraphe = "1 RM"; break;
             case 3: this.titreGraphe = "Poids max"; break;
-
         }
+
+        this.cdr.detectChanges();
 
         this.http.post('http://127.0.0.1:5000/user/getExoStat', {
             exoId: this.exoChoisit
@@ -78,6 +77,9 @@ export class Statistique {
                 if (this.chart) {
                     this.chart.destroy();
                 }
+                const isDark = this.theme.isItDark();
+
+                console.log(isDark);
 
                 const config: ChartConfiguration<'line'> = {
                     type: 'line',
@@ -85,15 +87,15 @@ export class Statistique {
                         labels: this.stat.map(s => s.day),
                         datasets: [
                             {
-                                label: this.typeGraphe === 1
+                                label: typeGraphe === 1
                                     ? 'Volume'
-                                    : this.typeGraphe === 2
+                                    : typeGraphe === 2
                                         ? '1RM estimé'
                                         : 'Poids max',
                                 data: this.stat.map(s => {
-                                    if (this.typeGraphe === 1)
+                                    if (typeGraphe === 1)
                                         return s.volume
-                                    else if (this.typeGraphe === 2)
+                                    else if (typeGraphe === 2)
                                         return s.estimated_1rm
                                     else
                                         return s.max_weight

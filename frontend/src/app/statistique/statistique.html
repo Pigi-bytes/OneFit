@@ -1,41 +1,37 @@
 <main>
 
-    <form (ngSubmit)="getInformation()" #loginForm="ngForm" id="login_form" class="gap-3">
 
-        <div style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
-            <div>
-                <select *ngIf="exercices.length > 0" [(ngModel)]="exoChoisit" name="exercices">
-                    <option value="" disabled selected>Choisir un exercice</option>
-                    <option *ngFor="let exo of exercices" [value]="exo.exoId">{{ exo.name }}</option>
-                </select>
-                <p *ngIf="exercices.length == 0">Aucun exercices réalisé</p>
-
-            </div>
-
-            @if(exercices.length > 0){
-            <div class="radio-group">
-                <label class="radio-item">
-                    <input type="radio" name="type" [value]="1" [(ngModel)]="typeGraphe" />
-                    <span>Graphe Volume</span>
-                </label>
-
-                <label class="radio-item">
-                    <input type="radio" name="type" [value]="2" [(ngModel)]="typeGraphe" />
-                    <span>Graphe 1RM</span>
-                </label>
-
-                <label class="radio-item">
-                    <input type="radio" name="type" [value]="3" [(ngModel)]="typeGraphe" />
-                    <span>Graphe poids max</span>
-                </label>
-            </div>
-
-            <input class="btnPrimaire" type="submit" value="valider" />
-            }
+    <div style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
+        <div>
+            <select *ngIf="exercices.length > 0" [(ngModel)]="exoChoisit" name="exercices">
+                <option value="" disabled selected>Choisir un exercice</option>
+                <option *ngFor="let exo of exercices" [value]="exo.exoId">{{ exo.name }}</option>
+            </select>
+            <p *ngIf="exercices.length == 0">Aucun exercices réalisé</p>
 
         </div>
 
-    </form>
+        @if(exercices.length > 0){
+        <div class="radio-group">
+            <label class="radio-item">
+                <input type="radio" name="type" (change)="getInformation(1)" />
+                <span>Graphe Volume</span>
+            </label>
+
+            <label class="radio-item">
+                <input type="radio" name="type" (change)="getInformation(2)" />
+                <span>Graphe 1RM</span>
+            </label>
+
+            <label class="radio-item">
+                <input type="radio" name="type" (change)="getInformation(3)" />
+                <span>Graphe poids max</span>
+            </label>
+        </div>
+        }
+
+    </div>
+
 
     <h1 style="margin-top: 50px;">{{titreGraphe}}</h1>
     <div class="chart-container">
