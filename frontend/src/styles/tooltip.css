@@ -7,7 +7,7 @@
     padding: 10px;
     border-radius: 6px;
     position: fixed;
-    z-index: 1000;
+    z-index: 1;
     pointer-events: none;
     font-size: 12px;
 }
@@ -20,4 +20,5 @@
 
 [tooltip]:hover .tooltiptext {
     visibility: visible;
+    z-index: 1;
 }
