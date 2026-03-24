@@ -1,0 +1,8 @@
+.chart-container {
+    width: 100%;
+    /* largeur du graphe */
+    height: 50%;
+    /* hauteur du graphe */
+    margin: auto;
+    /* centrer le graphe */
+}
