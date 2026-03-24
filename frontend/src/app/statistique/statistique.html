@@ -13,18 +13,20 @@
             </div>
 
             @if(exercices.length > 0){
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <label style="display: flex; align-items: center; gap: 0.5rem;">
-                    <input type="radio" name="type" value="1" />
-                    <span>Graphe truc 1</span>
+            <div class="radio-group">
+                <label class="radio-item">
+                    <input type="radio" name="type" [value]="1" [(ngModel)]="typeGraphe" />
+                    <span>Graphe Volume</span>
                 </label>
-                <label style="display: flex; align-items: center; gap: 0.5rem;">
-                    <input type="radio" name="type" value="2" />
-                    <span>Graphe truc 2</span>
+
+                <label class="radio-item">
+                    <input type="radio" name="type" [value]="2" [(ngModel)]="typeGraphe" />
+                    <span>Graphe 1RM</span>
                 </label>
-                <label style="display: flex; align-items: center; gap: 0.5rem;">
-                    <input type="radio" name="type" value="3" />
-                    <span>Graphe truc 3</span>
+
+                <label class="radio-item">
+                    <input type="radio" name="type" [value]="3" [(ngModel)]="typeGraphe" />
+                    <span>Graphe poids max</span>
                 </label>
             </div>
 
@@ -35,7 +37,9 @@
 
     </form>
 
+    <h1 style="margin-top: 50px;">{{titreGraphe}}</h1>
     <div class="chart-container">
+
         <canvas #myChart>{{chart}}</canvas>
     </div>
 </main>

@@ -31,7 +31,7 @@
 html,
 body {
     height: 100%;
-    width:100%;
+    width: 100%;
     margin: 0;
     font-family: 'Space Grotesk' !important;
 }
@@ -51,6 +51,7 @@ main {
     justify-content: center;
     align-items: center;
     text-align: center;
+    gap: 2rem;
 }
 
 .layout {
@@ -181,4 +182,25 @@ main.hideScrolbar {
 
 .actif {
     background-color: #b5ffa3 !important;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-left: 10rem;
+
+}
+
+.radio-item {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    align-items: left;
+    gap: 8px;
+    width: 200px;
+    /* clé pour alignement */
+}
+
+.radio-item input {
+    margin: 0;
 }

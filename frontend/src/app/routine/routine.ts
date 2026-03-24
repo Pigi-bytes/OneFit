@@ -6,13 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { EnvoyerElt } from '../envoyerElt';
-import { TooltipMoveDirective } from '../tooltipmove';
 import { Message } from '../../message';
 import { Erreur } from '../erreur';
 
 @Component({
     selector: 'app-routine',
-    imports: [FormsModule, CommonModule, RouterModule, TooltipMoveDirective],
+    imports: [FormsModule, CommonModule, RouterModule],
     templateUrl: './routine.html',
     styleUrl: './routine.css',
 })

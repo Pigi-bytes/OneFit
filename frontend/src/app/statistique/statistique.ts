@@ -6,7 +6,7 @@ import { Erreur } from '../erreur';
 import { ChangeDetectorRef } from '@angular/core';
 import { Chart, registerables, ChartConfiguration } from 'chart.js';
 import { Theme } from '../theme';
-import { Subscription } from 'rxjs';
+import { ignoreElements, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-statistique',
@@ -22,6 +22,9 @@ export class Statistique {
     backendResponse = "";
     chart!: Chart<'line'>;
     stat: any[] = [];
+    typeGraphe: number = 1;
+
+    titreGraphe = "Sélectionnez un graphe à afficher";
 
     constructor(private http: HttpClient, private erreur: Erreur, private cdr: ChangeDetectorRef, private theme: Theme) { Chart.register(...registerables); }
     @ViewChild('myChart', { static: false }) myChart!: ElementRef<HTMLCanvasElement>;
@@ -52,6 +55,18 @@ export class Statistique {
         const isDark = localStorage.getItem('darkMode') === 'true';
         console.log(this.exoChoisit);
 
+        if (this.exoChoisit === "") {
+            return;
+        }
+
+
+        switch (this.typeGraphe) {
+            case 1: this.titreGraphe = "Volume"; break;
+            case 2: this.titreGraphe = "1 RM"; break;
+            case 3: this.titreGraphe = "Poids max"; break;
+
+        }
+
         this.http.post('http://127.0.0.1:5000/user/getExoStat', {
             exoId: this.exoChoisit
         }).subscribe({
@@ -70,8 +85,19 @@ export class Statistique {
                         labels: this.stat.map(s => s.day),
                         datasets: [
                             {
-                                label: 'Volume',
-                                data: this.stat.map(s => s.volume),
+                                label: this.typeGraphe === 1
+                                    ? 'Volume'
+                                    : this.typeGraphe === 2
+                                        ? '1RM estimé'
+                                        : 'Poids max',
+                                data: this.stat.map(s => {
+                                    if (this.typeGraphe === 1)
+                                        return s.volume
+                                    else if (this.typeGraphe === 2)
+                                        return s.estimated_1rm
+                                    else
+                                        return s.max_weight
+                                }),
                                 backgroundColor: '#676767',
                                 borderColor: isDark ? '#4ade80' : '#2563eb',
                                 pointBackgroundColor: isDark ? '#ffffff' : '#333333',
