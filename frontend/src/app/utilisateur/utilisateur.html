@@ -47,8 +47,17 @@
         </form>
 
         <div class="button-group mb-4">
-            <button type="button" class="btn btnPrimaire" routerLink="/modif-password">Modifier le mot de passe</button>
-            <button type="button" class="btn btnDanger " (click)="supprimer()">Supprimer votre compte</button>
+
+            <button type="button" class="btn btnPrimaire" routerLink="/modif-password">
+                <i class="bi bi-pencil"></i>
+                Modifier le mot de passe
+            </button>
+            
+            <button type="button" class="btn btnDanger " (click)="supprimer()">
+                <i class="bi bi-trash"></i>
+                Supprimer votre compte
+            </button>
+
         </div>
 
         <div *ngIf="backendResponse" class="mt-2 alert alert-info">

@@ -22,6 +22,8 @@ export class Statistique {
     backendResponse = "";
     chart!: Chart<'line'>;
     stat: any[] = [];
+    description = "";
+    isDark: boolean = false;
 
     titreGraphe = "Sélectionnez un graphe à afficher";
 
@@ -59,9 +61,14 @@ export class Statistique {
         }
 
         switch (typeGraphe) {
-            case 1: this.titreGraphe = "Volume"; break;
-            case 2: this.titreGraphe = "1 RM"; break;
-            case 3: this.titreGraphe = "Poids max"; break;
+            case 1: this.titreGraphe = "Volume";
+                this.description = "Le volume total de poids soulevé lors d’une séance de musculation est un indicateur qui permet de mesurer la quantité de travail effectuée. Il correspond à la somme de toutes les charges déplacées pendant l’entraînement. Pour le calculer, on utilise la formule suivante : volume = séries × répétitions × charge (en kilogrammes). Il suffit donc de multiplier, pour chaque exercice, le nombre de séries par le nombre de répétitions et par la charge utilisée, puis d’additionner les résultats de tous les exercices afin d’obtenir le volume total de la séance."; break;
+            case 2: this.titreGraphe = "1 RM";
+                this.description = "Le 1RM(une répétition maximale) correspond au poids maximal qu’une personne peut soulever une seule fois sur un exercice donné. Comme il est difficile à mesurer directement, il est souvent estimé à partir des performances réalisées avec des charges plus légères. Une formule courante consiste à utiliser le nombre de répétitions et la charge soulevée pour obtenir une estimation du 1RM. Cela permet de suivre sa progression en force sans avoir à tester systématiquement sa charge maximale."; break;
+            case 3:
+                this.titreGraphe = "Poids max";
+                this.description = "Le poids maximal correspond à la charge la plus lourde soulevée lors d’une séance pour un exercice donné. Contrairement au 1RM estimé, il s’agit d’une valeur réelle observée pendant l’entraînement. Pour le déterminer, il suffit d’identifier la répétition où la charge utilisée est la plus élevée. Cet indicateur permet de suivre l’évolution de la force maximale au fil du temps.";
+                break;
         }
 
         this.cdr.detectChanges();
@@ -101,8 +108,8 @@ export class Statistique {
                                         return s.max_weight
                                 }),
                                 backgroundColor: '#676767',
-                                borderColor: isDark ? '#4ade80' : '#2563eb',
-                                pointBackgroundColor: isDark ? '#ffffff' : '#333333',
+                                borderColor: this.isDark ? '#4ade80' : '#2563eb',
+                                pointBackgroundColor: this.isDark ? '#ffffff' : '#333333',
                                 fill: false,
                             }
                         ]
@@ -119,22 +126,22 @@ export class Statistique {
                         scales: {
                             x: {
                                 grid: {
-                                    color: isDark
+                                    color: this.isDark
                                         ? 'rgba(255,255,255,0.15)'
                                         : 'rgba(0,0,0,0.1)'
                                 },
                                 ticks: {
-                                    color: isDark ? '#ffffff' : '#333333'
+                                    color: this.isDark ? '#ffffff' : '#333333'
                                 }
                             },
                             y: {
                                 grid: {
-                                    color: isDark
+                                    color: this.isDark
                                         ? 'rgba(255,255,255,0.15)'
                                         : 'rgba(0,0,0,0.1)'
                                 },
                                 ticks: {
-                                    color: isDark ? '#ffffff' : '#333333'
+                                    color: this.isDark ? '#ffffff' : '#333333'
                                 }
                             }
                         }
@@ -151,26 +158,26 @@ export class Statistique {
     private updateChartColors() {
         if (!this.chart) return;
 
-        const isDark = this.theme.isItDark();
+        this.isDark = this.theme.isItDark();
 
-        this.chart.data.datasets[0].borderColor = isDark ? '#4ade80' : '#2563eb';
-        this.chart.data.datasets[0].pointBackgroundColor = isDark ? '#ffffff' : '#333333';
+        this.chart.data.datasets[0].borderColor = this.isDark ? '#4ade80' : '#2563eb';
+        this.chart.data.datasets[0].pointBackgroundColor = this.isDark ? '#ffffff' : '#333333';
 
         if (this.chart.options.scales) {
             if (this.chart.options.scales['x']) {
                 this.chart.options.scales['x'].grid = {
-                    color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
+                    color: this.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
                 };
                 this.chart.options.scales['x'].ticks = {
-                    color: isDark ? '#ffffff' : '#333333'
+                    color: this.isDark ? '#ffffff' : '#333333'
                 };
             }
             if (this.chart.options.scales['y']) {
                 this.chart.options.scales['y'].grid = {
-                    color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
+                    color: this.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
                 };
                 this.chart.options.scales['y'].ticks = {
-                    color: isDark ? '#ffffff' : '#333333'
+                    color: this.isDark ? '#ffffff' : '#333333'
                 };
             }
         }
