@@ -25,6 +25,7 @@ export class AfficheSceance implements OnInit {
     private platformId = inject(PLATFORM_ID);
     jour: string | null = "";
     exercices: any[] = [];
+    exercicesValide: any[] = [];
     backendResponse = "";
     commencerSeance: boolean = false;
     seanceRepos: boolean = false;
@@ -65,6 +66,14 @@ export class AfficheSceance implements OnInit {
             })
         );
 
+        this.subscriptions.push(
+            this.ei.exercices$.subscribe(data => {
+                this.exercicesValide = data;
+                console.log('Exercices reçus:', this.exercicesValide);
+                this.ei.blockExercice();
+            })
+        );
+
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
             this.chargeSeance();
@@ -84,6 +93,12 @@ export class AfficheSceance implements OnInit {
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
                 this.exercices = res.seance.exercises.sort((a: any, b: any) => a.ordre - b.ordre);
+
+                for (const exo of this.exercices) {
+                    if (this.exercicesValide.some(e => e === exo.seance_exercise_id)) {
+                        exo['dejaValide'] = true;
+                    }
+                }
                 if (this.exercices.length === 0 && this.commencerSeance) {
 
                     this.seanceRepos = true;
@@ -155,9 +170,18 @@ export class AfficheSceance implements OnInit {
     }
 
     retour() {
+
         if (this.commencerSeance && !this.seanceRepos) {
+            for (const exo of this.exercices) {
+                if (!this.exercicesValide.some(e => e === exo.seance_exercise_id)) {
+                    alert("il faut valider tout les exercies pour terminer la scéance");
+                    return;
+                }
+
+            }
 
             this.ei.blockSeance();
+            this.ei.resetExercice();
             this.ei.triggerRefresh([Message.FINIR_SEANCE]);
             localStorage.removeItem("lastMessage");
             this.router.navigate(['/recap-seance']);

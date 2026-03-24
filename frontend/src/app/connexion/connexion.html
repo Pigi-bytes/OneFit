@@ -1,26 +1,34 @@
-<main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
+<main class="connexion-page">
+	<div class="card connexion-card">
+		
+		<img src="/img/onefit_logo_couleurs.png" class="imgLogo" alt="OneFit">
+		<h1>Connexion</h1>
 
-    <form (ngSubmit)="login()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3 w-50">
+		<form (ngSubmit)="login()" #loginForm="ngForm" id="login_form" class="formConnexion">
+			<div class="connexion-input-group">
+				<label class="input-label" for="username">Nom d'utilisateur</label>
+				<input type="text" class="input-field" placeholder="Ex: Jean Dupont" id="username" name="username" [(ngModel)]="username" required (click)="resetNotif()">
+			</div>
 
-        <div class="form-group">
-            <label for="username">Nom d'utilisateur</label>
-            <input type="text" id="username" name="username" [(ngModel)]="username" required class="form-control"
-                (click)="resetNotif()" />
-        </div>
+			<div class="connexion-input-group">
+				<label class="input-label" for="password">Mot de passe</label>
+				<input type="password" class="input-field" placeholder="*******" id="password" name="password" [(ngModel)]="password" required (click)="resetNotif()">
+			</div>
 
-        <div class="form-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" [(ngModel)]="password" required class="form-control"
-                (click)="resetNotif()" /><br>
-        </div>
+			<div class="button-group">
+				<button type="button" class="btn btnSecondaire" routerLink="/">
+					<i class="bi bi-arrow-left"></i> Retour
+				</button>
 
-        <button type="submit" class="btn btnPrimaire">Connexion</button>
-        <button type="button" class="btn btnPrimaire" routerLink="/">Retour</button>
+				<button type="submit" class="btn btnPrimaire">
+					<i class="bi bi-lock-fill"></i> Connexion
+				</button>
 
-    </form>
+			</div>
+		</form>
 
-    <div *ngIf="backendResponse" class="mt-2 alert alert-info">
-        {{ backendResponse }}
-    </div>
-
+		<div *ngIf="backendResponse" class="mt-2 alert alert-info">
+			{{ backendResponse }}
+		</div>
+	</div>
 </main>

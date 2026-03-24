@@ -21,7 +21,7 @@
 
             @for (day of calendarDays; track $index) {
             <div class="card" [class.actif]="verifStreak(day)">
-                <span [class.aujourd-hui]="isToday(day)" [class.vide]="!day">
+                <span [class.vide]="!day">
                     {{ day ?? '' }}
                 </span>
 

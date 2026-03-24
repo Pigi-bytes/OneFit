@@ -14,7 +14,7 @@
             class="card clickable-card d-flex flex-row align-items-center p-2">
 
             <!-- exo info -->
-            <div (click)="modifie(exo.exoId,exo.planned_sets,exo.planned_reps,exo.planned_weight,exo.seance_exercise_id)"
+            <div (click)="!exo.dejaValide ? modifie(exo.exoId, exo.planned_sets, exo.planned_reps, exo.planned_weight, exo.seance_exercise_id) : null"
                 tooltip>
                 <span class="tooltiptext">
                     @if(!commencerSeance){
@@ -27,7 +27,9 @@
                 <div class="d-flex align-items-center p-2">
                     <img [src]="exo.img_url" alt="{{exo.nom}}" width="20%" class="me-3 rounded">
                     <p class="mb-0">{{ exo.name }} </p>
+                    <i *ngIf="exo.dejaValide" class="bi bi-check-lg"></i>
                 </div>
+
             </div>
 
             <!-- boutons -->
@@ -37,8 +39,7 @@
                     <span class="tooltiptext"> Déplacer vers le haut </span>
                     &#11165;
                 </button>
-                <button *ngIf="!commencerSeance  && i < exercices.length - 1" type="button"
-                    class="btn btnPrimaire "
+                <button *ngIf="!commencerSeance  && i < exercices.length - 1" type="button" class="btn btnPrimaire "
                     (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()" tooltip>
                     <span class="tooltiptext"> Déplacer vers le bas </span>
                     &#11167;
