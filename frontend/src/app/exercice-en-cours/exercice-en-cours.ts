@@ -49,8 +49,8 @@ export class ExerciceEnCours {
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
             this.chargerExo();
-        }        
-        
+        }
+
         this.cdr.detectChanges();
     }
 
@@ -69,7 +69,7 @@ export class ExerciceEnCours {
                 if (this.exo) {
                     this.setsValides = Array.from({ length: this.exo.planned_sets }, () => ({ reps: null, weight: null }));
                 }
-                
+
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },
@@ -95,7 +95,7 @@ export class ExerciceEnCours {
         }
     }
 
-    validerExo(){
+    validerExo() {
         this.http.post('http://127.0.0.1:5000/seanceReelle/ajouterExoEffectue', {
             seance_exercise_id: this.exo.seance_exercise_id,
             sets: this.setsValides
@@ -104,10 +104,28 @@ export class ExerciceEnCours {
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
                 this.backendResponse = res.message;
+
+                // débloquer et réémettre le tableau
+                this.ei.unblockExercice();
+
+                // ajouter l'exercice au tableau
+                this.ei.addExercice(this.seance_exercise_id);
+
+                // émettre l'état mis à jour
+                this.ei.soumettre();
+
+                localStorage.removeItem("coteExo");
+
+                // naviguer et déclencher le refresh après que le composant soit créé
+                this.router.navigate(['/seance-en-cours']).then(() => {
+                    this.ei.triggerRefresh([Message.SEANCE_EN_COURS]);
+                });
             },
 
             error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
+
+
     }
 
     range(n: number) {

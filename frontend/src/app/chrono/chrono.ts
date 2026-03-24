@@ -171,6 +171,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
 
                 });
                 this.elt.blockSeance();
+                this.elt.resetExercice();
                 this.router.navigate(['/accueil']);
 
             }
