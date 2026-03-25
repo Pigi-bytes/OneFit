@@ -21,6 +21,8 @@ import { SeanceEnCours } from './seance-en-cours/seance-en-cours';
 import { RecapSceance } from './recap-sceance/recap-sceance';
 import { Statistique } from './statistique/statistique';
 import { Contact } from './contact/contact';
+import { Compliance } from './compliance/compliance';
+import { Cgu } from './cgu/cgu';
 
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },
@@ -45,4 +47,6 @@ export const routes: Routes = [
     { path: "recap-seance", component: RecapSceance, data: { hideMenu: true } },
     { path: "statistique", component: Statistique },
     { path: "contact", component: Contact },
+    { path: "compliance", component: Compliance, data: { hideMenu: true } },
+    { path: "cgu", component: Cgu, data: { hideMenu: true } },
 ];

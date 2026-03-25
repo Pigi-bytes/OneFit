@@ -33,3 +33,13 @@
 .formCreerCompte .input-field {
 	width: 100%;
 }
+
+.creer-consent {
+	margin-bottom: 1rem;
+}
+
+.compliance-link {
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: 500;
+}

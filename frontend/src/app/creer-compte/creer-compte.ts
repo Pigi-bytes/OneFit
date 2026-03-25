@@ -20,10 +20,15 @@ export class CreerCompte {
     password = '';
     backendResponse = '';
     confirmPassword = '';
+    acceptedCompliance = false;
 
     constructor(private http: HttpClient, private router: Router, private erreur: Erreur, private cdr: ChangeDetectorRef, private not: Notification) { }
 
     creer() {
+        if (!this.acceptedCompliance) {
+            this.backendResponse = 'Vous devez accepter la politique de conformité avant de créer un compte';
+            return;
+        }
 
         if (this.password !== this.confirmPassword.trim()) {
             this.backendResponse = 'Les mots de passe ne correspondent pas';

@@ -6,44 +6,26 @@
         <form (ngSubmit)="creer()" #loginForm="ngForm" id="signup_form" class="formCreerCompte">
             <div class="creer-input-group">
                 <label class="input-label" for="username">Nom d'utilisateur</label>
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    class="input-field"
-                    placeholder="Ex: Jean Dupont"
-                    [(ngModel)]="username"
-                    required
-                    (click)="resetNotif()"
-                >
+                <input type="text" id="username" name="username" class="input-field" placeholder="Ex: Jean Dupont" [(ngModel)]="username" required (click)="resetNotif()">
             </div>
 
             <div class="creer-input-group">
                 <label class="input-label" for="password">Mot de passe</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    class="input-field"
-                    placeholder="*******"
-                    [(ngModel)]="password"
-                    required
-                    (click)="resetNotif()"
-                >
+                <input type="password" id="password" name="password" class="input-field" placeholder="*******" [(ngModel)]="password" required (click)="resetNotif()" >
             </div>
 
             <div class="creer-input-group">
                 <label class="input-label" for="confirmPassword">Confirmer le mot de passe</label>
-                <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    class="input-field"
-                    placeholder="*******"
-                    [(ngModel)]="confirmPassword"
-                    required
-                    (click)="resetNotif()"
-                >
+                <input type="password" id="confirmPassword" name="confirmPassword" class="input-field" placeholder="*******" [(ngModel)]="confirmPassword" required (click)="resetNotif()" >
+            </div>
+
+            <div class="creer-consent">
+                <label for="acceptedCompliance" class="d-flex align-items-start gap-2">
+                    <input id="acceptedCompliance" type="checkbox" name="acceptedCompliance" [(ngModel)]="acceptedCompliance" (change)="resetNotif()" >
+                    <span>J'ai lu et j'accepte la
+                        <a class="compliance-link" routerLink="/compliance">politique de confidentialité</a> et les <a class="compliance-link" routerLink="/cgu">conditions d'utilisation</a>.
+                    </span>
+                </label>
             </div>
 
             <div class="button-group">
