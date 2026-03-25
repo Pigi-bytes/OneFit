@@ -70,3 +70,5 @@ class Config:
     LOG_LEVEL_SQLALCHEMY = os.environ.get("LOG_LEVEL_SQLALCHEMY", "WARNING").upper()
     LOG_LEVEL_WERKZEUG = os.environ.get("LOG_LEVEL_WERKZEUG", "WARNING").upper()
     LOG_LEVEL_URLLIB3 = os.environ.get("LOG_LEVEL_URLLIB3", "WARNING").upper()
+
+    ONEFIT_SMTP_PASSWORD = os.environ.get("ONEFIT_SMTP_PASSWORD", "ONEFIT_SMTP_PASSWORD")

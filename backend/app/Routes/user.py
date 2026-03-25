@@ -1,11 +1,12 @@
+import smtplib
 from datetime import date, timedelta
+from email.message import EmailMessage
 
 import sqlalchemy as sa
+from config import Config
+from email_validator import EmailNotValidError, validate_email
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
-import smtplib
-from email.message import EmailMessage
-from email_validator import validate_email, EmailNotValidError
 
 from app import db
 from app.communRoutes import getCurrentUserOrAbort401, userResponse
@@ -15,6 +16,7 @@ from app.schemas import (
     ExoStatQuerySchema,
     ExoStatResponseSchema,
     LoggedExercisesResponseSchema,
+    MailSchema,
     MessageSchema,
     UserAjouterPoidsSchema,
     UserHistoriqueResponseSchema,
@@ -22,7 +24,6 @@ from app.schemas import (
     UserSuppPoidSchema,
     UserWorkoutStreakResponseSchema,
     ValidationErrorSchema,
-    MailSchema,
 )
 from app.utils.logger import QueryTimer, db_logger, route_logger
 
@@ -246,11 +247,6 @@ def supprimer_utilisateur():
     return {"message": "Utilisateur supprimé avec succès"}
 
 
-
-
-
-
-
 def is_valid_email(email):
     try:
         v = validate_email(email) 
@@ -258,17 +254,17 @@ def is_valid_email(email):
     except EmailNotValidError:
         return False
 
+
 @userBLP.route("/envoyer_mail", methods=["POST"])
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.arguments(MailSchema)
-@userBLP.response(200,MessageSchema )
+@userBLP.response(200, MessageSchema)
 @userBLP.alt_response(401, schema=BaseErrorSchema, description="mail invalide")
 @jwt_required()
 def envoyer_mail(data):
-    # Créer le message
+    """Envoie un email de contact à OneFit"""
     msg = EmailMessage()
 
-    
     email = data['email']
     if not is_valid_email(email):
         abort(404, message="mail invalide")
@@ -281,7 +277,7 @@ def envoyer_mail(data):
     # Envoyer via SMTP
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
         smtp.starttls()  # Connexion sécurisée
-        smtp.login('onefit.contactsport@gmail.com', 'vblmewqfrxwqyhss')
+        smtp.login('onefit.contactsport@gmail.com', Config.ONEFIT_SMTP_PASSWORD)
         smtp.send_message(msg)
         return {"message": "Email envoyé avec sucée"}
         
