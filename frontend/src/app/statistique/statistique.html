@@ -1,49 +1,46 @@
-<main>
+<main class="poid-page">
 
+    <section class="card poid-graph-section">
+        <div class="chart-area">
 
-    <div style="display: flex; gap: 1rem; align-items: center; justify-content: center;">
-        <div>
-            <select *ngIf="exercices.length > 0" [(ngModel)]="exoChoisit" name="exercices">
-                <option value="" disabled selected>Choisir un exercice</option>
-                <option *ngFor="let exo of exercices" [value]="exo.exoId">{{ exo.name }}</option>
-            </select>
-            <p *ngIf="exercices.length == 0">Aucun exercices réalisé</p>
+            <div class="chart-main">
+                <div class="chart-title">{{ titreGraphe }}</div>
+                <div class="chart-box" [class.empty]="!afficheGraphe">
+                    <canvas #myChart *ngIf="afficheGraphe"></canvas>
+                    <p *ngIf="!afficheGraphe">Sélectionnez un exercice et un graphe</p>
+                </div>
+            </div>
+
+            <div class="chart-right" *ngIf="exercices.length > 0">
+                <select [(ngModel)]="exoChoisit" name="exercices">
+                    <option value="" disabled selected>Choisir un exercice</option>
+                    <option *ngFor="let exo of exercices" [value]="exo.exoId">{{ exo.name }}</option>
+                </select>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="type" (change)="getInformation(1)" />
+                        <span>Graphe Volume</span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="type" (change)="getInformation(2)" />
+                        <span>Graphe 1RM</span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="type" (change)="getInformation(3)" />
+                        <span>Graphe poids max</span>
+                    </label>
+                </div>
+                <p *ngIf="exercices.length === 0">Aucun exercice réalisé</p>
+            </div>
 
         </div>
+    </section>
 
-        @if(exercices.length > 0){
-        <div class="radio-group">
-            <label class="radio-item">
-                <input type="radio" name="type" (change)="getInformation(1)" />
-                <span>Graphe Volume</span>
-            </label>
-
-            <label class="radio-item">
-                <input type="radio" name="type" (change)="getInformation(2)" />
-                <span>Graphe 1RM</span>
-            </label>
-
-            <label class="radio-item">
-                <input type="radio" name="type" (change)="getInformation(3)" />
-                <span>Graphe poids max</span>
-            </label>
-        </div>
-        }
-
-    </div>
-
-
-    <h1 style="margin-top: 50px;">{{titreGraphe}}</h1>
-    <div class="chart-container">
-
-        <canvas #myChart>{{chart}}</canvas>
-    </div>
-
-
-    @if(exercices.length > 0){
-    <div class="card">
-        <h2>Description</h2>
-        <p>{{description}}</p>
-    </div>
+    @if(exercices.length > 0) {
+    <section class="card poid-description">
+        <h4 class="titre">Description</h4>
+        <p>{{ description }}</p>
+    </section>
     }
+
 </main>

@@ -23,6 +23,7 @@ export class Statistique {
     chart!: Chart<'line'>;
     stat: any[] = [];
     description = "";
+    afficheGraphe: boolean = false;
     isDark: boolean = false;
 
     titreGraphe = "Sélectionnez un graphe à afficher";
@@ -71,6 +72,7 @@ export class Statistique {
                 break;
         }
 
+        this.afficheGraphe = true;
         this.cdr.detectChanges();
 
         this.http.post('http://127.0.0.1:5000/user/getExoStat', {
@@ -85,6 +87,8 @@ export class Statistique {
                     this.chart.destroy();
                 }
                 const isDark = this.theme.isItDark();
+
+
 
                 console.log(isDark);
 
@@ -149,6 +153,8 @@ export class Statistique {
                 };
 
                 this.chart = new Chart(this.myChart.nativeElement, config);
+
+
 
 
             }

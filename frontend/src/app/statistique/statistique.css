@@ -1,8 +1,140 @@
-.chart-container {
+.poid-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    gap: 1.25rem;
     width: 100%;
-    /* largeur du graphe */
-    height: 50%;
-    /* hauteur du graphe */
-    margin: auto;
-    /* centrer le graphe */
+    box-sizing: border-box;
+}
+
+.card {
+    width: 100%;
+    border: 4px solid var(--white1);
+    background-color: var(--white2);
+    border-radius: 16px;
+    box-sizing: border-box;
+}
+
+/* Section graphe */
+.poid-graph-section {
+    padding: 1.25rem 1.5rem;
+}
+
+.chart-area {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+/* Partie gauche : graphe */
+.chart-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.chart-main h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 0.5rem 0;
+}
+
+
+.legend-line {
+    display: inline-block;
+    width: 28px;
+    height: 4px;
+    background: #3b82f6;
+    border-radius: 2px;
+}
+
+.chart-box {
+    position: relative;
+    height: 240px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.chart-box.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+}
+
+.chart-box canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.chart-right {
+    margin-top: 3.5rem;
+    min-width: 190px;
+    background: white;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border: 1px solid #dde2ef;
+}
+
+.chart-right select {
+    font-size: 14px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: white;
+    width: 100%;
+    cursor: pointer;
+}
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.radio-item input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #e53e3e;
+    cursor: pointer;
+}
+
+.poid-description {
+    padding: 1rem 1.5rem;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.7;
+    text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .poid-page {
+        padding: 1rem;
+    }
+
+    .chart-area {
+        flex-direction: column;
+    }
+
+    .chart-right {
+        min-width: unset;
+        width: 100%;
+    }
 }
