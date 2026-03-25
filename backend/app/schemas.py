@@ -106,6 +106,14 @@ def _direction(**kw):
     }
     return fields.Str(**{**d, **kw})
 
+def _mailContenue(**kw):
+    d = {"required": True, "metadata": {"description": "contenue"}}
+    return fields.Str(**{**d, **kw})
+
+def _email(**kw):
+    d = {"required": True, "metadata": {"description": "email"}}
+    return fields.Str(**{**d, **kw})
+
 
 # ---------------------------------------------------------------------------
 # Erreurs
@@ -410,3 +418,9 @@ class RenameRoutineSchema(Schema):
 class RenameSeanceSchema(Schema):
     seance_id = _seance_id()
     name = _name(metadata={"description": "Nouveau nom de la séance"}, validate=validate.Length(min=2, max=50))
+
+
+class MailSchema(Schema):
+    email = _email(metadata={"description": "email "})
+    contenue = _mailContenue(metadata={"description": "object du mail"})
+    

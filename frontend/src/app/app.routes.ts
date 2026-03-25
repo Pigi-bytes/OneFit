@@ -20,6 +20,7 @@ import { ExerciceEnCours } from './exercice-en-cours/exercice-en-cours';
 import { SeanceEnCours } from './seance-en-cours/seance-en-cours';
 import { RecapSceance } from './recap-sceance/recap-sceance';
 import { Statistique } from './statistique/statistique';
+import { Contact } from './contact/contact';
 
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },
@@ -43,4 +44,5 @@ export const routes: Routes = [
     { path: "seance-en-cours", component: SeanceEnCours, data: { hideMenu: true } },
     { path: "recap-seance", component: RecapSceance, data: { hideMenu: true } },
     { path: "statistique", component: Statistique },
+    { path: "contact", component: Contact },
 ];

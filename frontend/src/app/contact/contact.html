@@ -1,0 +1,68 @@
+<main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
+
+    <h1 class="mb-4">Qui somme nous</h1>
+
+    <div class="card p-4 mb-4 w-100" style="max-width: 600px;">
+
+
+        <table>
+            <!-- username -->
+            <tr>
+                <td class="text-start" colspan="2"><label for="username">
+                        Ce projet est développé dans le cadre de notre L3 informatique au sein de l'université du
+                        Mans, porté par Barthélémy
+                        Derouault, Meriem Taieb Kherafa, Souleymane Barry et Baptiste Carfantan.<br>
+
+                        <br>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;Si vous avez la moindre question ou remarque sur le site, vous pouvez
+                        nous
+                        envoyer un mail grâce au formulaire ci-dessous.
+                    </label></td>
+            </tr>
+
+            <!-- taille -->
+            <tr>
+                <td>
+                    <label>Votre email :</label>
+                </td>
+
+                <td>
+                    <input (click)="resetNotif()" [(ngModel)]="email" type="email" placeholder="exemple@gmail.com"
+                        required>
+                </td>
+
+            </tr>
+            <tr>
+                <td colspan="2"> <textarea id="taille" name="taille" [(ngModel)]="contenue" required
+                        class="form-control" (click)="resetNotif()" rows="5" cols="30"
+                        placeholder="Écrivez ici..."></textarea>
+                </td>
+            </tr>
+        </table>
+
+
+        <div class="button-group mb-4">
+
+            <button type="button" class="btn btnPrimaire" (click)="envoyerMail()">
+                <i class="bi bi-send"></i>
+                Envoyer un mail
+            </button>
+
+            <button type="button" class="btn btnDanger " (click)="supprimer()">
+                <i class="bi bi-trash"></i>
+                effacer
+            </button>
+
+        </div>
+
+
+
+
+        <div *ngIf="backendResponse" class="mt-2 alert alert-info">
+            {{ backendResponse }}
+        </div>
+
+    </div>
+
+</main>

@@ -3,6 +3,9 @@ from datetime import date, timedelta
 import sqlalchemy as sa
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
+import smtplib
+from email.message import EmailMessage
+from email_validator import validate_email, EmailNotValidError
 
 from app import db
 from app.communRoutes import getCurrentUserOrAbort401, userResponse
@@ -19,6 +22,7 @@ from app.schemas import (
     UserSuppPoidSchema,
     UserWorkoutStreakResponseSchema,
     ValidationErrorSchema,
+    MailSchema,
 )
 from app.utils.logger import QueryTimer, db_logger, route_logger
 
@@ -240,3 +244,50 @@ def supprimer_utilisateur():
 
     route_logger.info(f"USER DELETE | user_id={user_id} username={username}")
     return {"message": "Utilisateur supprimé avec succès"}
+
+
+
+
+
+
+
+def is_valid_email(email):
+    try:
+        v = validate_email(email) 
+        return True
+    except EmailNotValidError:
+        return False
+
+@userBLP.route("/envoyer_mail", methods=["POST"])
+@userBLP.doc(security=[{"bearerAuth": []}])
+@userBLP.arguments(MailSchema)
+@userBLP.response(200,MessageSchema )
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="mail invalide")
+@jwt_required()
+def envoyer_mail(data):
+    # Créer le message
+    msg = EmailMessage()
+
+    
+    email = data['email']
+    if not is_valid_email(email):
+        abort(404, message="mail invalide")
+    msg['Subject'] = 'Avis OneFit'
+    msg['From'] = email
+    msg['To'] = 'onefit.contactsport@gmail.com'
+    msg['Reply-To'] = email   
+    msg.set_content(data['contenue'])
+
+    # Envoyer via SMTP
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+        smtp.starttls()  # Connexion sécurisée
+        smtp.login('onefit.contactsport@gmail.com', 'vblmewqfrxwqyhss')
+        smtp.send_message(msg)
+        return {"message": "Email envoyé avec sucée"}
+        
+    
+    
+
+    
+    
+
