@@ -83,6 +83,7 @@ export class Accueil {
     }
 
     ngOnInit() {
+
         if (isPlatformBrowser(this.platformId)) {
             const token = localStorage.getItem('access_token');
             if (!token) {
@@ -142,6 +143,20 @@ export class Accueil {
 
             error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
+
+    }
+
+    dejaEffectue() {
+
+        const d = new Date();
+
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+
+        const date = `${year}-${month}-${day}`;
+
+        return this.allDate.includes(date);
 
     }
 }
