@@ -23,6 +23,7 @@ import { Statistique } from './statistique/statistique';
 import { Contact } from './contact/contact';
 import { Compliance } from './compliance/compliance';
 import { Cgu } from './cgu/cgu';
+import { MentionsLegales } from './mentions-legales/mentions-legales';
 
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },
@@ -47,6 +48,7 @@ export const routes: Routes = [
     { path: "recap-seance", component: RecapSceance, data: { hideMenu: true } },
     { path: "statistique", component: Statistique },
     { path: "contact", component: Contact },
+    { path: "mentions-legales", component: MentionsLegales },
     { path: "compliance", component: Compliance, data: { hideMenu: true } },
     { path: "cgu", component: Cgu, data: { hideMenu: true } },
 ];
