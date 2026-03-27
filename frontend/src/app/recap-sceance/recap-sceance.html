@@ -1,32 +1,35 @@
-<main class="page-container align-items-center justify-content-center min-vh-100">
+<main class="card">
 
-    <h1 class="titreRecap">Bien joué {{ name }} !</h1>
+    <div class="page-container ">
 
-    <div class="chrono card">
-        <p>temps :</p>
-        <app-chrono></app-chrono>
-    </div>
+        <h1 class="titreRecap">Bien joué {{ name }} !</h1>
 
-    <div class="streak card">
-        <p>streak :</p>
-        <p>votre streak est de {{streak}} jours </p>
-    </div>
+        <div class="chrono card">
+            <p>temps :</p>
+            <app-chrono></app-chrono>
+        </div>
 
-    <div class="recap card" style="max-width: 600px; overflow-y: auto; max-height: 80vh">
-        <p>recap exo :</p>
-        <div *ngFor="let exo of exercices;let i = index" class="d-flex flex-row align-items-center p-2">
+        <div class="streak card">
+            <p>streak :</p>
+            <p>votre streak est de {{streak}} jours </p>
+        </div>
 
-            <!-- exo info -->
-            <div>
-                <div class="d-flex align-items-center p-2">
-                    <img [src]="exo.img_url" alt="{{exo.nom}}" width="20%" class="me-3 rounded">
-                    <p class="mb-0">{{ exo.name }} </p>
+        <div class="recap card" style="max-width: 600px; overflow-y: auto; max-height: 80vh">
+            <p>recap exo :</p>
+            <div *ngFor="let exo of exercices;let i = index">
+
+                <!-- exo info -->
+                <div>
+                    <div class="d-flex align-items-center p-2">
+                        <img [src]="exo.img_url" alt="{{exo.nom}}" width="20%" class="me-3 rounded">
+                        <p class="mb-0">{{ exo.name }} </p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <button class="btn btnPrimaire btnRecap" (click)="terminer()">super</button>
+        <button class="btn btnPrimaire btnRecap" (click)="terminer()">super</button>
+    </div>
 
 
 

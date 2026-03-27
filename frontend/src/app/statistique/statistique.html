@@ -11,24 +11,26 @@
                 </div>
             </div>
 
-            <div class="chart-right" *ngIf="exercices.length > 0">
-                <select [(ngModel)]="exoChoisit" name="exercices">
-                    <option value="" disabled selected>Choisir un exercice</option>
-                    <option *ngFor="let exo of exercices" [value]="exo.exoId">{{ exo.name }}</option>
-                </select>
-                <div class="radio-group">
-                    <label class="radio-item">
-                        <input type="radio" name="type" (change)="getInformation(1)" />
-                        <span>Graphe Volume</span>
-                    </label>
-                    <label class="radio-item">
-                        <input type="radio" name="type" (change)="getInformation(2)" />
-                        <span>Graphe 1RM</span>
-                    </label>
-                    <label class="radio-item">
-                        <input type="radio" name="type" (change)="getInformation(3)" />
-                        <span>Graphe poids max</span>
-                    </label>
+            <div class="chart-right">
+                <div *ngIf="exercices.length > 0">
+                    <select [(ngModel)]="exoChoisit" name="exercices">
+                        <option value="" disabled selected>Choisir un exercice</option>
+                        <option *ngFor="let exo of exercices" [value]="exo.exoId">{{ exo.name }}</option>
+                    </select>
+                    <div class="radio-group">
+                        <label class="radio-item">
+                            <input type="radio" name="type" (change)="getInformation(1)" />
+                            <span>Graphe Volume</span>
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="type" (change)="getInformation(2)" />
+                            <span>Graphe 1RM</span>
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="type" (change)="getInformation(3)" />
+                            <span>Graphe poids max</span>
+                        </label>
+                    </div>
                 </div>
                 <p *ngIf="exercices.length === 0">Aucun exercice réalisé</p>
             </div>

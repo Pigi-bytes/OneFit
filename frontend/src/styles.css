@@ -68,21 +68,6 @@ main {
     overflow: auto;
 }
 
-.page-container {
-    display: grid;
-    padding: 0 40px;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas:
-        ". title ."
-        "chrono . streak"
-        ". recap ."
-        ". button .";
-
-    align-items: center;
-    text-align: center;
-    gap: 20px;
-    min-height: 100vh;
-}
 
 main .card {
     border: 4px solid var(--white1);
@@ -180,6 +165,7 @@ td {
 main.hideScrolbar {
     justify-content: flex-start !important;
     align-items: stretch !important;
+
 }
 
 .actif {

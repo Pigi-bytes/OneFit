@@ -15,9 +15,10 @@
     </div>
 
 
-    <div class="d-flex flex-column gap-3 w-50" style="overflow-y: auto; overflow-x: hidden; max-height: 60vh;">
-        <div *ngFor="let exo of exercices" class="card clickable-card d-flex flex-row align-items-center p-2 justify-content-between w-100">
-            
+    <div class="d-flex flex-column gap-3 w-50" style="overflow-y: auto; overflow-x: hidden; max-height: 40vh;">
+        <div *ngFor="let exo of exercices"
+            class="card clickable-card d-flex flex-row align-items-center p-2 justify-content-between w-100">
+
             <div (click)="AfficherInfosExo(exo.id);" tooltip>
                 <span class="tooltiptext">Voir l'exercice</span>
 
@@ -26,7 +27,7 @@
                     <p class="mb-0">{{ exo.nom }}</p>
                 </div>
             </div>
-            
+
             <button class="btn btn-principal " (click)="ajouterExo(exo.id); $event.stopPropagation()" tooltip>
                 <span class="tooltiptext">Ajouter l'exercice</span>
                 +
@@ -35,7 +36,7 @@
         </div>
     </div>
 
-    <div class="button-group" >
+    <div class="button-group">
         <button type="button" class="btn btnPrimaire" routerLink="/seance">Retour</button>
     </div>
 
