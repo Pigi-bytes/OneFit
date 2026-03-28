@@ -1,3 +1,73 @@
+.accueil-main {
+    padding: 2rem 1.25rem 2.5rem;
+    display: grid;
+    justify-items: stretch;
+    align-content: start;
+}
+
+.hero-panel {
+    display: grid;
+    grid-template-columns: 1.1fr auto;
+    gap: 1.2rem;
+    padding: 1.3rem;
+    border-radius: 22px;
+}
+
+h1 {
+    color: var(--red1);
+}
+
+.hero-subtitle {
+    color: var(--blue2);
+}
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+.stat-item {
+    padding: 1rem;
+    text-align: left;
+}
+
+.stat-label {
+    margin: 0;
+    color: var(--blue3);
+}
+
+.stat-value {
+    margin: 0.35rem;
+    color: var(--blue1);
+    font-weight: 700;
+}
+
+.calendar-panel {
+    padding: 1.2rem;
+    border-radius: 22px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.calendar-header h2 {
+    color: var(--blue1);
+}
+
 .changeMois {
     align-items: center;
     justify-content: center;
@@ -5,8 +75,47 @@
     gap: 10px;
 }
 
+.month-label {
+    min-width: 160px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--blue1);
+}
+
 .calendrier-grille {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.jour-semaine {
+    font-weight: 600;
+    color: var(--blue3);
+}
+
+.day-cell {
+    border: 1px solid var(--white1);
+    background: var(--white3);
+    color: var(--blue1);
+    border-radius: 12px;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.day-cell.vide {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.day-cell.today {
+    border-color: var(--red2);
+    box-shadow: inset 0 0 0 1px var(--red2);
+}
+
+.day-cell.actif {
+    background-color: #b5ffa3;
+    border-color: #8fdc7c;
 }

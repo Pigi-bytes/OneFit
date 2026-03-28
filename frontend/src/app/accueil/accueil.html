@@ -1,12 +1,49 @@
-<main>
-    <h1>Bonjour, {{ name }} !</h1>
+<main class="accueil-main">
+    <section class="hero-panel card">
+        <div>
+            <p class="hero-kicker">Tableau de bord</p>
+            <h1>Bonjour, {{ name }} !</h1>
+        </div>
 
-    <div class="card">
-        <h2>Votre streak</h2>
-        <div class="changeMois">
-            <button (click)="prevMonth()" class="btn btnPrimaire">&#8592;</button>
-            <span>{{ monthLabel }}</span>
-            <button (click)="nextMonth()" class="btn btnPrimaire">&#8594;</button>
+        <div class="hero-actions">
+            <button class="btn btnPrimaire" (click)="commencerSeance()" [disabled]="didSessionToday">
+                <i class="bi bi-play-fill"></i> {{ didSessionToday ? 'Séance déjà validée' : 'Commencer une séance' }}
+            </button>
+
+            <button class="btn btnTertiaire" routerLink="/routine">
+                <i class="bi bi-list-task"></i> Voir mes routines
+            </button>
+        </div>
+    </section>
+
+    <section class="stats-grid">
+        <article class="card stat-item">
+            <p class="stat-label">Séances totales</p>
+            <p class="stat-value">{{ totalSessions }}</p>
+        </article>
+        <article class="card stat-item">
+            <p class="stat-label">Ce mois-ci</p>
+            <p class="stat-value">{{ sessionsThisMonth }}</p>
+        </article>  
+    </section>
+
+    <section class="card calendar-panel">
+        <div class="calendar-header">
+            <h2>Votre streak</h2>
+
+            <div class="changeMois">
+
+                <button (click)="prevMonth()" class="btn btnPrimaire btnIcon" aria-label="Mois précédent">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                
+                <span class="month-label">{{ monthLabel }}</span>
+
+                <button (click)="nextMonth()" class="btn btnPrimaire btnIcon" aria-label="Mois suivant">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+            </div>
         </div>
 
         <div class="calendrier-grille">
@@ -18,23 +55,11 @@
             <span class="jour-semaine">Sam</span>
             <span class="jour-semaine">Dim</span>
 
-
             @for (day of calendarDays; track $index) {
-            <div class="card" [class.actif]="verifStreak(day)">
-                <span [class.vide]="!day">
-                    {{ day ?? '' }}
-                </span>
-
-            </div>
-
+            <button type="button" class="day-cell" [class.actif]="verifStreak(day)" [class.today]="isToday(day)" [class.vide]="!day" [disabled]="!day">
+                {{ day ?? '' }}
+            </button>
             }
         </div>
-    </div>
-
-    <div class="button-group">
-        <button class="btn btnPrimaire" (click)="commencerSeance()" [disabled]="dejaEffectue()">
-            <i class="bi bi-play"></i>
-            Commencer une séance
-        </button>
-    </div>
+    </section>
 </main>

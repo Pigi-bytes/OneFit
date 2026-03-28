@@ -34,11 +34,26 @@ export class Accueil {
 
     backendResponse = "";
 
-    allDate: any[] = []
+    allDate: string[] = [];
 
 
     get monthLabel(): string {
         return this.currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+    }
+
+    get totalSessions(): number {
+        return this.allDate.length;
+    }
+
+    get sessionsThisMonth(): number {
+        const year = this.currentMonth.getFullYear();
+        const month = String(this.currentMonth.getMonth() + 1).padStart(2, '0');
+        const prefix = `${year}-${month}-`;
+        return this.allDate.filter((date) => typeof date === 'string' && date.startsWith(prefix)).length;
+    }
+
+    get didSessionToday(): boolean {
+        return this.dejaEffectue();
     }
 
     get calendarDays(): (number | null)[] {
@@ -69,7 +84,7 @@ export class Accueil {
         this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1);
     }
 
-    verifStreak(day: any) {
+    verifStreak(day: number | null) {
         if (!day) return false;
 
         const year = this.currentMonth.getFullYear();
@@ -136,7 +151,7 @@ export class Accueil {
 
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
-                this.allDate = res['days'];
+                this.allDate = Array.isArray(res['days']) ? res['days'] : [];
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },
