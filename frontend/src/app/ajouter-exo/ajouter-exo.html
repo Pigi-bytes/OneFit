@@ -8,7 +8,7 @@
                 <div class="d-flex gap-2">
                     <input type="text" id="nom" name="nom" [(ngModel)]="nom" required class="form-control"
                         (click)="resetNotif()" placeholder="Tapez un exercice..." />
-                    <button type="submit" class="btn btnPrimaire">Rechercher</button>
+                    <button type="submit" class="btn btnPrimaire w-auto">Rechercher</button>
                 </div>
             </div>
         </form>
@@ -28,9 +28,9 @@
                 </div>
             </div>
 
-            <button class="btn btn-principal " (click)="ajouterExo(exo.id); $event.stopPropagation()" tooltip>
+            <button class="btn btnIcon" (click)="ajouterExo(exo.id); $event.stopPropagation()" tooltip>
                 <span class="tooltiptext">Ajouter l'exercice</span>
-                +
+                <i class="bi bi-plus-lg"></i>
             </button>
 
         </div>

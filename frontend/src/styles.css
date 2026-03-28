@@ -8,6 +8,7 @@
 @import './styles/canvas.css';
 @import './styles/input.css';
 @import './styles/routines.css';
+@import './styles/compliance.css';
 
 /* style pour la page d'accueil */
 
@@ -77,28 +78,24 @@ main .card {
     border-radius: 18px;
 }
 
+.dark main .card {
+    border: 4px solid var(--blue3);
+    background-color: var(--blue1);
+    transition: background-color 0.3s ease, box-shadow 0.2s ease;
+    will-change: background-color;
+    border-radius: 18px;
+}
+
 main .clickable-card:hover {
     background-color: var(--white1);
 }
 
-main .card li {
-    background-color: var(--white2);
-}
-
-
-.dark main .card li,
-.dark main .card {
-    background-color: var(--white3);
-}
-
 .dark main .clickable-card:hover {
-    background-color: var(--white1);
+    background-color: var(--blue3);
 }
 
 p,
-label,
-.dark main .card p,
-.dark main .card label {
+label {
     color: var(--blue1);
 }
 
@@ -107,20 +104,13 @@ label,
 }
 
 h1, 
-h4,
-.dark main .card h1,
-.dark main .card h4 {
+h4 {
     color: var(--red1);
 }
 
-h2,
-.dark main .card h2 {
+h2 {
     color: var(--blue1);
     font-weight: normal;
-}
-
-main .card h1 {
-    color: var(--blue1);
 }
 
 .dark h1,
@@ -157,8 +147,12 @@ app-chrono {
     /* 4 parts → ratio 6:4 = 60:40 */
 }
 
-.card .text-gray {
+.text-gray {
     color: var(--blue3);
+}
+
+.dark .text-gray {
+    color: var(--silver2);
 }
 
 td {
@@ -198,4 +192,12 @@ main.hideScrolbar {
 
 .chart-container {
     transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+a {
+    color: var(--red1);
+}
+
+.dark a {
+    color: var(--silver1);
 }

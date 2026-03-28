@@ -1,0 +1,51 @@
+.compliance-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+}
+
+.compliance-card {
+    width: min(60%, 100%);
+    padding: 2.25rem;
+    display: flex;
+    flex-direction: column;
+    color: var(--blue3);
+}
+
+.dark .compliance-card,
+.dark .compliance-card h1,
+.dark .compliance-card h2,
+.dark .compliance-card p {
+    color: var(--white1);
+}
+
+ul 
+.compliance-card h1,
+.compliance-card h2,
+.compliance-card p {
+    color: var(--blue3);
+}
+
+.dark li {
+    background-color: var(--blue1);
+}
+
+.compliance-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.2rem;
+    font-weight: 800;
+    color: var(--blue3);
+}
+
+.compliance-intro {
+    margin-bottom: 0.45rem;
+    text-align: center;
+}
+
+.compliance-section {
+    text-align: left;
+    padding: 0.75rem 1.1rem;
+    border-top: 1px solid var(--silver3);
+}

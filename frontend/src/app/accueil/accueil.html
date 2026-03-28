@@ -5,7 +5,7 @@
             <h1>Bonjour, {{ name }} !</h1>
         </div>
 
-        <div class="hero-actions">
+        <div class="hero-actions button-group">
             <button class="btn btnPrimaire" (click)="commencerSeance()" [disabled]="didSessionToday">
                 <i class="bi bi-play-fill"></i> {{ didSessionToday ? 'Séance déjà validée' : 'Commencer une séance' }}
             </button>
@@ -29,7 +29,7 @@
 
     <section class="card calendar-panel">
         <div class="calendar-header">
-            <h2>Votre streak</h2>
+            <h2>Ma streak</h2>
 
             <div class="changeMois">
 

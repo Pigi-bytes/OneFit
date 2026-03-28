@@ -4,6 +4,15 @@
 	padding: 1rem;
 }
 
+:host-context(.dark) .weight-menu-card {
+    background-color: var(--blue2);
+}
+
+:host-context(.dark) .weight-menu-card .btnPrimaire {
+    background-color: var(--white1);
+	color: var(--blue2);
+}
+
 .weight-form {
 	display: flex;
 	flex-direction: column;

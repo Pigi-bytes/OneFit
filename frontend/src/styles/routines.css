@@ -86,6 +86,10 @@
     color: var(--blue1);
 }
 
+.dark .routine-title {
+    color: var(--white3);
+}
+
 .routine-exo-list {
     display: flex;
     flex-direction: column;
@@ -103,6 +107,10 @@
     gap: 1.1rem;
 }
 
+.dark .routine-exo-item {
+    background: var(--blue2);
+}
+
 .routine-exo-item {
     display: flex;
     align-items: center;
@@ -118,6 +126,12 @@
     font-size: 1.5rem;
 }
 
+.dark .routine-exo-num,
+.dark .routine-exo-details {
+    color: var(--white1);
+}
+
+
 .routine-exo-main {
     flex: 1;
     display: flex;
@@ -128,6 +142,10 @@
     font-weight: 600;
     color: var(--blue1);
     font-size: 1.5rem;
+}
+
+.dark .routine-exo-name {
+    color: var(--white3);
 }
 
 .routine-exo-details {

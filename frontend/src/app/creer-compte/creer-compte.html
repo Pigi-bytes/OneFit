@@ -1,6 +1,6 @@
 <main class="creer-page">
     <div class="card creer-card">
-        <img src="/img/onefit_logo_couleurs.png" class="imgLogo" alt="OneFit">
+		<img [src]="isDark ? '/img/onefit_logo_clair.png' : '/img/onefit_logo_couleurs.png'" class="imgLogo" alt="OneFit">
         <h1>Créer un compte</h1>
 
         <form (ngSubmit)="creer()" #loginForm="ngForm" id="signup_form" class="formCreerCompte">
@@ -33,7 +33,7 @@
                     <i class="bi bi-arrow-left"></i> Retour
                 </button>
 
-                <button type="submit" class="btn btnPrimaire">
+                <button type="submit" class="btn btnPrimaire w-auto">
                     <i class="bi bi-person-plus"></i> Créer un compte
                 </button>
             </div>

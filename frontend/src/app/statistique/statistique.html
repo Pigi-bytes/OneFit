@@ -6,7 +6,7 @@
         <div class="chart-area">
 
             <div class="chart-main">
-                <div class="chart-title">{{ titreGraphe }}</div>
+                <p class="h5 p-2">{{ titreGraphe }}</p>
                 <div class="chart-box" [class.empty]="!afficheGraphe">
                     <canvas #myChart *ngIf="afficheGraphe"></canvas>
                     <p *ngIf="!afficheGraphe">Sélectionnez un exercice et un graphe</p>

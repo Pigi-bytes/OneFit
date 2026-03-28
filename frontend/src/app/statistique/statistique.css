@@ -75,13 +75,18 @@
 .chart-right {
     margin-top: 3.5rem;
     min-width: 190px;
-    background: white;
+    background: var(--white3);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 14px;
-    border: 1px solid #dde2ef;
+    border: 1px solid var(--white1);
+}
+
+:host-context(.dark) .chart-right {
+    background: var(--blue2);
+    border: 1px solid var(--blue3);
 }
 
 .chart-right select {

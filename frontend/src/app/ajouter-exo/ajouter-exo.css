@@ -1,0 +1,3 @@
+.btnIcon i { color: var(--blue1) }
+
+:host-context(.dark) .btnIcon i { color: var(--white3)} 

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
 import { Notification } from '../notification';
 import { Erreur } from '../erreur';
+import { Theme } from '../theme';
 
 @Component({
     selector: 'app-creer-compte',
@@ -21,8 +22,10 @@ export class CreerCompte {
     backendResponse = '';
     confirmPassword = '';
     acceptedCompliance = false;
+    isDark = false;
 
-    constructor(private http: HttpClient, private router: Router, private erreur: Erreur, private cdr: ChangeDetectorRef, private not: Notification) { }
+    constructor(private http: HttpClient, private router: Router, private erreur: Erreur,
+                private cdr: ChangeDetectorRef, private not: Notification, private theme: Theme) { }
 
     creer() {
         if (!this.acceptedCompliance) {
@@ -63,6 +66,10 @@ export class CreerCompte {
 
     resetNotif() {
         this.not.reset(this, this.cdr);
+    }
+
+    ngOnInit() {
+        this.isDark = this.theme.isItDark();
     }
 
 }
