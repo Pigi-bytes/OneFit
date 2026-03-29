@@ -9,8 +9,7 @@
                 <p class="h5 p-2">{{ titreGraphe }}</p>
                 <div class="card chart-box" [class.empty]="!afficheGraphe">
                     <canvas #myChart *ngIf="afficheGraphe"></canvas>
-                    <p *ngIf="!afficheGraphe && !manqueType">Sélectionnez un exercice</p>
-                    <p *ngIf="!afficheGraphe && manqueType">Sélectionnez un type de graphe</p>
+                    <p *ngIf="!afficheGraphe">Sélectionnez un exercice et un type de graphe</p>
                 </div>
             </div>
 
