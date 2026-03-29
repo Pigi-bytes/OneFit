@@ -26,7 +26,9 @@ export class Statistique {
     afficheGraphe: boolean = false;
     isDark: boolean = false;
     typeChoisit: any = null;
-    manqueType: boolean = false;
+    radioSelect: boolean = false;
+    type: number = 0;
+
 
     titreGraphe = "Sélectionnez un graphe à afficher";
 
@@ -56,11 +58,14 @@ export class Statistique {
     }
 
     public getInformation(typeGraphe: any) {
+        const isDark = localStorage.getItem('darkMode') === 'true';
         console.log(this.exoChoisit);
-        this.manqueType = false;
+        this.type = typeGraphe;
+        this.radioSelect = true;
 
 
         if (this.exoChoisit === "") {
+
             return;
         }
 
@@ -89,7 +94,6 @@ export class Statistique {
                 if (this.chart) {
                     this.chart.destroy();
                 }
-                const isDark = this.theme.isItDark();
 
 
 
@@ -196,9 +200,11 @@ export class Statistique {
 
 
     resetRadio() {
-        this.typeChoisit = null;
-        this.afficheGraphe = false;
-        this.manqueType = true;
+
+
+        if (this.radioSelect) {
+            this.getInformation(this.type);
+        }
 
     }
 
