@@ -31,7 +31,9 @@ export class App implements OnInit {
 
     ngOnInit() {
         if (this.theme.isItDark()) {
-            document.body.classList.add('dark');
+            const page = document.querySelector('.layout');
+            if (page)
+                page.classList.toggle('dark');
         }
     }
 

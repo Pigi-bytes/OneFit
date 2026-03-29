@@ -31,14 +31,5 @@ export class SideMenu {
 
     toggleTheme() {
         this.theme.toggleDark();
-
-        const page = document.querySelector('.layout');
-
-        if (page) {
-            this.isDark = page.classList.contains('dark');
-            if (typeof localStorage !== 'undefined') {
-                localStorage.setItem('darkMode', String(this.isDark));
-            }
-        }
     }
 }
