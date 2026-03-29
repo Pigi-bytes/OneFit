@@ -24,7 +24,6 @@ export class Statistique {
     stat: any[] = [];
     description = "";
     afficheGraphe: boolean = false;
-    isDark: boolean = false;
     typeChoisit: any = null;
     radioSelect: boolean = false;
     type: number = 0;
@@ -119,8 +118,8 @@ export class Statistique {
                                         return s.max_weight
                                 }),
                                 backgroundColor: '#676767',
-                                borderColor: this.isDark ? '#4ade80' : '#2563eb',
-                                pointBackgroundColor: this.isDark ? '#ffffff' : '#333333',
+                                borderColor: isDark ? '#4ade80' : '#2563eb',
+                                pointBackgroundColor: isDark ? '#ffffff' : '#333333',
                                 fill: false,
                             }
                         ]
@@ -137,22 +136,22 @@ export class Statistique {
                         scales: {
                             x: {
                                 grid: {
-                                    color: this.isDark
+                                    color: isDark
                                         ? 'rgba(255,255,255,0.15)'
                                         : 'rgba(0,0,0,0.1)'
                                 },
                                 ticks: {
-                                    color: this.isDark ? '#ffffff' : '#333333'
+                                    color: isDark ? '#ffffff' : '#333333'
                                 }
                             },
                             y: {
                                 grid: {
-                                    color: this.isDark
+                                    color: isDark
                                         ? 'rgba(255,255,255,0.15)'
                                         : 'rgba(0,0,0,0.1)'
                                 },
                                 ticks: {
-                                    color: this.isDark ? '#ffffff' : '#333333'
+                                    color: isDark ? '#ffffff' : '#333333'
                                 }
                             }
                         }
@@ -171,26 +170,26 @@ export class Statistique {
     private updateChartColors() {
         if (!this.chart) return;
 
-        this.isDark = this.theme.isItDark();
+        const isDark = this.theme.isItDark();
 
-        this.chart.data.datasets[0].borderColor = this.isDark ? '#4ade80' : '#2563eb';
-        this.chart.data.datasets[0].pointBackgroundColor = this.isDark ? '#ffffff' : '#333333';
+        this.chart.data.datasets[0].borderColor = isDark ? '#4ade80' : '#2563eb';
+        this.chart.data.datasets[0].pointBackgroundColor = isDark ? '#ffffff' : '#333333';
 
         if (this.chart.options.scales) {
             if (this.chart.options.scales['x']) {
                 this.chart.options.scales['x'].grid = {
-                    color: this.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
+                    color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
                 };
                 this.chart.options.scales['x'].ticks = {
-                    color: this.isDark ? '#ffffff' : '#333333'
+                    color: isDark ? '#ffffff' : '#333333'
                 };
             }
             if (this.chart.options.scales['y']) {
                 this.chart.options.scales['y'].grid = {
-                    color: this.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
+                    color: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)'
                 };
                 this.chart.options.scales['y'].ticks = {
-                    color: this.isDark ? '#ffffff' : '#333333'
+                    color: isDark ? '#ffffff' : '#333333'
                 };
             }
         }

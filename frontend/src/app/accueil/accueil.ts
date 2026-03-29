@@ -98,9 +98,11 @@ export class Accueil {
     }
 
     ngOnInit() {
-        localStorage.removeItem("seanceJour");
+
+
 
         if (isPlatformBrowser(this.platformId)) {
+            localStorage.removeItem("exoCourrant");
             localStorage.setItem("noRecap", "true");
             const token = localStorage.getItem('access_token');
             if (!token) {
@@ -142,6 +144,7 @@ export class Accueil {
         localStorage.setItem("jour", jour);
         localStorage.removeItem("coteExo");
         localStorage.removeItem("coteRecap");
+        localStorage.removeItem("seanceJour");
         this.elt.reset();
         this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);
         this.elt.unblockSeance();
