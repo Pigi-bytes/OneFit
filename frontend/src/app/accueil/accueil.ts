@@ -98,14 +98,17 @@ export class Accueil {
     }
 
     ngOnInit() {
+        localStorage.removeItem("seanceJour");
 
         if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem("noRecap", "true");
             const token = localStorage.getItem('access_token');
             if (!token) {
                 this.router.navigate(['']);
                 alert("veuillez vous connecter");
                 return;
             }
+
             this.getUserName();
         }
         this.recupStrick();

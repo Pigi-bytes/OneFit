@@ -30,6 +30,10 @@ export class RecapSceance {
 
 
     ngOnInit() {
+
+        if (isPlatformBrowser(this.platformId) && localStorage.getItem("noRecap")) {
+            this.route.navigate(['accueil']);
+        }
         this.ei.triggerRefresh([Message.CHRONO_RECAP]);
         if (isPlatformBrowser(this.platformId)) {
             this.jour = localStorage.getItem("jour");
