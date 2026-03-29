@@ -78,8 +78,6 @@
     background: var(--white3);
     border-radius: 12px;
     padding: 1rem 1.25rem;
-    display: flex;
-    flex-direction: column;
     gap: 14px;
     border: 1px solid var(--white1);
 }
@@ -93,21 +91,19 @@
     font-size: 14px;
     padding: 6px 10px;
     border-radius: 8px;
-    border: 1px solid #ccc;
-    background: white;
+    background: var(--white3);
+    border: 1px solid var(--white1);
     width: 100%;
     cursor: pointer;
 }
 
 .radio-group {
-    display: flex;
-    flex-direction: column;
     gap: 10px;
+    margin-top: 10px;
 }
 
 .radio-item {
     display: flex;
-    align-items: center;
     gap: 10px;
     cursor: pointer;
     font-size: 15px;
