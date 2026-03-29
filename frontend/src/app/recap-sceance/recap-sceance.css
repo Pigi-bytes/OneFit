@@ -1,12 +1,3 @@
-main.card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: var(--white3);
-    padding: 40px;
-}
-
 .page-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -22,8 +13,6 @@ main.card {
     width: 100%;
     max-width: 860px;
     max-height: 60%;
-    background-color: var(--white2);
-    border: 4px solid var(--white1);
     border-radius: 18px;
 }
 

@@ -1,0 +1,7 @@
+.set-number {
+    color: var(--blue3)
+}
+
+:host-context(.dark) .set-number {
+    color: var(--white1)
+}
