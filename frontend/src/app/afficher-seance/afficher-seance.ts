@@ -102,7 +102,7 @@ export class AfficheSceance implements OnInit {
                 if (this.exercices.length === 0 && this.commencerSeance) {
 
                     this.seanceRepos = true;
-                    this.ei.triggerRefresh([Message.RESET_CHRONO]);
+                    this.ei.triggerRefresh([Message.ENR_REPOS]);
                     this.cdr.detectChanges();
                 }
                 this.backendResponse = res.message;

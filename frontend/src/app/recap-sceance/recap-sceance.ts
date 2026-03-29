@@ -70,10 +70,7 @@ export class RecapSceance {
             next: (res: any) => {
                 console.log('RESPONSE OK', res);
                 this.exercices = res.seance.exercises.sort((a: any, b: any) => a.ordre - b.ordre);
-                if (this.exercices.length === 0) {
-                    this.ei.triggerRefresh([Message.RESET_CHRONO]);
-                    this.cdr.detectChanges();
-                }
+
                 this.backendResponse = res.message;
 
             },
