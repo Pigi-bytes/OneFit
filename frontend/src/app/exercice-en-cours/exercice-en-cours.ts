@@ -10,10 +10,11 @@ import { Message } from '../../message';
 import { EnvoyerElt } from '../envoyerElt';
 import { Chrono } from '../chrono/chrono';
 import { Erreur } from '../erreur';
+import { AideExo } from '../aide-exo/aide-exo';
 
 @Component({
     selector: 'app-exercice-en-cours',
-    imports: [Chrono, FormsModule, CommonModule, RouterModule],
+    imports: [Chrono, FormsModule, CommonModule, RouterModule, AideExo],
     templateUrl: './exercice-en-cours.html',
     styleUrl: './exercice-en-cours.css',
 })
@@ -23,9 +24,11 @@ export class ExerciceEnCours {
     private platformId = inject(PLATFORM_ID);
     private subscription?: Subscription;
     exo: any;
+    exoInfo: any;
     backendResponse = "";
     seance_exercise_id: any = 1;
     setsValides: { reps: any, weight: any }[] = [];
+    isModalOpen = false;
 
     constructor(
         private http: HttpClient,
@@ -70,6 +73,7 @@ export class ExerciceEnCours {
                     this.setsValides = Array.from({ length: this.exo.planned_sets }, () => ({ reps: null, weight: null }));
                 }
 
+                this.chargerInfoExo();
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
             },
@@ -77,6 +81,20 @@ export class ExerciceEnCours {
             error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
 
+    }
+
+    chargerInfoExo() {
+        if (this.exo.exoId !== null) {
+            this.http.post('http://127.0.0.1:5000/externe/getExo', {
+                exoId: this.exo.exoId
+            }).subscribe({
+                next: (res: any) => {
+                    console.log('RESPONSE OK', res);
+                    this.exoInfo = res;
+                },
+                error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
+            });
+        }
     }
 
     ajouterSet() {
@@ -118,6 +136,10 @@ export class ExerciceEnCours {
         });
 
 
+    }
+
+    openModal(id: any) {
+        this.isModalOpen = true;
     }
 
     range(n: number) {

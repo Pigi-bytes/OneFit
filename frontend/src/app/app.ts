@@ -12,8 +12,6 @@ import { SideMenu } from './side-menu/side-menu';
 })
 export class App implements OnInit {
 
-
-
     protected readonly title = signal('OneFit');
     showMenu = true;
 

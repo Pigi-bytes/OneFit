@@ -9,8 +9,25 @@
 				<!-- image de lexo et nom de l'exo-->
 				<div class="col-md-5 text-center d-flex flex-column align-items-center justify-content-center">
 					<img [src]="exo?.img_url" alt="{{ exo?.name }}" class="img-fluid rounded mb-2">
-					<h2 class="text-center fw-bold">{{ exo?.name }}</h2>
-                    <!-- !!!!!!! A FAIRE: bouton aide -->
+					<div class="d-flex align-items-center gap-2">
+						<h2 class="fw-bold m-0">{{ exo?.name }}</h2>
+
+						<!-- bouton aide exo-->
+						<button type="button" class="btn btnPrimaire btnIcon" (click)="openModal(exo?.id)">
+							<i class="bi bi-info-circle"></i>
+						</button>
+						<app-aide-exo [(isOpen)]="isModalOpen">
+							<h2 class="mb-4"> <span class="fw-bold">Instructions</span> - {{ exo?.name }}</h2>
+							<div class="content">
+								@if (exoInfo.video_url) {
+								<video controls width="100%">
+									<source [src]="exoInfo.video_url" type="video/mp4">
+								</video>}
+								<p class="p-4">{{exoInfo.instructions}}</p>
+							</div>
+						</app-aide-exo>
+
+					</div>
 				</div>
 
 				<!-- form sets -->
@@ -44,15 +61,15 @@
 								<button type="button" class="btn btnDanger btnIcon" (click)="supprimerSet()">
 									<i class="bi bi-x-lg"></i>
 								</button>
+							</div> 
+							<!-- bouton ajouter set -->
+							<div class="col-1 text-center">
+								<button type="button" class="btn btnPrimaire btnIcon" (click)="ajouterSet()" >
+									<i class="bi bi-plus-lg"></i>
+								</button>
 							</div> }
+							
 						</div> }
-
-						<!-- bouton ajouter -->
-						<div class="d-flex justify-content-center my-3">
-							<button type="button" class="btn btnPrimaire btnIcon" (click)="ajouterSet()" >
-								<i class="bi bi-plus-lg"></i>
-							</button>
-						</div>
 
 					</div>
 				</div>

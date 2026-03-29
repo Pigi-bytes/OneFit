@@ -10,6 +10,7 @@ import { Poid } from './poid/poid';
 import { Carte } from './carte/carte';
 import { SideMenu } from './side-menu/side-menu';
 import { AjouterExo } from './ajouter-exo/ajouter-exo';
+import { AideExo } from './aide-exo/aide-exo';
 import { AfficherExo } from './afficher-exo/afficher-exo';
 import { Exercices } from './exercices/exercices';
 import { Routine } from './routine/routine';
@@ -37,6 +38,7 @@ export const routes: Routes = [
     { path: "carte", component: Carte },
     { path: "side-menu", component: SideMenu },
     { path: "ajouter-exo", component: AjouterExo },
+    { path: "aide-exo", component: AideExo, data: { hideMenu: true } },
     { path: "afficher-exo", component: AfficherExo },
     { path: "exercices", component: Exercices },
     { path: "routine", component: Routine },

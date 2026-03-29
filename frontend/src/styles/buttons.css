@@ -42,8 +42,9 @@
 /* bouton icone */
 .btnIcon {
     padding: 0.75rem;
-    width: 42px;
     height: 42px;
+    width: 42px;
+    min-width: 0;
 }
 
 .btnIcon i {

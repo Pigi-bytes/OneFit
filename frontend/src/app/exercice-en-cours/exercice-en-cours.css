@@ -5,3 +5,7 @@
 :host-context(.dark) .set-number {
     color: var(--white1)
 }
+
+.content {
+    overflow-y: auto;
+}

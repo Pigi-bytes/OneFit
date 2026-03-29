@@ -1,0 +1,10 @@
+@if (isOpen){
+<div class="overlay">
+  <div class="card">
+      <button type="button" class="close btn btnPrimaire btnIcon" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <ng-content></ng-content>
+  </div>
+</div>
+}
