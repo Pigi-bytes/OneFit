@@ -20,6 +20,10 @@ export class SideMenu {
     constructor(private theme: Theme) { }
     name = "";
 
+    ngOnInit() {
+        this.isDark = this.theme.isItDark();
+    }
+
     deconnexion() {
         const confirmAction = confirm("Êtes-vous sûr(e) de vouloir vous déconnecter ?");
 
@@ -31,5 +35,6 @@ export class SideMenu {
 
     toggleTheme() {
         this.theme.toggleDark();
+        this.isDark = this.theme.isItDark();
     }
 }
