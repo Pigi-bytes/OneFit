@@ -26,4 +26,13 @@
   background: transparent;
   font-size: 18px;
   cursor: pointer;
+  color: var(--blue1)
+}
+
+.close:hover {
+  background: transparent;
+}
+
+:host-context(.dark) .close {
+  color: var(--white3)
 }
