@@ -25,6 +25,8 @@ export class Statistique {
     description = "";
     afficheGraphe: boolean = false;
     isDark: boolean = false;
+    typeChoisit: any = null;
+    manqueType: boolean = false;
 
     titreGraphe = "Sélectionnez un graphe à afficher";
 
@@ -55,6 +57,7 @@ export class Statistique {
 
     public getInformation(typeGraphe: any) {
         console.log(this.exoChoisit);
+        this.manqueType = false;
 
 
         if (this.exoChoisit === "") {
@@ -65,7 +68,7 @@ export class Statistique {
             case 1: this.titreGraphe = "Volume";
                 this.description = "Le volume total de poids soulevé lors d’une séance de musculation est un indicateur qui permet de mesurer la quantité de travail effectuée. Il correspond à la somme de toutes les charges déplacées pendant l’entraînement. Pour le calculer, on utilise la formule suivante : volume = séries × répétitions × charge (en kilogrammes). Il suffit donc de multiplier, pour chaque exercice, le nombre de séries par le nombre de répétitions et par la charge utilisée, puis d’additionner les résultats de tous les exercices afin d’obtenir le volume total de la séance."; break;
             case 2: this.titreGraphe = "1 RM";
-                this.description = "Le 1RM(une répétition maximale) correspond au poids maximal qu’une personne peut soulever une seule fois sur un exercice donné. Comme il est difficile à mesurer directement, il est souvent estimé à partir des performances réalisées avec des charges plus légères. Une formule courante consiste à utiliser le nombre de répétitions et la charge soulevée pour obtenir une estimation du 1RM. Cela permet de suivre sa progression en force sans avoir à tester systématiquement sa charge maximale."; break;
+                this.description = "Le 1RM (une répétition maximale) correspond au poids maximal qu’une personne peut soulever une seule fois sur un exercice donné. Comme il est difficile à mesurer directement, il est souvent estimé à partir des performances réalisées avec des charges plus légères. Une formule courante consiste à utiliser le nombre de répétitions et la charge soulevée pour obtenir une estimation du 1RM. Cela permet de suivre sa progression en force sans avoir à tester systématiquement sa charge maximale."; break;
             case 3:
                 this.titreGraphe = "Poids max";
                 this.description = "Le poids maximal correspond à la charge la plus lourde soulevée lors d’une séance pour un exercice donné. Contrairement au 1RM estimé, il s’agit d’une valeur réelle observée pendant l’entraînement. Pour le déterminer, il suffit d’identifier la répétition où la charge utilisée est la plus élevée. Cet indicateur permet de suivre l’évolution de la force maximale au fil du temps.";
@@ -189,6 +192,14 @@ export class Statistique {
         }
 
         this.chart.update();
+    }
+
+
+    resetRadio() {
+        this.typeChoisit = null;
+        this.afficheGraphe = false;
+        this.manqueType = true;
+
     }
 
 
