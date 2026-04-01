@@ -33,16 +33,16 @@
             </div>
 
             <!-- boutons -->
-            <div class="d-flex ms-auto">
-                <button *ngIf="!commencerSeance && i > 0" type="button" class="btn btnPrimaire "
+            <div class="d-flex ms-auto gap-1">
+                <button *ngIf="!commencerSeance && i > 0" type="button" class="btn btnPrimaire btnIcon"
                     (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()" tooltip>
                     <span class="tooltiptext"> Déplacer vers le haut </span>
-                    &#11165;
+                    <i class="bi bi-arrow-up"></i>
                 </button>
-                <button *ngIf="!commencerSeance  && i < exercices.length - 1" type="button" class="btn btnPrimaire "
+                <button *ngIf="!commencerSeance  && i < exercices.length - 1" type="button" class="btn btnPrimaire btnIcon"
                     (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()" tooltip>
                     <span class="tooltiptext"> Déplacer vers le bas </span>
-                    &#11167;
+                    <i class="bi bi-arrow-down"></i>
                 </button>
             </div>
         </div>
@@ -51,12 +51,13 @@
 
     <div tooltip *ngIf="!commencerSeance">
         <span class="tooltiptext"> Ajouter un exercice </span>
-        <button type="button" class="btn btnPrimaire mb-2 " (click)="ajouterExo()">+</button>
+        <button type="button" class="btn btnPrimaire mb-2 btnIcon" (click)="ajouterExo()">+</button>
     </div>
 
-    <button type="button" class="btn btnPrimaire mb-2" (click)="retour()"
+    <button type="button" class="btn btnPrimaire" (click)="retour()"
         *ngIf="!commencerSeance || seanceRepos ">Retour</button>
-    <button type="button" class="btn btnPrimaire mb-2" (click)="retour()" *ngIf="commencerSeance && !seanceRepos">
+        
+    <button type="button" class="btn btnPrimaire" (click)="retour()" *ngIf="commencerSeance && !seanceRepos">
         <i class="bi bi-check-lg"></i>
         Finir la séance
     </button>
