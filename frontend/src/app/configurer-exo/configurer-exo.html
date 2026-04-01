@@ -1,70 +1,52 @@
-<main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
+<main class="d-flex">
+    <section class="config-shell">
+        <header>
+            <h2>Configurer l'exercice</h2>
+            <p>Ajuste rapidement les paramètres pour ta séance.</p>
+        </header>
 
-    <div class="card p-4" style="max-width: 200px;" *ngIf="exo">
-
-        <p class="h5 text-center mb-4">{{ exo?.name }}</p>
-
-        <div class="text-center mb-4">
-            <img [src]="exo?.img_url" alt="{{ exo?.name }}" class="img-fluid rounded" style="max-height: 150px;">
+        <div class="config-preview card" *ngIf="exo">
+            <h2>{{ exo?.name }}</h2>
+            <img [src]="exo?.img_url" alt="{{ exo?.name }}" class="preview-image">
         </div>
-    </div>
 
-    <div class="card p-4" style="max-width: 600px;" *ngIf="modifie && !exo">
-        <p class="text-center text-gray">
-            <i class="text-center mb-4"></i> Sélectionnez un exercice
-        </p>
+        <div class="config-preview card empty" *ngIf="modifie && !exo">
+            <p class="mb-0"> <i class="bi bi-cursor me-2"></i> Sélectionnez un exercice</p>
+        </div>
 
+        <form (ngSubmit)="action()" #loginForm="ngForm" id="login_form" class="config-form" *ngIf="idExo" [attr.data-key]="formKey">
+            <div class="field-row">
+                <label for="setNumber">Nombre de sets</label>
+                <input type="number" id="setNumber" name="setNumber" [(ngModel)]="setNumber" required class="form-control" (click)="resetNotif()"/>
+            </div>
 
-    </div>
+            <div class="field-row">
+                <label for="repNumber">Nombre de répétitions</label>
+                <input type="number" id="repNumber" name="repNumber" [(ngModel)]="repNumber" required class="form-control" (click)="resetNotif()"/>
+            </div>
+ 
+            <div class="field-row">
+                <label for= "poids">Poids</label>
+                <input type="number" id="poids" name="poids" [(ngModel)]="poids" required class="form-control" (click)="resetNotif()"/>
+            </div>
 
-    <form (ngSubmit)="action()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3 w-50" *ngIf="idExo"
-        [attr.data-key]="formKey">
+            <div class="action-row">
+                <button type="submit" class="btn btnPrimaire">
+                    <i class="bi bi-floppy"></i>
+                    <span *ngIf="!modifie">Ajouter</span>
+                    <span *ngIf="modifie">Modifier</span>
+                </button>
 
-        <table>
-            <tr>
-                <td>
-                    <label for="setNumber">Nombre de sets :</label>
-                </td>
-                <td>
-                    <input type="text" id="setNumber" name="setNumber" [(ngModel)]="setNumber" required
-                        class="form-control" (click)="resetNotif()" />
-                </td>
-            </tr>
+                <button type="button" class="btn btnDanger" *ngIf="modifie" (click)="supprimer()">
+                    <i class="bi bi-trash"></i> Supprimer
+                </button>
 
-            <tr>
-                <td>
-                    <label for="repNumber">Nombre de répétitions :</label>
-                </td>
-                <td>
-                    <input type="text" id="repNumber" name="repNumber" [(ngModel)]="repNumber" required
-                        class="form-control" (click)="resetNotif()" />
-                </td>
-            </tr>
+                <button type="button" class="btn btnSecondaire" (click)="annuler()">Annuler</button>
+            </div>
+        </form>
 
-            <tr>
-                <td>
-                    <label for="poids">Poids :</label>
-                </td>
-                <td>
-                    <input type="text" id="poids" name="poids" [(ngModel)]="poids" required class="form-control"
-                        (click)="resetNotif()" />
-                </td>
-            </tr>
-        </table>
-
-        <button type="submit" class="btn btnPrimaire">
-            <span *ngIf="!modifie">Ajouter</span>
-            <span *ngIf="modifie">modifie</span>
-        </button>
-
-        <button type="button" class="btn btnDanger" *ngIf="modifie" (click)="supprimer()">supprimer</button>
-
-        <button type="button" class="btn btnPrimaire" (click)="annuler()">Annuler</button>
-
-    </form>
-
-    <div *ngIf="backendResponse" class="mt-2 alert alert-info">
-        {{ backendResponse }}
-    </div>
-
+        <div *ngIf="backendResponse" class="mt-2 alert alert-info w-100">
+            {{ backendResponse }}
+        </div>
+    </section>
 </main>
