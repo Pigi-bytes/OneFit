@@ -73,6 +73,7 @@ def _routine_id(**kw):
     return fields.Int(**{**d, **kw})
 
 
+
 def _planned_sets(**kw):
     d = {"required": True, "metadata": {"description": "Nombre de séries prévues"}}
     return fields.Int(**{**d, **kw})
@@ -113,6 +114,10 @@ def _mailContenue(**kw):
 def _email(**kw):
     d = {"required": True, "metadata": {"description": "email"}}
     return fields.Str(**{**d, **kw})
+
+def _routine_pref(**kw):
+    d = {"required": True, "metadata": {"description": "ID de la routine"}}
+    return fields.Int(**{**d, **kw})
 
 
 # ---------------------------------------------------------------------------
@@ -423,4 +428,8 @@ class RenameSeanceSchema(Schema):
 class MailSchema(Schema):
     email = _email(metadata={"description": "email "})
     contenue = _mailContenue(metadata={"description": "object du mail"})
+
+class RoutinePref(Schema):
+    routine = _routine_pref()
+
     

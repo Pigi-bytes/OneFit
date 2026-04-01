@@ -1,5 +1,6 @@
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
+from app.communRoutes import checkExoExists
 
 from app import db
 from app.communRoutes import getCurrentUserOrAbort401, getRoutineForUserOrAbort404
@@ -13,11 +14,72 @@ from app.schemas import (
     RoutineSchema,
     RoutinesResponseSchema,
     ValidationErrorSchema,
+    RoutinePref,
 )
 from app.utils.logger import QueryTimer, route_logger
 
 routineBLP = Blueprint("routine", __name__, url_prefix="/routine", description="Gestion des routines")
 
+
+
+dwarfMaxing = [
+    # Lundi
+    [
+        ("exr_41n2hxnFMotsXTj3", 4, 10, 60),  # Bench Press
+        ("exr_41n2hdkBpqwoDmVq", 4, 12, 40),  # Suspended Row
+        ("exr_41n2hgCHNgtVLHna", 3, 12, 12),  # Cross Body Hammer Curl
+        ("exr_41n2hndkoGHD1ogh", 3, 12, 0),   # Triceps Dip (poids du corps)
+    ],
+    # Mardi
+    [
+        ("exr_41n2hs6camM22yBG", 4, 10, 30),  # Seated Shoulder Press
+        ("exr_41n2hU4y6EaYXFhr", 4, 8,  0),   # Pull Up (poids du corps)
+        ("exr_41n2hxxePSdr5oN1", 4, 12, 60),  # Hip Thrust
+        ("exr_41n2hmbfYcYtedgz", 3, 15, 16),  # Dumbbell Glute Bridge
+    ],
+    # Mercredi - repos
+    [],
+    # Jeudi
+    [
+        ("exr_41n2hsVHu7B1MTdr", 4, 10, 20),  # Palms In Incline Bench Press
+        ("exr_41n2hQDiSwTZXM4F", 4, 12, 24),  # Goblet Squat
+        ("exr_41n2hQtaWxPLNFwX", 4, 15, 16),  # Dumbbell Standing Calf Raise
+        ("exr_41n2hUDuvCas2EB3",  3, 15, 10),  # Cable Seated Neck Flexion
+    ],
+    # Vendredi
+    [
+        ("exr_41n2hXszY7TgwKy4", 4, 8,  0),   # Chin Up (poids du corps)
+        ("exr_41n2hGioS8HumEF7", 3, 12, 14),  # Hammer Curl
+        ("exr_41n2hwoc6PkW1UJJ", 4, 15, 40),  # Barbell Standing Calf Raise
+        ("exr_41n2hrHSqBnVWRRB", 3, 10, 0),   # Bodyweight Single Leg Deadlift
+    ],
+    # Samedi - repos
+    [],
+    # Dimanche - repos
+    [],
+]
+
+OneFitMan = [
+    [
+        ("exr_41n2hNXJadYcfjnd", 4, 25, 0),
+        ("exr_41n2hQDiSwTZXM4F", 4, 25, 0),
+        ("exr_41n2hxnFMotsXTj3", 3, 15, 100),
+    ]
+    for _ in range(7)
+]
+
+girlyPop = [
+    [("exr_41n2hGioS8HumEF7",  16, 1, 14)]  # Lundi - Hammer Curl (16 sets x 1 rep)
+    if i % 2 == 0 else
+    [("exr_41n2hndkoGHD1ogh", 17, 1, 0)]    # Triceps Dip
+    for i in range(7)
+]
+
+ROUTINES_PREFAITES = {
+    1: ("DwarfMaxingUltraXX", dwarfMaxing),
+    2: ("OneFitMan", OneFitMan),
+    3 : ("GirlyPop",girlyPop),
+}
 
 def create_routine_for_user(user, routine_name):
     routine = Routine(user_id=user.id, name=routine_name, is_active=False)
@@ -27,6 +89,35 @@ def create_routine_for_user(user, routine_name):
     for day in DayOfWeek:
         seance = Seance(routine_id=routine.id, day=day, title="Jour de Repos", is_rest_day=True)
         db.session.add(seance)
+    user.setActiveRoutine(routine.id)
+    db.session.commit()
+    route_logger.info(f"ROUTINE CREATED | user_id={user.id} | routine_id={routine.id}")
+    return routine
+
+def create_routine_Pre(user, routine_name, exo):
+    routine = Routine(user_id=user.id, name=routine_name, is_active=False)
+    with QueryTimer("ajoutRoutineDatabase"):
+        db.session.add(routine)
+        db.session.flush()
+
+    for i, day in enumerate(DayOfWeek):
+        seance = Seance(routine_id=routine.id, day=day, title="Jour de Repos", is_rest_day=True)
+        db.session.add(seance)
+        db.session.flush()
+
+        exercises_du_jour = exo[i] if i < len(exo) else []
+
+        if exercises_du_jour:
+            seance.is_rest_day = False
+            seance.title = day.value
+
+            for exercise_data in exercises_du_jour:
+                exercise_id, planned_sets, planned_reps, planned_weight = exercise_data
+                exercise = checkExoExists(exercise_id)
+                if not exercise:
+                    abort(404, message=f"Exercice {exercise_id} non trouvé.")
+                seance.ajouterPlan(exercise, planned_sets, planned_reps, planned_weight)
+
     user.setActiveRoutine(routine.id)
     db.session.commit()
     route_logger.info(f"ROUTINE CREATED | user_id={user.id} | routine_id={routine.id}")
@@ -140,3 +231,28 @@ def modiferNomRoutine(data):
         f"ROUTINE NAME UPDATED | user_id={user.id} | routine_id={routine.id} | old_name={old_name} | new_name={routine.name}"
     )
     return {"message": "Nom de la routine mis à jour avec succès."}
+
+
+@routineBLP.route("/ajouterRoutinePrefaite", methods=["POST"])
+@routineBLP.arguments(RoutinePref)
+@routineBLP.doc(security=[{"bearerAuth": []}])
+@routineBLP.response(200, MessageSchema)
+@routineBLP.alt_response(404, schema=BaseErrorSchema, description="Routine, séance ou exercice prévu introuvable")
+@routineBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
+@jwt_required()
+def ajouterRoutinePrefaite(data):
+    user = getCurrentUserOrAbort401()
+    val = data["routine"]
+    if val not in ROUTINES_PREFAITES:
+        abort(404, message="Routine préfaite introuvable.")
+    name, exo = ROUTINES_PREFAITES[val]
+    create_routine_Pre(user, name, exo)
+    return {"message": "Routine ajouté au votre"}
+
+@routineBLP.route("/getRoutinesPrefaites", methods=["GET"])
+@routineBLP.doc(security=[{"bearerAuth": []}])
+@routineBLP.response(200, RoutinesResponseSchema)
+@jwt_required()
+def getRoutinesPrefaites():
+    routines = [{"id": k, "name": v[0], "is_active": False} for k, v in ROUTINES_PREFAITES.items()]
+    return {"routines": routines}
