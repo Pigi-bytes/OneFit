@@ -75,10 +75,47 @@ girlyPop = [
     for i in range(7)
 ]
 
+debutant = [
+    # Lundi
+    [
+        ("exr_41n2hxnFMotsXTj3", 4, 10, 20),  # Bench Press
+        ("exr_41n2hsVHu7B1MTdr", 2,10,20),  # incline Bench press
+        ("exr_41n2hndkoGHD1ogh", 3, 10,0), # tricep dip
+        ("exr_41n2hdHtZrMPkcqY", 3, 10,20), # tricep extension
+    ],
+
+    # Mardi
+    [],
+
+    # Mercredi
+    [
+        ("exr_41n2hftBVLiXgtRQ", 4, 10,0),  # wide grip pull up
+        ("exr_41n2hcFJpBvAkXCP", 3,12,0), # seated row with towel
+        ("exr_41n2hY9EdwkdGz9a", 3,10,20), # bent over row
+        ("exr_41n2hGioS8HumEF7", 3, 8, 10),  # Hammer Curl
+    ],
+
+    # Jeudi
+    [],
+
+    # Vendredi
+    [
+        ("exr_41n2hQtaWxPLNFwX", 4, 10, 10),  # Dumbbell Standing Calf Raise
+        ("exr_41n2hhiWL8njJDZe", 3,12, 20), # seated calf raise
+        ("exr_41n2hs6camM22yBG",  4, 8, 20), # shoulder press
+        ("exr_41n2hjuGpcex14w7",  3, 8, 5) # lateral raise
+    ],
+    # Samedi
+    [],
+    # Dimanche
+    []
+]
+
 ROUTINES_PREFAITES = {
-    1: ("DwarfMaxingUltraXX", dwarfMaxing),
-    2: ("OneFitMan", OneFitMan),
+    1 : ("DwarfMaxingUltraXX", dwarfMaxing),
+    2 : ("OneFitMan", OneFitMan),
     3 : ("GirlyPop",girlyPop),
+    3 : ("Débutant",debutant),
 }
 
 def create_routine_for_user(user, routine_name):
