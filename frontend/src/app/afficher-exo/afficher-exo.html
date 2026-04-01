@@ -1,31 +1,21 @@
-<main class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-3">
+<main class="d-flex">
+    <section class="config-shell">
+        <header>
+            <h2 *ngIf="!exo">Afficher l'exercice</h2>
+        </header>
 
-    <div class="card p-4" style="max-width: 600px;" *ngIf="!exo">
-        <p class="text-center text-gray">
-            <i class="text-center mb-4"></i> Sélectionnez un exercice
-        </p>
-
-
-    </div>
-    <div class="card p-4" style="max-width: 600px;" *ngIf="message">
-        <p class="text-center text-gray">
-            <i class=" text-center mb-4"></i> {{message}}
-        </p>
-
-    </div>
-
-    <div class="card p-4" style="max-width: 600px; overflow-y: auto; max-height: 80vh" *ngIf="exo">
-
-        <h1 class="text-center mb-4">{{ exo?.name }}</h1>
-
-        <div class="text-center mb-4">
-            <img [src]="exo?.img_url" alt="{{ exo?.name }}" class="img-fluid rounded" style="max-height: 250px;">
+        <div class="config-preview card empty" *ngIf="!exo && !message">
+            <p class="mb-0"><i class="bi bi-cursor me-2"></i> Sélectionnez un exercice</p>
         </div>
 
-        <p class="text-center">
-            {{ exo?.overview }}
-        </p>
+        <div class="config-preview card" *ngIf="message">
+            <p class="mb-0">{{ message }}</p>
+        </div>
 
-    </div>
-
+        <div class="config-preview card" *ngIf="exo">
+            <h2>{{ exo?.name }}</h2>
+            <img [src]="exo?.img_url" alt="{{ exo?.name }}" class="preview-image">
+            <p class="mb-0">{{ exo?.overview }}</p>
+        </div>
+    </section>
 </main>
