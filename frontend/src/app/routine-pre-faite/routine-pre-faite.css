@@ -1,0 +1,14 @@
+.carousel-container {
+    display: flex;
+    justify-content: center;
+    /* centre horizontalement */
+    align-items: center;
+    /* centre verticalement */
+    min-height: 100vh;
+    /* occupe toute la fenêtre */
+}
+
+ngb-carousel {
+    width: 80%;
+    max-width: 800px;
+}
