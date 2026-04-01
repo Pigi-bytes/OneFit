@@ -2,8 +2,10 @@
     <h1 class="p-2">Ma routine active</h1>
 
     <div class="week-btn-row">
-        <button class="btn btnPrimaire" *ngFor="let jour of jours; let i = index" [class.active]="selectedDay === i" (click)="selectDay(i)">
-            {{ jour.short }} <br> <i class="bi" [ngClass]="seances[i]?.isRestDay ? 'bi-moon-fill' : 'bi-lightning-charge-fill'"></i>
+        <button class="btn btnPrimaire" *ngFor="let jour of jours; let i = index" [class.active]="selectedDay === i"
+            (click)="selectDay(i)">
+            {{ jour.short }} <br> <i class="bi"
+                [ngClass]="seances[i]?.isRestDay ? 'bi-moon-fill' : 'bi-lightning-charge-fill'"></i>
         </button>
     </div>
 
@@ -11,10 +13,10 @@
         <div class="card routine-main-card">
             <div class="routine-header">
                 <div class="routine-title">{{ seances[selectedDay]?.title }}</div>
-                
-                    <button class="btn btnPrimaire" (click)="afficherSeance(jours[selectedDay]?.full || '')">
-                        <i class="bi bi-pencil"></i> Éditer le jour
-                    </button>
+
+                <button class="btn btnPrimaire" (click)="afficherSeance(jours[selectedDay]?.full || '')">
+                    <i class="bi bi-pencil"></i> Éditer le jour
+                </button>
             </div>
 
             <div class="routine-exo-list">
@@ -23,7 +25,8 @@
 
                     <div class="routine-exo-main">
                         <div class="routine-exo-name">{{ exo.name }}</div>
-                        <div class="routine-exo-details">{{ exo.planned_sets }} sets de {{ exo.planned_reps }} reps à {{ exo.planned_weight }} kg</div>
+                        <div class="routine-exo-details">{{ exo.planned_sets }} sets de {{ exo.planned_reps }} reps à {{
+                            exo.planned_weight }} kg</div>
                     </div>
 
                 </div>
@@ -37,7 +40,7 @@
                 <button class="btn btnPrimaire" routerLink="/routines-persos">
                     <i class="bi bi-grid-3x3-gap"></i> Mes routines
                 </button>
-                <button class="btn btnPrimaire">
+                <button class="btn btnPrimaire" routerLink="/routine-pre-faite">
                     <i class="bi bi-box-arrow-in-right"></i> Routines préfaites
                 </button>
             </div>

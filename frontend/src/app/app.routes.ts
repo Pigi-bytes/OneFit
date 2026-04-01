@@ -25,6 +25,7 @@ import { Contact } from './contact/contact';
 import { Compliance } from './compliance/compliance';
 import { Cgu } from './cgu/cgu';
 import { MentionsLegales } from './mentions-legales/mentions-legales';
+import { RoutinePreFaite } from './routine-pre-faite/routine-pre-faite';
 
 export const routes: Routes = [
     { path: '', component: Home, data: { hideMenu: true } },
@@ -53,4 +54,5 @@ export const routes: Routes = [
     { path: "mentions-legales", component: MentionsLegales },
     { path: "compliance", component: Compliance, data: { hideMenu: true } },
     { path: "cgu", component: Cgu, data: { hideMenu: true } },
+    { path: "routine-pre-faite", component: RoutinePreFaite }
 ];
