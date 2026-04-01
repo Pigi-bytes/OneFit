@@ -7,7 +7,7 @@
         </div>
 
         <div *ngIf="seanceRepos">
-            <p> jour de repos</p>
+            <p>Jour de repos</p>
         </div>
 
         <div *ngFor="let exo of exercices;let i = index"
@@ -34,16 +34,30 @@
 
             <!-- boutons -->
             <div class="d-flex ms-auto gap-1">
-                <button *ngIf="!commencerSeance && i > 0" type="button" class="btn btnPrimaire btnIcon"
-                    (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()" tooltip>
+                @if(i < exercices.length - 1){
+                <button type="button" class="btn btnPrimaire btnIcon"
+                    (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()"
+                    [style.visibility]="i < 1 ? 'hidden' : 'visible'" tooltip>
                     <span class="tooltiptext"> Déplacer vers le haut </span>
                     <i class="bi bi-arrow-up"></i>
                 </button>
-                <button *ngIf="!commencerSeance  && i < exercices.length - 1" type="button" class="btn btnPrimaire btnIcon"
-                    (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()" tooltip>
+                }
+                
+                <button type="button" class="btn btnPrimaire btnIcon"
+                    (click)="bouger(exo.seance_exercise_id,'down') ; $event.stopPropagation()"
+                    [style.visibility]="i > exercices.length - 2 ? 'hidden' : 'visible'" tooltip>
                     <span class="tooltiptext"> Déplacer vers le bas </span>
                     <i class="bi bi-arrow-down"></i>
                 </button>
+
+                @if(i > exercices.length - 2){
+                <button type="button" class="btn btnPrimaire btnIcon"
+                    (click)="bouger(exo.seance_exercise_id,'up') ; $event.stopPropagation()"
+                    [style.visibility]="i < 1 ? 'hidden' : 'visible'" tooltip>
+                    <span class="tooltiptext"> Déplacer vers le haut </span>
+                    <i class="bi bi-arrow-up"></i>
+                </button>
+                }
             </div>
         </div>
 
@@ -51,12 +65,14 @@
 
     <div tooltip *ngIf="!commencerSeance">
         <span class="tooltiptext"> Ajouter un exercice </span>
-        <button type="button" class="btn btnPrimaire mb-2 btnIcon" (click)="ajouterExo()">+</button>
+        <button type="button" class="btn btnPrimaire mb-2 btnIcon" (click)="ajouterExo()">
+        <i class="bi bi-plus-lg"></i>
+        </button>
     </div>
 
     <button type="button" class="btn btnPrimaire" (click)="retour()"
         *ngIf="!commencerSeance || seanceRepos ">Retour</button>
-        
+
     <button type="button" class="btn btnPrimaire" (click)="retour()" *ngIf="commencerSeance && !seanceRepos">
         <i class="bi bi-check-lg"></i>
         Finir la séance

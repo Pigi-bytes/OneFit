@@ -156,7 +156,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
             localStorage.removeItem("coteExo");
             this.router.navigate(['/seance-en-cours']);
         } else {
-            if (confirm("voulez vous quitter la séance en cours (elle ne serat pas enregistrée)")) {
+            if (confirm("Voulez-vous quitter la séance en cours? Elle ne sera pas enregistrée.")) {
                 this.resetChrono();
                 localStorage.removeItem("lastMessage");
                 this.http.delete('http://127.0.0.1:5000/seanceReelle/abandonSeanceReelle', {
