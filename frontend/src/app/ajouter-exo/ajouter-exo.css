@@ -1,3 +1,22 @@
-.btnIcon i { color: var(--blue1) }
+.search-wrapper {
+	width: min(720px, 90%);
+}
 
-:host-context(.dark) .btnIcon i { color: var(--white3)} 
+.exo-list {
+	width: min(720px, 92%);
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 48vh;
+	margin-bottom: 0.5rem;
+}
+
+.exo-clickable {
+	flex: 1;
+	cursor: pointer;
+}
+
+.exo-thumb {
+	width: 64px;
+	height: 64px;
+	object-fit: cover;
+}
