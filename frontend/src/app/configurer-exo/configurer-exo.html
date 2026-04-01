@@ -9,7 +9,7 @@
             <img [src]="exo?.img_url" alt="{{ exo?.name }}" class="preview-image">
         </div>
 
-        <div class="config-preview card empty" *ngIf="modifie && !exo">
+        <div class="config-preview card empty" *ngIf="!exo">
             <p class="mb-0"> <i class="bi bi-cursor me-2"></i> Sélectionnez un exercice</p>
         </div>
 
