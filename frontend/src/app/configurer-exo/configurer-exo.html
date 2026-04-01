@@ -1,7 +1,7 @@
 <main class="d-flex">
     <section class="config-shell">
         <header>
-            <h2>Configurer l'exercice</h2>
+            <h2 *ngIf="!idExo">Configurer l'exercice</h2>
         </header>
 
         <div class="config-preview card" *ngIf="exo">
