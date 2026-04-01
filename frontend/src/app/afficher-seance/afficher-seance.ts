@@ -102,7 +102,7 @@ export class AfficheSceance implements OnInit {
                 if (this.exercices.length === 0 && this.commencerSeance) {
 
                     this.seanceRepos = true;
-                    this.ei.triggerRefresh([Message.RESET_CHRONO]);
+                    this.ei.triggerRefresh([Message.ENR_REPOS]);
                     this.cdr.detectChanges();
                 }
                 this.backendResponse = res.message;
@@ -162,6 +162,11 @@ export class AfficheSceance implements OnInit {
         if (!this.commencerSeance) {
             this.ei.triggerRefresh([Message.MODIFIER_EXERCICE, id, nbRep, nbSet, poid, idSequence]);
         } else {
+            if (isPlatformBrowser(this.platformId)) {
+                localStorage.setItem("exoVisualise", idSequence!);
+
+            }
+
             this.ei.triggerRefresh([Message.CHRONO_EXO]);
             this.ei.triggerRefresh([Message.ENVOYER_ID_EXO, idSequence]);
             this.router.navigate(['/exercice-en-cours']);
@@ -182,6 +187,10 @@ export class AfficheSceance implements OnInit {
 
             this.ei.blockSeance();
             this.ei.resetExercice();
+            if (isPlatformBrowser(this.platformId)) {
+                localStorage.setItem("seanceJour", localStorage.getItem("jour")!);
+            }
+
             this.ei.triggerRefresh([Message.FINIR_SEANCE]);
             localStorage.removeItem("lastMessage");
             this.router.navigate(['/recap-seance']);

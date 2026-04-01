@@ -31,9 +31,10 @@ export class SeanceEnCours {
             }
 
             if (!jour1) {
-                localStorage.setItem("seanceJour", jour2!);
+                return;
             } else if (jour1 === jour2) {
                 this.router.navigate(['recap-seance']);
+
             }
 
 

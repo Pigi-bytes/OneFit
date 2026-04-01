@@ -5,6 +5,8 @@ import sqlalchemy as sa
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 
+from app.communRoutes import addAndCommit
+
 from app import db
 from app.communRoutes import getCurrentUserOrAbort401, getRoutineForUserOrAbort404, getSeanceForRoutineAndDayOrAbort404
 from app.models import Routine, Seance, SeanceExercise, WorkoutLog, WorkoutSession
@@ -165,3 +167,25 @@ def abandonSeanceReelle():
     route_logger.info(f"WORKOUT SESSION ABORTED | user_id={user.id} | session_id={session.id} | seance_id={session.seance_id}")
 
     return {"message": "Séance annulée et données supprimées avec succès."}
+
+
+
+@seanceReelleBLP.route("/enregSceanceRepos", methods=["POST"])
+@seanceReelleBLP.arguments(StartEndSeanceEffectueeSchema)
+@seanceReelleBLP.doc(security=[{"bearerAuth": []}])
+@seanceReelleBLP.response(200, MessageSchema)
+@seanceReelleBLP.alt_response(404, schema=BaseErrorSchema, description="Aucune séance en cours")
+@jwt_required()
+def enrgRepo(data):
+    user = getCurrentUserOrAbort401()
+    routine = getRoutineForUserOrAbort404(user, data["routine_id"])
+    seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
+
+    # Récupérer la session active
+    sceance = WorkoutSession(
+        user_id=user.id, seance_id=seance.id, started_at=datetime.utcnow(),ended_at = datetime.utcnow()
+    ) 
+
+    addAndCommit(sceance, "commitRepos")
+
+    return {"message": "Repos bien enregistré!"}

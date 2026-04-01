@@ -29,6 +29,7 @@ export class ExerciceEnCours {
     seance_exercise_id: any = 1;
     setsValides: { reps: any, weight: any }[] = [];
     isModalOpen = false;
+    private exo2: any = null;
 
     constructor(
         private http: HttpClient,
@@ -39,6 +40,27 @@ export class ExerciceEnCours {
     ) { }
 
     ngOnInit() {
+
+        if (isPlatformBrowser(this.platformId)) {
+            const exo1 = localStorage.getItem("exoCourrant");
+            this.exo2 = localStorage.getItem("exoVisualise");
+
+
+            if (!this.exo2) {
+                this.router.navigate(['']);
+            }
+
+            if (exo1 && this.exo2) {
+                if (exo1 === this.exo2) {
+                    this.router.navigate(['seance-en-cours']);
+                } else {
+                    localStorage.setItem("exoCourrant", this.exo2);
+                }
+            }
+
+        }
+
+
         if (isPlatformBrowser(this.platformId) && localStorage.getItem("lastMessage")) {
             this.seance_exercise_id = Number(localStorage.getItem("lastSequence"));;
         }
@@ -124,6 +146,11 @@ export class ExerciceEnCours {
                 this.backendResponse = res.message;
                 this.ei.unblockExercice();
                 this.ei.addExercice(this.seance_exercise_id);
+                if (isPlatformBrowser(this.platformId)) {
+                    localStorage.setItem("exoCourrant", this.exo2!);
+
+                }
+
                 this.ei.soumettre();
 
                 this.ei.triggerRefresh([Message.SEANCE_EN_COURS]);

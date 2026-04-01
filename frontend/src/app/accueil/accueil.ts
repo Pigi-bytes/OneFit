@@ -99,13 +99,18 @@ export class Accueil {
 
     ngOnInit() {
 
+
+
         if (isPlatformBrowser(this.platformId)) {
+            localStorage.removeItem("exoCourrant");
+            localStorage.setItem("noRecap", "true");
             const token = localStorage.getItem('access_token');
             if (!token) {
                 this.router.navigate(['']);
                 alert("veuillez vous connecter");
                 return;
             }
+
             this.getUserName();
         }
         this.recupStrick();
@@ -139,6 +144,7 @@ export class Accueil {
         localStorage.setItem("jour", jour);
         localStorage.removeItem("coteExo");
         localStorage.removeItem("coteRecap");
+        localStorage.removeItem("seanceJour");
         this.elt.reset();
         this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);
         this.elt.unblockSeance();

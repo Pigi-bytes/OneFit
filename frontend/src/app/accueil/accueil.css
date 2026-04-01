@@ -41,7 +41,7 @@
 }
 
 :host-context(.dark) .stat-label {
-    color: var(--white3); 
+    color: var(--white3);
 }
 
 .stat-value {
@@ -114,7 +114,7 @@
     background: var(--white3);
     color: var(--blue1);
     border-radius: 12px;
-    min-height: 46px;
+    min-height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
