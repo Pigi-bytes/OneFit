@@ -33,7 +33,7 @@ userBLP = Blueprint("user", __name__, url_prefix="/user", description="Gestion u
 @userBLP.route("/user", methods=["GET"])
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, UserSchema)
-@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur introuvable")
 @jwt_required()
 def user():
     """Récupère le profil de l'utilisateur connecté"""
@@ -46,7 +46,7 @@ def user():
 @userBLP.arguments(UserAjouterPoidsSchema)
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, MessageSchema)
-@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur introuvable")
 @userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def ajouterOuModifierPoids(data):
@@ -81,16 +81,16 @@ def ajouterOuModifierPoids(data):
     db.session.refresh(user)
 
     db_logger.debug(f"MODIFICATION, AJOUT SUCCESS | user_id={user.id} | date={poids_date}")
-    return {"message": "Poids ajouter ou modifier correctement!"}
+    return {"message": "Poids ajouté ou modifié correctement!"}
 
 
 @userBLP.route("/suprimerPoid", methods=["DELETE"])
 @userBLP.arguments(UserSuppPoidSchema)
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, MessageSchema)
-@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur introuvable")
 @userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
-@userBLP.alt_response(404, schema=BaseErrorSchema, description="Donnée non présente")
+@userBLP.alt_response(404, schema=BaseErrorSchema, description="Donnée absente")
 @jwt_required()
 def suprimerPoid(data):
     """Ajoute ou modifie un poids dans l'historique de l'utilisateur connecté"""
@@ -116,16 +116,16 @@ def suprimerPoid(data):
         return {"message": "Poids supprimé correctement!"}
     else:
         route_logger.warning(f"POIDS NON TROUVE | user_id={user.id} | date={date}")
-        abort(404, message="Poid non présent")
+        abort(404, message="Ce poids n'est pas présent dans vos données.")
 
     db.session.refresh(user)
-    return {"message": "Poids ajouter ou modifier correctement!"}
+    return {"message": "Poids ajouté ou modifié correctement!"}
 
 
 @userBLP.route("/getAllPoids", methods=["GET"])
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, UserHistoriqueResponseSchema)
-@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur introuvable")
 @jwt_required()
 def getAllPoids():
     """Récupère tout l'historique des poids de l'utilisateur connecté"""
@@ -141,7 +141,7 @@ def getAllPoids():
 @userBLP.route("/getStreak", methods=["GET"])
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, UserWorkoutStreakResponseSchema)
-@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur introuvable")
 @jwt_required()
 def getStreak():
     """Récupère les jours avec séance réelle et la streak en cours"""
@@ -175,7 +175,7 @@ def getStreak():
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.arguments(ExoStatQuerySchema)
 @userBLP.response(200, ExoStatResponseSchema)
-@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur introuvable")
 @userBLP.alt_response(404, schema=BaseErrorSchema, description="Exercice introuvable")
 @userBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
@@ -203,7 +203,7 @@ def getExoStat(data):
 @userBLP.route("/getLoggedExercises", methods=["GET"])
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, LoggedExercisesResponseSchema)
-@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur introuvable")
 @jwt_required()
 def getLoggedExercises():
     """Récupère les exercices distincts présents dans les logs de l'utilisateur connecté"""
@@ -229,7 +229,7 @@ def getLoggedExercises():
 @userBLP.route("/supprimer", methods=["DELETE"])
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.response(200, MessageSchema)
-@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur introuvable")
 @jwt_required()
 def supprimer_utilisateur():
     """Supprime l'utilisateur connecté et son historique"""
@@ -259,7 +259,7 @@ def is_valid_email(email):
 @userBLP.doc(security=[{"bearerAuth": []}])
 @userBLP.arguments(MailSchema)
 @userBLP.response(200, MessageSchema)
-@userBLP.alt_response(401, schema=BaseErrorSchema, description="mail invalide")
+@userBLP.alt_response(401, schema=BaseErrorSchema, description="Adresse mail invalide")
 @jwt_required()
 def envoyer_mail(data):
     """Envoie un email de contact à OneFit"""

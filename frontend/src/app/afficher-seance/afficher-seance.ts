@@ -179,7 +179,7 @@ export class AfficheSceance implements OnInit {
         if (this.commencerSeance && !this.seanceRepos) {
             for (const exo of this.exercices) {
                 if (!this.exercicesValide.some(e => e === exo.seance_exercise_id)) {
-                    alert("il faut valider tout les exercies pour terminer la scéance");
+                    alert("Il faut valider tous les exercices pour terminer la scéance.");
                     return;
                 }
 

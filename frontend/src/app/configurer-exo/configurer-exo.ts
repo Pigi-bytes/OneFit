@@ -184,7 +184,7 @@ export class ConfigurerExo {
     }
 
     supprimer() {
-        const confirmAction = confirm("Voulez-vous vraiment supprimer cette exercice de la séance ?");
+        const confirmAction = confirm("Voulez-vous vraiment supprimer cet exercice de la séance ?");
 
         if (confirmAction) {
             this.http.delete('http://127.0.0.1:5000/seance/supprimerExoSeance', {

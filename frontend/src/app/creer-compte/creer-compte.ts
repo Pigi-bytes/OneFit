@@ -29,12 +29,12 @@ export class CreerCompte {
 
     creer() {
         if (!this.acceptedCompliance) {
-            this.backendResponse = 'Vous devez accepter la politique de conformité avant de créer un compte';
+            this.backendResponse = 'Vous devez accepter la politique de conformité avant de créer un compte.';
             return;
         }
 
         if (this.password !== this.confirmPassword.trim()) {
-            this.backendResponse = 'Les mots de passe ne correspondent pas';
+            this.backendResponse = 'Les mots de passe ne correspondent pas.';
             return;
         }
 

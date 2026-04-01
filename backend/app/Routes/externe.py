@@ -15,7 +15,7 @@ from app.schemas import (
 )
 from app.utils.logger import route_logger
 
-externeBLP = Blueprint("externe", __name__, url_prefix="/externe", description="Call a l'autre api")
+externeBLP = Blueprint("externe", __name__, url_prefix="/externe", description="Call à l'autre API")
 
 TEMPS_DISTANCE_MOTS = {
     "run",
@@ -74,7 +74,7 @@ def getSalleLoc(data):
 @externeBLP.arguments(ExerciceRequestSchema)
 @externeBLP.doc(security=[{"bearerAuth": []}])
 @externeBLP.response(200, ExerciceResponseSchema)
-@externeBLP.alt_response(404, schema=BaseErrorSchema, description="Exercice non trouvé sur l'API externe")
+@externeBLP.alt_response(404, schema=BaseErrorSchema, description="Exercice introuvable dans l'API externe")
 @externeBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def getExo(data):

@@ -216,7 +216,7 @@ def createRoutine(data):
 @routineBLP.arguments(ActiveRoutineSchema)
 @routineBLP.doc(security=[{"bearerAuth": []}])
 @routineBLP.response(200, MessageSchema)
-@routineBLP.alt_response(404, schema=BaseErrorSchema, description="Routine non trouvée")
+@routineBLP.alt_response(404, schema=BaseErrorSchema, description="Routine introuvable")
 @routineBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def activerRoutine(data):
@@ -233,7 +233,7 @@ def activerRoutine(data):
 @routineBLP.arguments(ActiveRoutineSchema)
 @routineBLP.doc(security=[{"bearerAuth": []}])
 @routineBLP.response(200, MessageSchema)
-@routineBLP.alt_response(404, schema=BaseErrorSchema, description="Routine non trouvée")
+@routineBLP.alt_response(404, schema=BaseErrorSchema, description="Routine introuvable")
 @routineBLP.alt_response(409, schema=BaseErrorSchema, description="Impossible de supprimer une routine active")
 @routineBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()

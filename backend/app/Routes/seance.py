@@ -110,7 +110,7 @@ def deplacerOrdreExoSeance(data):
 @seanceBLP.doc(security=[{"bearerAuth": []}])
 @seanceBLP.arguments(getSeanceByDay)
 @seanceBLP.response(200, SeanceResponseSchema)
-@seanceBLP.alt_response(404, schema=BaseErrorSchema, description="Séance non trouvée")
+@seanceBLP.alt_response(404, schema=BaseErrorSchema, description="Séance introuvable")
 @seanceBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def getSeanceDuJour(data):

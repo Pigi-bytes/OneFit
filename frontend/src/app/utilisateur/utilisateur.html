@@ -1,6 +1,6 @@
 <main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
 
-    <h1 class="mb-4">Votre profil d'utilisateur</h1>
+    <h1 class="mb-4">Mon profil d'utilisateur</h1>
 
     <div class="card p-4 mb-4 w-100" style="max-width: 600px;"> 
         <form (ngSubmit)="modif()" #loginForm="ngForm" id="login_form" class="d-flex flex-column gap-3">
@@ -17,7 +17,7 @@
 
                 <!-- taille -->
                     <tr>
-                        <td class="text-start"><label for="taille">Taille</label></td>
+                        <td class="text-start"><label for="taille">Taille (cm)</label></td>
                         <td> <input type="text" id="taille" name="taille"
                             [(ngModel)]="taille" required class="form-control"
                             (click)="resetNotif()" />
@@ -55,7 +55,7 @@
             
             <button type="button" class="btn btnDanger " (click)="supprimer()">
                 <i class="bi bi-trash"></i>
-                Supprimer votre compte
+                Supprimer mon compte
             </button>
 
         </div>

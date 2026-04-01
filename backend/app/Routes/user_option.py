@@ -23,7 +23,7 @@ userOptionBLP = Blueprint("option", __name__, url_prefix="/user/option", descrip
 @userOptionBLP.arguments(UserConfigurerSchema)
 @userOptionBLP.doc(security=[{"bearerAuth": []}])
 @userOptionBLP.response(200, UserSchema)
-@userOptionBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur non trouvé")
+@userOptionBLP.alt_response(401, schema=BaseErrorSchema, description="Utilisateur introuvable")
 @userOptionBLP.alt_response(422, schema=ValidationErrorSchema, description="Données invalides")
 @jwt_required()
 def configurerUser(data):

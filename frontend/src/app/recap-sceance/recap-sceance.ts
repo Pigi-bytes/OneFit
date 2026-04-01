@@ -40,7 +40,7 @@ export class RecapSceance {
             const token = localStorage.getItem('access_token');
             if (!token) {
                 this.route.navigate(['']);
-                alert("veuillez vous connecter")
+                alert("Veuillez-vous connecter.")
                 return;
             }
             this.http.get<any>('http://127.0.0.1:5000/user/user').pipe(take(1)).subscribe(res => {

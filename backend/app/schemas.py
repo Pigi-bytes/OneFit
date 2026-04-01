@@ -427,7 +427,7 @@ class RenameSeanceSchema(Schema):
 
 class MailSchema(Schema):
     email = _email(metadata={"description": "email "})
-    contenue = _mailContenue(metadata={"description": "object du mail"})
+    contenue = _mailContenue(metadata={"description": "Objet du mail"})
 
 class RoutinePref(Schema):
     routine = _routine_pref()

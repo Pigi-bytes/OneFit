@@ -107,7 +107,7 @@ export class Accueil {
             const token = localStorage.getItem('access_token');
             if (!token) {
                 this.router.navigate(['']);
-                alert("veuillez vous connecter");
+                alert("Veuillez-vous connecter.");
                 return;
             }
 
