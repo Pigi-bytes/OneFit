@@ -1,5 +1,5 @@
 .config-shell {
-	width: min(560px, 100%);
+	width: min(560px, 80%);
 	padding: 1.3rem;
 	display: flex;
 	flex-direction: column;
