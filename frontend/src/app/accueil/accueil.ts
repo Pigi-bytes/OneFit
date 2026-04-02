@@ -144,6 +144,7 @@ export class Accueil {
         localStorage.setItem("jour", jour);
         localStorage.removeItem("coteExo");
         localStorage.removeItem("coteRecap");
+        localStorage.removeItem("noRecap");
         localStorage.removeItem("seanceJour");
         this.elt.reset();
         this.elt.triggerRefresh([Message.COMMENCER_SEANCE]);

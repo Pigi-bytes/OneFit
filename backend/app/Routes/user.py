@@ -267,7 +267,7 @@ def envoyer_mail(data):
 
     email = data['email']
     if not is_valid_email(email):
-        abort(404, message="mail invalide")
+        abort(404, message="Email invalide")
     msg['Subject'] = 'Avis OneFit'
     msg['From'] = email
     msg['To'] = 'onefit.contactsport@gmail.com'
@@ -279,7 +279,7 @@ def envoyer_mail(data):
         smtp.starttls()  # Connexion sécurisée
         smtp.login('onefit.contactsport@gmail.com', Config.ONEFIT_SMTP_PASSWORD)
         smtp.send_message(msg)
-        return {"message": "Email envoyé avec sucée"}
+        return {"message": "Email envoyé avec succès"}
         
     
     
