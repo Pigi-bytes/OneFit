@@ -37,7 +37,8 @@ export class Routine {
         { short: 'Sam', full: 'Samedi' },
         { short: 'Dim', full: 'Dimanche' },
     ];
-    selectedDay = 0;
+    
+    selectedDay = ((new Date().getDay() + 6) % 7);
 
     selectDay(i: number) {
         this.selectedDay = i;
