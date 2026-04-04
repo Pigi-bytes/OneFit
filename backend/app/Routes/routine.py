@@ -1,21 +1,20 @@
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
-from app.communRoutes import checkExoExists
 
 from app import db
-from app.communRoutes import getCurrentUserOrAbort401, getRoutineForUserOrAbort404
-from app.models import DayOfWeek, Routine, Seance
+from app.communRoutes import APISPORT, checkExoExists, getCurrentUserOrAbort401, getRoutineForUserOrAbort404
+from app.models import DayOfWeek, Exercise, Routine, Seance
 from app.schemas import (
     ActiveRoutineSchema,
     BaseErrorSchema,
     CreateRoutineSchema,
     MessageSchema,
     RenameRoutineSchema,
+    RoutinePref,
+    RoutinePrefaitesResponseSchema,
     RoutineSchema,
     RoutinesResponseSchema,
-    RoutinePrefaitesResponseSchema,
     ValidationErrorSchema,
-    RoutinePref,
 )
 from app.utils.logger import QueryTimer, route_logger
 
@@ -158,7 +157,27 @@ def create_routine_Pre(user, routine_name, exo):
                 exercise_id, planned_sets, planned_reps, planned_weight = exercise_data
                 exercise = checkExoExists(exercise_id)
                 if not exercise:
-                    abort(404, message=f"Exercice {exercise_id} non trouvé.")
+                    route_logger.info(f"EXO AUTO-FETCH | exoId={exercise_id}")
+                    exo_api = APISPORT.get(f"exercises/{exercise_id}")
+                    if not exo_api:
+                        abort(404, message=f"Exercice {exercise_id} introuvable (API externe).")
+
+                    exercise = Exercise(
+                        id_api=exo_api["exerciseId"],
+                        name=exo_api["name"],
+                        img_url=exo_api["imageUrl"],
+                        video_url=exo_api["videoUrl"],
+                        overview=exo_api["overview"],
+                        instructions="\n".join(exo_api["instructions"])
+                        if isinstance(exo_api["instructions"], list)
+                        else exo_api["instructions"],
+                        body_part=", ".join(exo_api["bodyParts"])
+                        if isinstance(exo_api["bodyParts"], list)
+                        else exo_api["bodyParts"],
+                    )
+                    db.session.add(exercise)
+                    db.session.flush()
+                    route_logger.info(f"EXO AUTO-CREATED | exoId={exercise.id_api}")
                 seance.ajouterPlan(exercise, planned_sets, planned_reps, planned_weight)
 
     user.setActiveRoutine(routine.id)
