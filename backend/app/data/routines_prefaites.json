@@ -1,7 +1,7 @@
 {
   "1": {
     "name": "DwarfMaxingUltraXX",
-    "description": "Une routine de niveau intermédiaire ultra boostee: On ne cherche pas a grandir, on cherche a se compacter : devenir un nain carre, sec et terriblement puissant.",
+    "description":"Une routine de niveau intermédiaire ultra boostée. On ne cherche pas à grandir, on cherche à se compacter : devenir un nain carré, sec et terriblement puissant.",
     "days": [
       [
         {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 4, "planned_reps": 10, "planned_weight": 60},
