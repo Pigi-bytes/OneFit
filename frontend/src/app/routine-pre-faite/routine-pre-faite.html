@@ -1,37 +1,27 @@
 <main class="carousel-container">
+
+    <h1> Routines préfaites </h1>
     <ngb-carousel #carousel="ngbCarousel" class="card" (slide)="slideChanged()">
-        <ng-template ngbSlide id="1">
-            <div class="card">
-                <h2>DwarfMaxingUltraXX</h2>
-                <p>Contenu 1...</p>
-            </div>
-        </ng-template>
-
-        <ng-template ngbSlide id="2">
-            <div class="card">
-                <h2>OneFitMan</h2>
-                <p>Contenu 2...</p>
-            </div>
-        </ng-template>
-
-        <ng-template ngbSlide id="3">
-            <div class="card">
-                <h2>GirlyPop</h2>
-                <p>Contenu 3...</p>
-            </div>
-        </ng-template>
-
-        <ng-template ngbSlide id="4">
-            <div class="card">
-                <h2>Débutant</h2>
-                <p>Contenu 3...</p>
-            </div>
-        </ng-template>
+        @for(routine of routines; track routine) {
+            <ng-template ngbSlide [id]="routine.id">
+                <div class="p-4 carousel-item-content">
+                    <h2>{{ routine.name }}</h2>
+                    <p>{{ routine.description }}</p>
+                    <p class="text-gray">Jours de repos: {{ 7 - routine.activeDays}}</p>
+                </div>
+            </ng-template>
+        }
     </ngb-carousel>
 
-    <div class="mt-3">
-        <button class="btn btnPrimaire" (click)="ajouterRoutine(carousel)">Ajouter</button>
-        <button class="btn btnPrimaire" routerLink="/routine">retour</button>
+    <div class="mt-3 button-group">
+        <button class="btn btnPrimaire" (click)="ajouterRoutine(carousel)">
+            <i class="bi bi-plus-lg"></i>
+            Ajouter
+        </button>
+        <button class="btn btnPrimaire" routerLink="/routine">
+            <i class="bi bi-arrow-left"></i>
+            Retour
+        </button>
     </div>
 
     <div *ngIf="backendResponse" class="mt-2 alert alert-info">

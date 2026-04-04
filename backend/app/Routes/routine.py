@@ -13,6 +13,7 @@ from app.schemas import (
     RenameRoutineSchema,
     RoutineSchema,
     RoutinesResponseSchema,
+    RoutinePrefaitesResponseSchema,
     ValidationErrorSchema,
     RoutinePref,
 )
@@ -112,10 +113,17 @@ debutant = [
 ]
 
 ROUTINES_PREFAITES = {
-    1 : ("DwarfMaxingUltraXX", dwarfMaxing),
-    2 : ("OneFitMan", OneFitMan),
-    3 : ("GirlyPop",girlyPop),
-    3 : ("Débutant",debutant),
+    1 : ("DwarfMaxingUltraXX", dwarfMaxing,
+    "Une routine de niveau intermédiaire ultra boostée qui vous transformera en nain cubique."),
+
+    2 : ("OneFitMan", OneFitMan,
+    "Cette routine ne rigole pas. Mais vos ennemis ne rigoleront pas non plus devant votre corps de guerrier. Choisissez-la si vous êtes à la hauteur. Résultats garantis."),
+
+    3 : ("GirlyPop",girlyPop,
+    "Vous voulez avoir des gros bras sans vous casser la tête? GirlyPop est faite pour vous. PS: L'équipe OneFit ne saurait être tenue responsable d'un quelconque incident lié à l'usage de cette routine."),
+    
+    4 : ("Débutant",debutant,
+    "Pour ceux qui veulent se mettre au sport avec un emploi du temps serré. Cette routine de niveau débutant n'a que trois jours d'exercice : lundi pour les pectoraux et les triceps, le mercredi pour le dos et les biceps, et le vendredi pour les jambes et les épaules."),
 }
 
 def create_routine_for_user(user, routine_name):
@@ -282,14 +290,18 @@ def ajouterRoutinePrefaite(data):
     val = data["routine"]
     if val not in ROUTINES_PREFAITES:
         abort(404, message="Routine préfaite introuvable.")
-    name, exo = ROUTINES_PREFAITES[val]
+    name, exo, _ = ROUTINES_PREFAITES[val]
     create_routine_Pre(user, name, exo)
     return {"message": "Routine ajouté au votre"}
 
 @routineBLP.route("/getRoutinesPrefaites", methods=["GET"])
 @routineBLP.doc(security=[{"bearerAuth": []}])
-@routineBLP.response(200, RoutinesResponseSchema)
+@routineBLP.response(200, RoutinePrefaitesResponseSchema)
 @jwt_required()
 def getRoutinesPrefaites():
-    routines = [{"id": k, "name": v[0], "is_active": False} for k, v in ROUTINES_PREFAITES.items()]
+    routines = [{"id": k,
+                 "name": v[0],
+                 "description": v[2],
+                 "activeDays": sum(1 for day in v[1] if day)}
+                 for k, v in ROUTINES_PREFAITES.items()]
     return {"routines": routines}

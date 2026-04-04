@@ -1,0 +1,37 @@
+.carousel-control-prev,
+.carousel-control-next {
+    width: 0%;
+}
+
+.carousel-control-prev {
+    left: -5vh
+}
+
+.carousel-control-next {
+    right: -5vh
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background: none;
+}
+
+.carousel-control-prev-icon::before,
+.carousel-control-next-icon::before {
+    font-size: 2rem;
+    color: var(--blue1);
+}
+
+.carousel-control-prev-icon::before {
+    content: "<"; 
+}
+
+.carousel-control-next-icon::before {
+    content: ">";
+}
+
+.dark .carousel-control-prev-icon::before,
+.dark .carousel-control-next-icon::before {
+    color: var(--white3);
+}
+

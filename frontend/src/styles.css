@@ -9,6 +9,7 @@
 @import './styles/input.css';
 @import './styles/routines.css';
 @import './styles/compliance.css';
+@import './styles/carousel.css';
 
 /* style pour la page d'accueil */
 
@@ -197,6 +198,7 @@ main.hideScrolbar {
 a {
     color: var(--red1);
 }
+
 
 .dark a {
     color: var(--silver1);

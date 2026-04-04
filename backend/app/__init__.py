@@ -22,7 +22,7 @@ from flask_cors import CORS  # noqa: E402
 app = Flask(__name__)
 logger.info("Application Flask initialisée \n")
 
-CORS(app)
+CORS(app, origins=["http://localhost:4200"])
 logger.debug("CORS activé")
 app.config.from_object(Config)
 logger.debug("Configuration chargée depuis Config")

@@ -308,10 +308,17 @@ class RoutineSchema(Schema):
     name = _name()
     is_active = fields.Bool(required=True)
 
-
 class RoutinesResponseSchema(Schema):
     routines = fields.List(fields.Nested(RoutineSchema))
 
+class RoutinePrefaiteSchema(Schema):
+    id = _routine_id()
+    name = _name()
+    description = fields.Str(required=True)
+    activeDays = fields.Int(required=True)
+
+class RoutinePrefaitesResponseSchema(Schema):
+    routines = fields.List(fields.Nested(RoutinePrefaiteSchema))
 
 class PlannedExerciseSchema(Schema):
     seance_exercise_id = _seance_exercise_id()

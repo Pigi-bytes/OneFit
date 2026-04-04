@@ -18,11 +18,30 @@ export class RoutinePreFaite {
 
     currentSlide = 0; // index ou id de la slide active
     backendResponse = ""
+    routines : any[] = [];
 
     constructor(private not: Notification, private cdr: ChangeDetectorRef, private http: HttpClient, private erreur: Erreur) { }
 
+    ngOnInit() {
+        this.chargerRoutines();
+    }
+    
     slideChanged() {
         this.resetNotif();
+    }
+
+    chargerRoutines() {
+        this.http.get('http://127.0.0.1:5000/routine/getRoutinesPrefaites'
+            ).subscribe({
+                next: (res: any) => {
+                console.log('RESPONSE OK', res);
+                this.routines = res.routines;
+                this.backendResponse = res.message;
+                this.cdr.detectChanges();
+            },
+
+            error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
+        });
     }
 
     ajouterRoutine(carousel: any) {

@@ -127,7 +127,7 @@ export class ConfigurerExo {
                 this.backendResponse = res.message;
                 this.cdr.detectChanges();
                 if (!this.modifie) {
-                    localStorage.setItem("message", "ajouté avec succès");
+                    localStorage.setItem("message", "Exercice ajouté avec succès");
                     this.ei.triggerRefresh([Message.AFFICHER_SEANCE, null]);
 
                 }

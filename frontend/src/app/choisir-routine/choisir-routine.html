@@ -44,8 +44,15 @@
 
         <!-- Boutons -->
         <div class="button-group mt-4 text-center">
-            <button class="btn btnPrimaire me-2" (click)="creerRoutine()">Créer une routine</button>
-            <button type="button" class="btn btnPrimaire" routerLink="/routine">Retour</button>
+            <button class="btn btnPrimaire me-2" (click)="creerRoutine()">
+                <i class="bi bi-plus-lg"></i>
+                Créer une routine
+            </button>
+            
+            <button type="button" class="btn btnPrimaire" routerLink="/routine">
+                <i class="bi bi-arrow-left"></i>
+                Retour
+            </button>
         </div>
 
     </div>
