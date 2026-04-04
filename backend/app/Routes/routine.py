@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 
@@ -21,107 +24,31 @@ from app.utils.logger import QueryTimer, route_logger
 routineBLP = Blueprint("routine", __name__, url_prefix="/routine", description="Gestion des routines")
 
 
+def _loadRoutinePrefaites():
+    data = Path(__file__).resolve().parent.parent / "data" / "routines_prefaites.json"
+    with data.open("r", encoding="utf-8") as f:
+        data = json.load(f)
 
-dwarfMaxing = [
-    # Lundi
-    [
-        ("exr_41n2hxnFMotsXTj3", 4, 10, 60),  # Bench Press
-        ("exr_41n2hdkBpqwoDmVq", 4, 12, 40),  # Suspended Row
-        ("exr_41n2hgCHNgtVLHna", 3, 12, 12),  # Cross Body Hammer Curl
-        ("exr_41n2hndkoGHD1ogh", 3, 12, 0),   # Triceps Dip (poids du corps)
-    ],
-    # Mardi
-    [
-        ("exr_41n2hs6camM22yBG", 4, 10, 30),  # Seated Shoulder Press
-        ("exr_41n2hU4y6EaYXFhr", 4, 8,  0),   # Pull Up (poids du corps)
-        ("exr_41n2hxxePSdr5oN1", 4, 12, 60),  # Hip Thrust
-        ("exr_41n2hmbfYcYtedgz", 3, 15, 16),  # Dumbbell Glute Bridge
-    ],
-    # Mercredi - repos
-    [],
-    # Jeudi
-    [
-        ("exr_41n2hsVHu7B1MTdr", 4, 10, 20),  # Palms In Incline Bench Press
-        ("exr_41n2hQDiSwTZXM4F", 4, 12, 24),  # Goblet Squat
-        ("exr_41n2hQtaWxPLNFwX", 4, 15, 16),  # Dumbbell Standing Calf Raise
-        ("exr_41n2hUDuvCas2EB3",  3, 15, 10),  # Cable Seated Neck Flexion
-    ],
-    # Vendredi
-    [
-        ("exr_41n2hXszY7TgwKy4", 4, 8,  0),   # Chin Up (poids du corps)
-        ("exr_41n2hGioS8HumEF7", 3, 12, 14),  # Hammer Curl
-        ("exr_41n2hwoc6PkW1UJJ", 4, 15, 40),  # Barbell Standing Calf Raise
-        ("exr_41n2hrHSqBnVWRRB", 3, 10, 0),   # Bodyweight Single Leg Deadlift
-    ],
-    # Samedi - repos
-    [],
-    # Dimanche - repos
-    [],
-]
+    routines = {}
+    for key, value in data.items():
+        exo_par_jour = []
+        for day in value["days"]:
+            exo_par_jour.append(
+                [
+                    (
+                        exo["exercise_id"],
+                        exo["planned_sets"],
+                        exo["planned_reps"],
+                        exo["planned_weight"],
+                    )
+                    for exo in day
+                ]
+            )
+        routines[int(key)] = (value["name"], exo_par_jour, value["description"])
+    return routines
 
-OneFitMan = [
-    [
-        ("exr_41n2hNXJadYcfjnd", 4, 25, 0),
-        ("exr_41n2hQDiSwTZXM4F", 4, 25, 0),
-        ("exr_41n2hxnFMotsXTj3", 3, 15, 100),
-    ]
-    for _ in range(7)
-]
+ROUTINES_PREFAITES = _loadRoutinePrefaites()
 
-girlyPop = [
-    [("exr_41n2hGioS8HumEF7",  16, 1, 14)]  # Lundi - Hammer Curl (16 sets x 1 rep)
-    if i % 2 == 0 else
-    [("exr_41n2hndkoGHD1ogh", 17, 1, 0)]    # Triceps Dip
-    for i in range(7)
-]
-
-debutant = [
-    # Lundi
-    [
-        ("exr_41n2hxnFMotsXTj3", 4, 10, 20),  # Bench Press
-        ("exr_41n2hsVHu7B1MTdr", 2,10,20),  # incline Bench press
-        ("exr_41n2hndkoGHD1ogh", 3, 10,0), # tricep dip
-    ],
-
-    # Mardi
-    [],
-
-    # Mercredi
-    [
-        ("exr_41n2hftBVLiXgtRQ", 4, 10,0),  # wide grip pull up
-        ("exr_41n2hsVHu7B1MTdr", 3,10,20), # bent over row
-        ("exr_41n2hGioS8HumEF7", 3, 8, 10),  # Hammer Curl
-    ],
-
-    # Jeudi
-    [],
-
-    # Vendredi
-    [
-        ("exr_41n2hQtaWxPLNFwX", 4, 10, 10),  # Dumbbell Standing Calf Raise
-        ("exr_41n2hhiWL8njJDZe", 3,12, 20), # seated calf raise
-        ("exr_41n2hs6camM22yBG",  4, 8, 20), # shoulder press
-        ("exr_41n2hjuGpcex14w7",  3, 8, 5) # lateral raise
-    ],
-    # Samedi
-    [],
-    # Dimanche
-    []
-]
-
-ROUTINES_PREFAITES = {
-    1 : ("DwarfMaxingUltraXX", dwarfMaxing,
-    "Une routine de niveau intermédiaire ultra boostée qui vous transformera en nain cubique."),
-
-    2 : ("OneFitMan", OneFitMan,
-    "Cette routine ne rigole pas. Mais vos ennemis ne rigoleront pas non plus devant votre corps de guerrier. Choisissez-la si vous êtes à la hauteur. Résultats garantis."),
-
-    3 : ("GirlyPop",girlyPop,
-    "Vous voulez avoir des gros bras sans vous casser la tête? GirlyPop est faite pour vous. PS: L'équipe OneFit ne saurait être tenue responsable d'un quelconque incident lié à l'usage de cette routine."),
-    
-    4 : ("Débutant",debutant,
-    "Pour ceux qui veulent se mettre au sport avec un emploi du temps serré. Cette routine de niveau débutant n'a que trois jours d'exercice : lundi pour les pectoraux et les triceps, le mercredi pour le dos et les biceps, et le vendredi pour les jambes et les épaules."),
-}
 
 def create_routine_for_user(user, routine_name):
     routine = Routine(user_id=user.id, name=routine_name, is_active=False)
@@ -135,6 +62,7 @@ def create_routine_for_user(user, routine_name):
     db.session.commit()
     route_logger.info(f"ROUTINE CREATED | user_id={user.id} | routine_id={routine.id}")
     return routine
+
 
 def create_routine_Pre(user, routine_name, exo):
     routine = Routine(user_id=user.id, name=routine_name, is_active=False)
@@ -311,14 +239,14 @@ def ajouterRoutinePrefaite(data):
     create_routine_Pre(user, name, exo)
     return {"message": "Routine ajoutée à vos routines personnelles avec succès."}
 
+
 @routineBLP.route("/getRoutinesPrefaites", methods=["GET"])
 @routineBLP.doc(security=[{"bearerAuth": []}])
 @routineBLP.response(200, RoutinePrefaitesResponseSchema)
 @jwt_required()
 def getRoutinesPrefaites():
-    routines = [{"id": k,
-                 "name": v[0],
-                 "description": v[2],
-                 "activeDays": sum(1 for day in v[1] if day)}
-                 for k, v in ROUTINES_PREFAITES.items()]
+    routines = [
+        {"id": k, "name": v[0], "description": v[2], "activeDays": sum(1 for day in v[1] if day)}
+        for k, v in ROUTINES_PREFAITES.items()
+    ]
     return {"routines": routines}

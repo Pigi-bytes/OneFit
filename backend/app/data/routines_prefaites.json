@@ -1,0 +1,115 @@
+{
+  "1": {
+    "name": "DwarfMaxingUltraXX",
+    "description": "Une routine de niveau intermédiaire ultra boostee: On ne cherche pas a grandir, on cherche a se compacter : devenir un nain carre, sec et terriblement puissant.",
+    "days": [
+      [
+        {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 4, "planned_reps": 10, "planned_weight": 60},
+        {"exercise_id": "exr_41n2hdkBpqwoDmVq", "planned_sets": 4, "planned_reps": 12, "planned_weight": 40},
+        {"exercise_id": "exr_41n2hgCHNgtVLHna", "planned_sets": 3, "planned_reps": 12, "planned_weight": 12},
+        {"exercise_id": "exr_41n2hndkoGHD1ogh", "planned_sets": 3, "planned_reps": 12, "planned_weight": 0}
+      ],
+      [
+        {"exercise_id": "exr_41n2hs6camM22yBG", "planned_sets": 4, "planned_reps": 10, "planned_weight": 30},
+        {"exercise_id": "exr_41n2hU4y6EaYXFhr", "planned_sets": 4, "planned_reps": 8, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hxxePSdr5oN1", "planned_sets": 4, "planned_reps": 12, "planned_weight": 60},
+        {"exercise_id": "exr_41n2hmbfYcYtedgz", "planned_sets": 3, "planned_reps": 15, "planned_weight": 16}
+      ],
+      [],
+      [
+        {"exercise_id": "exr_41n2hsVHu7B1MTdr", "planned_sets": 4, "planned_reps": 10, "planned_weight": 20},
+        {"exercise_id": "exr_41n2hQDiSwTZXM4F", "planned_sets": 4, "planned_reps": 12, "planned_weight": 24},
+        {"exercise_id": "exr_41n2hQtaWxPLNFwX", "planned_sets": 4, "planned_reps": 15, "planned_weight": 16},
+        {"exercise_id": "exr_41n2hUDuvCas2EB3", "planned_sets": 3, "planned_reps": 15, "planned_weight": 10}
+      ],
+      [
+        {"exercise_id": "exr_41n2hXszY7TgwKy4", "planned_sets": 4, "planned_reps": 8, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hGioS8HumEF7", "planned_sets": 3, "planned_reps": 12, "planned_weight": 14},
+        {"exercise_id": "exr_41n2hwoc6PkW1UJJ", "planned_sets": 4, "planned_reps": 15, "planned_weight": 40},
+        {"exercise_id": "exr_41n2hrHSqBnVWRRB", "planned_sets": 3, "planned_reps": 10, "planned_weight": 0}
+      ],
+      [],
+      []
+    ]
+  },
+  "2": {
+    "name": "OneFitMan",
+    "description": "Cette routine ne rigole pas. Mais vos ennemis ne rigoleront pas non plus devant votre corps de guerrier. Choisissez-la si vous etes a la hauteur. Resultats garantis.",
+    "days": [
+      [
+        {"exercise_id": "exr_41n2hNXJadYcfjnd", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hQDiSwTZXM4F", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 3, "planned_reps": 15, "planned_weight": 100}
+      ],
+      [
+        {"exercise_id": "exr_41n2hNXJadYcfjnd", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hQDiSwTZXM4F", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 3, "planned_reps": 15, "planned_weight": 100}
+      ],
+      [
+        {"exercise_id": "exr_41n2hNXJadYcfjnd", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hQDiSwTZXM4F", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 3, "planned_reps": 15, "planned_weight": 100}
+      ],
+      [
+        {"exercise_id": "exr_41n2hNXJadYcfjnd", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hQDiSwTZXM4F", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 3, "planned_reps": 15, "planned_weight": 100}
+      ],
+      [
+        {"exercise_id": "exr_41n2hNXJadYcfjnd", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hQDiSwTZXM4F", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 3, "planned_reps": 15, "planned_weight": 100}
+      ],
+      [
+        {"exercise_id": "exr_41n2hNXJadYcfjnd", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hQDiSwTZXM4F", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 3, "planned_reps": 15, "planned_weight": 100}
+      ],
+      [
+        {"exercise_id": "exr_41n2hNXJadYcfjnd", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hQDiSwTZXM4F", "planned_sets": 4, "planned_reps": 25, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 3, "planned_reps": 15, "planned_weight": 100}
+      ]
+    ]
+  },
+  "3": {
+    "name": "GirlyPop",
+    "description": "Vous voulez avoir des gros bras sans vous casser la tete? GirlyPop est faite pour vous. PS: L'equipe OneFit ne saurait etre tenue responsable d'un quelconque incident lie a l'usage de cette routine.",
+    "days": [
+      [{"exercise_id": "exr_41n2hGioS8HumEF7", "planned_sets": 16, "planned_reps": 1, "planned_weight": 14}],
+      [{"exercise_id": "exr_41n2hndkoGHD1ogh", "planned_sets": 17, "planned_reps": 1, "planned_weight": 0}],
+      [{"exercise_id": "exr_41n2hGioS8HumEF7", "planned_sets": 16, "planned_reps": 1, "planned_weight": 14}],
+      [{"exercise_id": "exr_41n2hndkoGHD1ogh", "planned_sets": 17, "planned_reps": 1, "planned_weight": 0}],
+      [{"exercise_id": "exr_41n2hGioS8HumEF7", "planned_sets": 16, "planned_reps": 1, "planned_weight": 14}],
+      [{"exercise_id": "exr_41n2hndkoGHD1ogh", "planned_sets": 17, "planned_reps": 1, "planned_weight": 0}],
+      [{"exercise_id": "exr_41n2hGioS8HumEF7", "planned_sets": 16, "planned_reps": 1, "planned_weight": 14}]
+    ]
+  },
+  "4": {
+    "name": "Debutant",
+    "description": "Pour ceux qui veulent se mettre au sport avec un emploi du temps serre. Cette routine de niveau debutant n'a que trois jours d'exercice : lundi pour les pectoraux et les triceps, le mercredi pour le dos et les biceps, et le vendredi pour les jambes et les epaules.",
+    "days": [
+      [
+        {"exercise_id": "exr_41n2hxnFMotsXTj3", "planned_sets": 4, "planned_reps": 10, "planned_weight": 20},
+        {"exercise_id": "exr_41n2hsVHu7B1MTdr", "planned_sets": 2, "planned_reps": 10, "planned_weight": 20},
+        {"exercise_id": "exr_41n2hndkoGHD1ogh", "planned_sets": 3, "planned_reps": 10, "planned_weight": 0}
+      ],
+      [],
+      [
+        {"exercise_id": "exr_41n2hftBVLiXgtRQ", "planned_sets": 4, "planned_reps": 10, "planned_weight": 0},
+        {"exercise_id": "exr_41n2hsVHu7B1MTdr", "planned_sets": 3, "planned_reps": 10, "planned_weight": 20},
+        {"exercise_id": "exr_41n2hGioS8HumEF7", "planned_sets": 3, "planned_reps": 8, "planned_weight": 10}
+      ],
+      [],
+      [
+        {"exercise_id": "exr_41n2hQtaWxPLNFwX", "planned_sets": 4, "planned_reps": 10, "planned_weight": 10},
+        {"exercise_id": "exr_41n2hhiWL8njJDZe", "planned_sets": 3, "planned_reps": 12, "planned_weight": 20},
+        {"exercise_id": "exr_41n2hs6camM22yBG", "planned_sets": 4, "planned_reps": 8, "planned_weight": 20},
+        {"exercise_id": "exr_41n2hjuGpcex14w7", "planned_sets": 3, "planned_reps": 8, "planned_weight": 5}
+      ],
+      [],
+      []
+    ]
+  }
+}
