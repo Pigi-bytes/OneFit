@@ -23,6 +23,9 @@ export class Accueil {
     private cdr = inject(ChangeDetectorRef);
     private erreur = inject(Erreur);
 
+
+    repos: boolean = false;
+
     name = "";
 
     // Calendrier
@@ -102,6 +105,18 @@ export class Accueil {
 
 
         if (isPlatformBrowser(this.platformId)) {
+            const now = new Date();
+            let jour = "";
+            switch (now.getDay()) {
+                case 0: jour = "Dimanche"; break;
+                case 1: jour = "Lundi"; break;
+                case 2: jour = "Mardi"; break;
+                case 3: jour = "Mercredi"; break;
+                case 4: jour = "Jeudi"; break;
+                case 5: jour = "Vendredi"; break;
+                case 6: jour = "Samedi"; break;
+            }
+            localStorage.setItem("jour", jour);
             localStorage.removeItem("exoCourrant");
             localStorage.setItem("noRecap", "true");
             const token = localStorage.getItem('access_token');
@@ -112,6 +127,7 @@ export class Accueil {
             }
 
             this.getUserName();
+            this.getSeance();
         }
         this.recupStrick();
     }
@@ -130,18 +146,7 @@ export class Accueil {
     commencerSeance() {
         localStorage.removeItem("seanceEnCours");
         localStorage.removeItem("seanceFini");
-        const now = new Date();
-        let jour = "";
-        switch (now.getDay()) {
-            case 0: jour = "Dimanche"; break;
-            case 1: jour = "Lundi"; break;
-            case 2: jour = "Mardi"; break;
-            case 3: jour = "Mercredi"; break;
-            case 4: jour = "Jeudi"; break;
-            case 5: jour = "Vendredi"; break;
-            case 6: jour = "Samedi"; break;
-        }
-        localStorage.setItem("jour", jour);
+
         localStorage.removeItem("coteExo");
         localStorage.removeItem("coteRecap");
         localStorage.removeItem("noRecap");
@@ -163,9 +168,9 @@ export class Accueil {
                 this.cdr.detectChanges();
             },
 
+
             error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
         });
-
     }
 
     dejaEffectue() {
@@ -179,6 +184,27 @@ export class Accueil {
         const date = `${year}-${month}-${day}`;
 
         return this.allDate.includes(date);
+
+    }
+
+    getSeance() {
+        this.http.post('http://127.0.0.1:5000/seance/getSeanceDuJour', {
+            routine_id: -1,
+            day: localStorage.getItem("jour"),
+
+        }).subscribe({
+            next: (res: any) => {
+                console.log('RESPONSE OK', res.seance.title);
+
+                if (res.seance.title === "Jour de Repos") {
+
+                    this.repos = true;
+                }
+
+
+            },
+            error: (err: any) => { this.backendResponse = this.erreur.erreur(err); this.cdr.detectChanges(); }
+        });
 
     }
 }

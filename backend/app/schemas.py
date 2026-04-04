@@ -432,4 +432,11 @@ class MailSchema(Schema):
 class RoutinePref(Schema):
     routine = _routine_pref()
 
-    
+
+
+
+
+class ReposSchema(Schema):
+    routine_id = _routine()
+    day = _day()
+    date = fields.Date(required=True)  

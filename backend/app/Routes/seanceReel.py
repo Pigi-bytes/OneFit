@@ -17,6 +17,7 @@ from app.schemas import (
     StartEndSeanceEffectueeSchema,
     TimeTotakSchema,
     ValidationErrorSchema,
+    ReposSchema,
 )
 from app.utils.logger import QueryTimer, route_logger
 
@@ -171,7 +172,7 @@ def abandonSeanceReelle():
 
 
 @seanceReelleBLP.route("/enregSceanceRepos", methods=["POST"])
-@seanceReelleBLP.arguments(StartEndSeanceEffectueeSchema)
+@seanceReelleBLP.arguments(ReposSchema)
 @seanceReelleBLP.doc(security=[{"bearerAuth": []}])
 @seanceReelleBLP.response(200, MessageSchema)
 @seanceReelleBLP.alt_response(404, schema=BaseErrorSchema, description="Aucune séance en cours")
@@ -182,9 +183,7 @@ def enrgRepo(data):
     seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
 
     # Récupérer la session active
-    sceance = WorkoutSession(
-        user_id=user.id, seance_id=seance.id, started_at=datetime.utcnow(),ended_at = datetime.utcnow()
-    ) 
+    sceance = WorkoutSession(user_id=user.id,seance_id=seance.id,started_at=data["date"],ended_at=data["date"])
 
     addAndCommit(sceance, "commitRepos")
 

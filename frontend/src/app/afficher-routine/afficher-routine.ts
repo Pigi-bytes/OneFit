@@ -17,7 +17,7 @@ import { Erreur } from '../erreur';
     styleUrl: './afficher-routine.css',
 })
 export class AfficherRoutine {
-    constructor(private http: HttpClient,private erreur: Erreur, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
+    constructor(private http: HttpClient, private erreur: Erreur, private router: Router, private cdr: ChangeDetectorRef, private not: Notification, private ei: EnvoyerElt) { }
     backendResponse = "";
     id = null;
     routine: any;
@@ -40,7 +40,7 @@ export class AfficherRoutine {
         this.id = id.toString();
     }
 
-    chargerInfosRoutines(){
+    chargerInfosRoutines() {
         this.http.post('http://127.0.0.1:5000/routine/getRoutine', {
             routine_id: this.id,
         }).subscribe({
@@ -65,6 +65,7 @@ export class AfficherRoutine {
                 console.log('RESPONSE OK', res);
                 this.seances = res.seances;
                 this.backendResponse = res.message;
+
                 this.cdr.detectChanges();
             },
 
@@ -97,7 +98,7 @@ export class AfficherRoutine {
         });
     }
 
-    activerRoutine(){
+    activerRoutine() {
         this.http.post('http://127.0.0.1:5000/routine/activerRoutine', {
             routine_id: this.id,
         }).subscribe({
@@ -137,10 +138,10 @@ export class AfficherRoutine {
         });
     }
 
-    supprimerRoutine(){
+    supprimerRoutine() {
         const confirmAction = confirm("Voulez-vous vraiment supprimer cette routine ?");
 
-        if (confirmAction){
+        if (confirmAction) {
             this.http.delete('http://127.0.0.1:5000/routine/supprimerRoutine', {
                 body: {
                     routine_id: this.id
@@ -159,12 +160,12 @@ export class AfficherRoutine {
         }
     }
 
-    ouvrirFormulaireRenommerRoutine(){
+    ouvrirFormulaireRenommerRoutine() {
         this.is_renaming = true;
         this.cdr.detectChanges();
     }
 
-    renommerRoutine(){
+    renommerRoutine() {
         this.http.post('http://127.0.0.1:5000/routine/modiferNomRoutine', {
             routine_id: this.id,
             name: this.routine_nom
@@ -205,6 +206,6 @@ export class AfficherRoutine {
             }
         });
     }
-    
+
 
 }

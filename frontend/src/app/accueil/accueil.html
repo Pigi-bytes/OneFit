@@ -6,8 +6,9 @@
         </div>
 
         <div class="hero-actions button-group">
-            <button class="btn btnPrimaire" (click)="commencerSeance()" [disabled]="didSessionToday">
-                <i class="bi bi-play-fill"></i> {{ didSessionToday ? 'Séance déjà validée' : 'Commencer une séance' }}
+            <button class="btn btnPrimaire" (click)="commencerSeance()" [disabled]="didSessionToday || repos">
+                <i class=" bi bi-play-fill"></i> {{ didSessionToday ? 'Séance déjà validée' : repos ? 'jour de repos' :
+                'Commencer une séance' }}
             </button>
 
             <button class="btn btnTertiaire" routerLink="/routine">
@@ -24,7 +25,7 @@
         <article class="card stat-item">
             <p class="stat-label">Ce mois-ci</p>
             <p class="stat-value">{{ sessionsThisMonth }}</p>
-        </article>  
+        </article>
     </section>
 
     <section class="card calendar-panel">
@@ -36,7 +37,7 @@
                 <button (click)="prevMonth()" class="btn btnPrimaire btnIcon" aria-label="Mois précédent">
                     <i class="bi bi-chevron-left"></i>
                 </button>
-                
+
                 <span class="month-label">{{ monthLabel }}</span>
 
                 <button (click)="nextMonth()" class="btn btnPrimaire btnIcon" aria-label="Mois suivant">
@@ -56,7 +57,8 @@
             <span class="jour-semaine">Dim</span>
 
             @for (day of calendarDays; track $index) {
-            <button type="button" class="day-cell" [class.actif]="verifStreak(day)" [class.today]="isToday(day)" [class.vide]="!day" [disabled]="!day">
+            <button type="button" class="day-cell" [class.actif]="verifStreak(day)" [class.today]="isToday(day)"
+                [class.vide]="!day" [disabled]="!day">
                 {{ day ?? '' }}
             </button>
             }

@@ -240,9 +240,13 @@ def supprimer_utilisateur():
     route_logger.warning(f"USER DELETE | Suppression du compte | user_id={user_id} username={username}")
 
     with QueryTimer("deleteUser"):
+        # Supprimer les données liées d'abord
+        WorkoutLog.query.filter_by(user_id=user_id).delete()
+        WorkoutSession.query.filter_by(user_id=user_id).delete()
+        HistoriquePoids.query.filter_by(user_id=user_id).delete()
+        
         db.session.delete(user)
         db.session.commit()
-
     route_logger.info(f"USER DELETE | user_id={user_id} username={username}")
     return {"message": "Utilisateur supprimé avec succès"}
 

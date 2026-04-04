@@ -30,6 +30,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
     seconde = 0;
     temps: string = "00:00:00";
     backendResponse = "";
+    seances: any;
 
     coteExo: boolean = false;
     coteRecap: boolean = false;
@@ -60,7 +61,6 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
         this.subscription = this.elt.afficheExercice$.subscribe((id) => {
             if (id[0] === Message.ENR_REPOS) {
                 this.isRunning = false;
-                this.enregRepos();
                 this.stopChrono();
                 this.resetChrono();
             } else if (id[0] === Message.CHRONO_EXO) {
@@ -197,14 +197,49 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
     }
 
     finirEnrgSceance() {
-        this.http.post('http://127.0.0.1:5000/seanceReelle/endSeanceEffectuee', {
+
+        this.http.post('http://127.0.0.1:5000/seance/getSeancesPrevu', {
             routine_id: -1,
-            day: localStorage.getItem("jour"),
 
         }).subscribe({
             next: (res: any) => {
+                this.seances = res.seances;
                 console.log('RESPONSE OK', res);
-                this.backendResponse = res.message;;
+
+                const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+                const jourActuel = localStorage.getItem("jour");
+                const indexActuel = jours.indexOf(jourActuel!);
+
+                for (let i = 1; i < jours.length; i++) {
+                    const index = (indexActuel - i + 7) % 7;
+                    const jourCible = jours[index];
+
+                    const seance = this.seances.find((s: any) => s.day === jourCible);
+
+                    if (seance?.title === "Jour de Repos") {
+                        const today = new Date();
+                        today.setDate(today.getDate() - i);
+                        const date = today.toISOString().split('T')[0];
+
+                        this.enregRepos(jourCible, date);
+                    } else {
+                        break; // On arrête dès qu'on tombe sur une vraie séance
+                    }
+                }
+                this.http.post('http://127.0.0.1:5000/seanceReelle/endSeanceEffectuee', {
+                    routine_id: -1,
+                    day: localStorage.getItem("jour"),
+
+                }).subscribe({
+                    next: (res: any) => {
+                        console.log('RESPONSE OK', res);
+                        this.backendResponse = res.message;;
+                    },
+
+                    error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
+
+                });
+
             },
 
             error: (err: any) => { this.backendResponse = this.er.erreur(err); this.cdr.detectChanges(); }
@@ -214,10 +249,11 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
     }
 
 
-    enregRepos() {
+    enregRepos(day: any, date: any) {
         this.http.post('http://127.0.0.1:5000/seanceReelle/enregSceanceRepos', {
             routine_id: -1,
-            day: localStorage.getItem("jour"),
+            day: day,
+            date: date,
 
         }).subscribe({
             next: (res: any) => {
