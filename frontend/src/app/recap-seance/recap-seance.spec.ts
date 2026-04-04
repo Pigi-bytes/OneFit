@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RecapSceance } from './recap-sceance';
+import { RecapSeance } from './recap-seance';
 
-describe('RecapSceance', () => {
-  let component: RecapSceance;
-  let fixture: ComponentFixture<RecapSceance>;
+describe('RecapSeance', () => {
+  let component: RecapSeance;
+  let fixture: ComponentFixture<RecapSeance>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RecapSceance]
+      imports: [RecapSeance]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RecapSceance);
+    fixture = TestBed.createComponent(RecapSeance);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

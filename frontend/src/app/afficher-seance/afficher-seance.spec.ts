@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AfficheSceance } from './afficher-seance';
+import { AfficheSeance } from './afficher-seance';
 
-describe('AfficheSceance', () => {
-  let component: AfficheSceance;
-  let fixture: ComponentFixture<AfficheSceance>;
+describe('AfficheSeance', () => {
+  let component: AfficheSeance;
+  let fixture: ComponentFixture<AfficheSeance>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AfficheSceance]
+      imports: [AfficheSeance]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AfficheSceance);
+    fixture = TestBed.createComponent(AfficheSeance);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

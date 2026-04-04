@@ -12,12 +12,12 @@ import { CommonModule } from '@angular/common';
 import { Erreur } from '../erreur';
 
 @Component({
-    selector: 'app-recap-sceance',
+    selector: 'app-recap-seance',
     imports: [Chrono, RouterModule, CommonModule],
-    templateUrl: './recap-sceance.html',
-    styleUrl: './recap-sceance.css',
+    templateUrl: './recap-seance.html',
+    styleUrl: './recap-seance.css',
 })
-export class RecapSceance {
+export class RecapSeance {
     name: any
     private platformId = inject(PLATFORM_ID);
     exercices: any[] = [];
