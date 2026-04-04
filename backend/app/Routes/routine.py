@@ -111,7 +111,7 @@ debutant = [
 
 ROUTINES_PREFAITES = {
     1 : ("DwarfMaxingUltraXX", dwarfMaxing,
-    "Une routine de niveau intermédiaire ultra boostée qui vous transformera en nain cubique."),
+    "Une routine de niveau intermédiaire ultra boostée. On ne cherche pas à grandir, on cherche à se compacter : devenir un nain carré, sec et terriblement puissant."),
 
     2 : ("OneFitMan", OneFitMan,
     "Cette routine ne rigole pas. Mais vos ennemis ne rigoleront pas non plus devant votre corps de guerrier. Choisissez-la si vous êtes à la hauteur. Résultats garantis."),
