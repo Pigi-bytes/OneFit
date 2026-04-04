@@ -82,7 +82,6 @@ debutant = [
         ("exr_41n2hxnFMotsXTj3", 4, 10, 20),  # Bench Press
         ("exr_41n2hsVHu7B1MTdr", 2,10,20),  # incline Bench press
         ("exr_41n2hndkoGHD1ogh", 3, 10,0), # tricep dip
-        ("exr_41n2hdHtZrMPkcqY", 3, 10,20), # tricep extension
     ],
 
     # Mardi
@@ -91,8 +90,7 @@ debutant = [
     # Mercredi
     [
         ("exr_41n2hftBVLiXgtRQ", 4, 10,0),  # wide grip pull up
-        ("exr_41n2hcFJpBvAkXCP", 3,12,0), # seated row with towel
-        ("exr_41n2hY9EdwkdGz9a", 3,10,20), # bent over row
+        ("exr_41n2hsVHu7B1MTdr", 3,10,20), # bent over row
         ("exr_41n2hGioS8HumEF7", 3, 8, 10),  # Hammer Curl
     ],
 
