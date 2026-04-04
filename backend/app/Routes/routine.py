@@ -290,7 +290,7 @@ def ajouterRoutinePrefaite(data):
         abort(404, message="Routine préfaite introuvable.")
     name, exo, _ = ROUTINES_PREFAITES[val]
     create_routine_Pre(user, name, exo)
-    return {"message": "Routine ajouté au votre"}
+    return {"message": "Routine ajoutée à vos routines personnelles avec succès."}
 
 @routineBLP.route("/getRoutinesPrefaites", methods=["GET"])
 @routineBLP.doc(security=[{"bearerAuth": []}])
