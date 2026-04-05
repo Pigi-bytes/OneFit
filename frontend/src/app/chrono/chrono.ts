@@ -210,7 +210,8 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                 const jourActuel = localStorage.getItem("jour");
                 const indexActuel = jours.indexOf(jourActuel!);
 
-                for (let i = 1; i < jours.length; i++) {
+                let boucle = true;
+                for (let i = 1; i < jours.length && boucle; i++) {
                     const index = (indexActuel - i + 7) % 7;
                     const jourCible = jours[index];
 
@@ -223,7 +224,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
 
                         this.enregRepos(jourCible, date);
                     } else {
-                        break; // On arrête dès qu'on tombe sur une vraie séance
+                        boucle = false; // On arrête dès qu'on tombe sur une vraie séance
                     }
                 }
                 this.http.post('http://127.0.0.1:5000/seanceReelle/endSeanceEffectuee', {
