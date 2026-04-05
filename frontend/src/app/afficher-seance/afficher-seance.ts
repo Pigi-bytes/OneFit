@@ -19,7 +19,7 @@ import { Erreur } from '../erreur';
     templateUrl: './afficher-seance.html',
     styleUrls: ['./afficher-seance.css'],
 })
-export class AfficheSceance implements OnInit {
+export class AfficheSeance implements OnInit {
 
     private subscription?: Subscription;
     private platformId = inject(PLATFORM_ID);
@@ -52,7 +52,7 @@ export class AfficheSceance implements OnInit {
 
 
         this.subscriptions.push(
-            this.ei.commencerSceance$.subscribe(() => {
+            this.ei.commencerSeance$.subscribe(() => {
                 this.commencerSeance = true;
                 localStorage.setItem("lastMessage", Message.SEANCE_EN_COURS.toString());
             })

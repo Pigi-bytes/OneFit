@@ -17,7 +17,7 @@ export class EnvoyerElt {
     private exerciceBlocked: boolean = true;
 
     afficheExercice$ = this.afficheExercice.asObservable();
-    commencerSceance$ = this.commencerSeance.asObservable();
+    commencerSeance$ = this.commencerSeance.asObservable();
     exercices$ = this.exercicesSubject.asObservable();
 
     private exercices: any[] = []; // tableau interne
@@ -51,7 +51,7 @@ export class EnvoyerElt {
     blockSeance() {
         this.blocked = true;
         this.commencerSeance = new ReplaySubject<void>(1);
-        this.commencerSceance$ = this.commencerSeance.asObservable();
+        this.commencerSeance$ = this.commencerSeance.asObservable();
     }
 
     unblockSeance() {

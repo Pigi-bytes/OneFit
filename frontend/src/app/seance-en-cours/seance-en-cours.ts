@@ -2,12 +2,12 @@ import { Component, Inject, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { AfficheSceance } from '../afficher-seance/afficher-seance';
+import { AfficheSeance } from '../afficher-seance/afficher-seance';
 import { Chrono } from '../chrono/chrono';
 
 @Component({
     selector: 'app-seance-en-cours',
-    imports: [Chrono, AfficheSceance],
+    imports: [Chrono, AfficheSeance],
     templateUrl: './seance-en-cours.html',
     styleUrl: './seance-en-cours.css',
 })

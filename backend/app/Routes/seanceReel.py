@@ -171,7 +171,7 @@ def abandonSeanceReelle():
 
 
 
-@seanceReelleBLP.route("/enregSceanceRepos", methods=["POST"])
+@seanceReelleBLP.route("/enregSeanceRepos", methods=["POST"])
 @seanceReelleBLP.arguments(ReposSchema)
 @seanceReelleBLP.doc(security=[{"bearerAuth": []}])
 @seanceReelleBLP.response(200, MessageSchema)
@@ -183,8 +183,8 @@ def enrgRepo(data):
     seance = getSeanceForRoutineAndDayOrAbort404(routine, data["day"])
 
     # Récupérer la session active
-    sceance = WorkoutSession(user_id=user.id,seance_id=seance.id,started_at=data["date"],ended_at=data["date"])
+    seance = WorkoutSession(user_id=user.id,seance_id=seance.id,started_at=data["date"],ended_at=data["date"])
 
-    addAndCommit(sceance, "commitRepos")
+    addAndCommit(seance, "commitRepos")
 
     return {"message": "Repos bien enregistré!"}

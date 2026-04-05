@@ -19,7 +19,7 @@ import { RoutinesPersos } from './routines-persos/routines-persos';
 import { Seance } from './seance/seance';
 import { ExerciceEnCours } from './exercice-en-cours/exercice-en-cours';
 import { SeanceEnCours } from './seance-en-cours/seance-en-cours';
-import { RecapSceance } from './recap-sceance/recap-sceance';
+import { RecapSeance } from './recap-seance/recap-seance';
 import { Statistique } from './statistique/statistique';
 import { Contact } from './contact/contact';
 import { Compliance } from './compliance/compliance';
@@ -48,7 +48,7 @@ export const routes: Routes = [
     { path: "seance", component: Seance },
     { path: "exercice-en-cours", component: ExerciceEnCours, data: { hideMenu: true } },
     { path: "seance-en-cours", component: SeanceEnCours, data: { hideMenu: true } },
-    { path: "recap-seance", component: RecapSceance, data: { hideMenu: true } },
+    { path: "recap-seance", component: RecapSeance, data: { hideMenu: true } },
     { path: "statistique", component: Statistique },
     { path: "contact", component: Contact },
     { path: "mentions-legales", component: MentionsLegales },

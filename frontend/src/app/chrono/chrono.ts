@@ -82,7 +82,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
                 if (isPlatformBrowser(this.platformId)) {
                     localStorage.setItem("seanceFini", "fini");
                 }
-                this.finirEnrgSceance();
+                this.finirEnrgSeance();
 
 
                 this.isRunning = false;
@@ -196,7 +196,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    finirEnrgSceance() {
+    finirEnrgSeance() {
 
         this.http.post('http://127.0.0.1:5000/seance/getSeancesPrevu', {
             routine_id: -1,
@@ -250,7 +250,7 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
 
 
     enregRepos(day: any, date: any) {
-        this.http.post('http://127.0.0.1:5000/seanceReelle/enregSceanceRepos', {
+        this.http.post('http://127.0.0.1:5000/seanceReelle/enregSeanceRepos', {
             routine_id: -1,
             day: day,
             date: date,
