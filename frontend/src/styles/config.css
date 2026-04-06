@@ -1,0 +1,54 @@
+.config-shell {
+	width: min(560px, 80%);
+	padding: 1.3rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+}
+
+.config-preview {
+	width: 100%;
+	overflow-y: auto;
+	max-height: 80vh;
+	padding: 1rem;
+}
+
+.config-preview.empty {
+	border-style: dashed;
+	border-width: 2px;
+}
+
+.preview-image {
+	width: 100%;
+	object-fit: cover;
+	border-radius: 14px;
+}
+
+.config-form {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.field-row {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	text-align: left;
+    font-weight: 600;
+
+}
+
+.action-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.55rem;
+	margin-top: 0.25rem;
+}
+
+.action-row .btn {
+	flex: 1;
+	min-width: 140px;
+}
