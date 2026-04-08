@@ -26,6 +26,9 @@ export class AfficherRoutine {
     private subscription?: Subscription;
     is_renaming = false;
 
+    /**
+     * Initialise le composant : configure l'abonnement et charge les données de la routine
+     */
     ngOnInit() {
         this.seances = null;
         this.subscription = this.ei.afficheExercice$.subscribe((id) => {
@@ -36,10 +39,17 @@ export class AfficherRoutine {
         });
     }
 
+    /**
+     * Modifie l'ID de la routine
+     * @param id Nouvel ID de la routine
+     */
     modifId(id: any) {
         this.id = id.toString();
     }
 
+    /**
+     * Charge les informations de la routine depuis le backend
+     */
     chargerInfosRoutines() {
         this.http.post('http://127.0.0.1:5000/routine/getRoutine', {
             routine_id: this.id,
@@ -56,6 +66,9 @@ export class AfficherRoutine {
         });
     }
 
+    /**
+     * Charge les séances prévues pour la routine
+     */
     chargerSeances() {
         this.http.post('http://127.0.0.1:5000/seance/getSeancesPrevu', {
             routine_id: this.id,
@@ -98,6 +111,9 @@ export class AfficherRoutine {
         });
     }
 
+    /**
+     * Active la routine sélectionnée
+     */
     activerRoutine() {
         this.http.post('http://127.0.0.1:5000/routine/activerRoutine', {
             routine_id: this.id,
@@ -138,6 +154,9 @@ export class AfficherRoutine {
         });
     }
 
+    /**
+     * Supprime la routine après confirmation
+     */
     supprimerRoutine() {
         const confirmAction = confirm("Voulez-vous vraiment supprimer cette routine ?");
 
@@ -160,11 +179,17 @@ export class AfficherRoutine {
         }
     }
 
+    /**
+     * Ouvre le formulaire de renommage de la routine
+     */
     ouvrirFormulaireRenommerRoutine() {
         this.is_renaming = true;
         this.cdr.detectChanges();
     }
 
+    /**
+     * Renomme la routine avec le nouveau nom fourni
+     */
     renommerRoutine() {
         this.http.post('http://127.0.0.1:5000/routine/modiferNomRoutine', {
             routine_id: this.id,

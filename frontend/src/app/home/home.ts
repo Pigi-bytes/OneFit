@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Theme } from '../theme';
 
+// Composant de la page d'accueil principale
 @Component({
     selector: 'app-home',
     imports: [RouterModule],
@@ -15,6 +16,9 @@ export class Home implements OnInit {
 
     isDark = false;
 
+    /**
+     * Initialise le composant : vérifie le thème sombre
+     */
     ngOnInit() {
         this.isDark = this.theme.isItDark();
     }

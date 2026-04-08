@@ -37,6 +37,9 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
 
     private intervalId: any;
 
+    /**
+     * Initialise le chronomètre : restaure l'état sauvegardé et configure les abonnements
+     */
     ngOnInit() {
         this.coteExo = false;
         this.coteRecap = false;
@@ -103,16 +106,26 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
 
         });
     }
+
+    /**
+     * Démarre le chronomètre après l'initialisation de la vue
+     */
     ngAfterViewInit() {
         if (isPlatformBrowser(this.platformId) && this.isRunning) {
             this.startChrono();
         }
     }
 
+    /**
+     * Nettoie les ressources lors de la destruction du composant
+     */
     ngOnDestroy() {
         this.stopChrono();
     }
 
+    /**
+     * Démarre le chronomètre
+     */
     private startChrono() {
         if (!isPlatformBrowser(this.platformId)) return;
         if (!this.intervalId) {
@@ -120,6 +133,9 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * Arrête le chronomètre
+     */
     private stopChrono() {
         if (this.intervalId) {
             clearInterval(this.intervalId);
@@ -127,6 +143,9 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * Met à jour le temps chaque seconde
+     */
     private tick() {
         this.seconde++;
         if (this.seconde >= 60) { this.seconde = 0; this.minute++; }
@@ -139,16 +158,25 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * Met à jour la chaîne de temps formatée
+     */
     private updateTemps() {
         this.temps = [this.heure, this.minute, this.seconde]
             .map(v => String(v).padStart(2, '0'))
             .join(':');
     }
 
+    /**
+     * Réinitialise le chronomètre
+     */
     private resetChrono() {
         localStorage.removeItem("chronoTemps");
     }
 
+    /**
+     * Gère le retour : revient à la séance ou abandonne
+     */
     retour() {
         if (this.coteExo) {
             this.elt.triggerRefresh([Message.SEANCE_EN_COURS]);
@@ -178,7 +206,9 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-
+    /**
+     * Commence l'enregistrement de la séance
+     */
     commencerEnrgScenace() {
         this.http.post('http://127.0.0.1:5000/seanceReelle/startSeanceEffectuee', {
             routine_id: -1,
@@ -196,6 +226,9 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
+    /**
+     * Termine l'enregistrement de la séance et enregistre les jours de repos
+     */
     finirEnrgSeance() {
 
         this.http.post('http://127.0.0.1:5000/seance/getSeancesPrevu', {
@@ -250,6 +283,11 @@ export class Chrono implements OnInit, AfterViewInit, OnDestroy {
     }
 
 
+    /**
+     * Enregistre une séance de repos pour un jour donné
+     * @param day Jour de la semaine
+     * @param date Date au format YYYY-MM-DD
+     */
     enregRepos(day: any, date: any) {
         this.http.post('http://127.0.0.1:5000/seanceReelle/enregSeanceRepos', {
             routine_id: -1,

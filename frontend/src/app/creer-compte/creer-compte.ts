@@ -25,8 +25,13 @@ export class CreerCompte {
     isDark = false;
 
     constructor(private http: HttpClient, private router: Router, private erreur: Erreur,
-                private cdr: ChangeDetectorRef, private not: Notification, private theme: Theme) { }
+        private cdr: ChangeDetectorRef, private not: Notification, private theme: Theme) { }
 
+    /**
+     * Crée un nouveau compte utilisateur
+     * Vérifie la conformité et la correspondance des mots de passe
+     * Effectue l'inscription puis la connexion automatique
+     */
     creer() {
         if (!this.acceptedCompliance) {
             this.backendResponse = 'Vous devez accepter la politique de conformité avant de créer un compte.';
@@ -64,10 +69,16 @@ export class CreerCompte {
 
     }
 
+    /**
+     * Réinitialise les notifications
+     */
     resetNotif() {
         this.not.reset(this, this.cdr);
     }
 
+    /**
+     * Initialise le composant, vérifie le thème sombre
+     */
     ngOnInit() {
         this.isDark = this.theme.isItDark();
     }

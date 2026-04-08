@@ -40,14 +40,23 @@ export class Accueil {
     allDate: string[] = [];
 
 
+    /**
+     * formatage du mois
+     */
     get monthLabel(): string {
         return this.currentMonth.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
     }
 
+    /**
+     * avoir le nombre de sessions réalisées
+     */
     get totalSessions(): number {
         return this.allDate.length;
     }
 
+    /**
+     * avoir le nombre de sessions réalisées durant le mois
+     */
     get sessionsThisMonth(): number {
         const year = this.currentMonth.getFullYear();
         const month = String(this.currentMonth.getMonth() + 1).padStart(2, '0');
@@ -55,10 +64,16 @@ export class Accueil {
         return this.allDate.filter((date) => typeof date === 'string' && date.startsWith(prefix)).length;
     }
 
+    /**
+     * est-ce que la séance a déjà été réalisée
+     */
     get didSessionToday(): boolean {
         return this.dejaEffectue();
     }
 
+    /**
+     * obtenir le calendrier
+     */
     get calendarDays(): (number | null)[] {
         const year = this.currentMonth.getFullYear();
         const month = this.currentMonth.getMonth();
@@ -72,6 +87,11 @@ export class Accueil {
         return days;
     }
 
+    /**
+     * Est-ce que le jour correspond à aujourd'hui
+     * @param day le jour
+     * @returns true si le jour est aujourd'hui
+     */
     isToday(day: number | null): boolean {
         if (!day) return false;
         return day === this.today.getDate()
@@ -79,14 +99,25 @@ export class Accueil {
             && this.currentMonth.getFullYear() === this.today.getFullYear();
     }
 
+    /**
+     * mois précédent
+     */
     prevMonth() {
         this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1, 1);
     }
 
+    /**
+     * mois suivant
+     */
     nextMonth() {
         this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1);
     }
 
+    /**
+     * vérifier la streak
+     * @param day un jour
+     * @returns true si la streak est maintenue
+     */
     verifStreak(day: number | null) {
         if (!day) return false;
 
@@ -100,6 +131,7 @@ export class Accueil {
         return this.allDate.includes(date);
     }
 
+    // initialisation
     ngOnInit() {
 
 
@@ -132,17 +164,20 @@ export class Accueil {
         this.recupStrick();
     }
 
+    // récupérer le nom d'utilisateur
     getUserName() {
         this.http.get<any>('http://127.0.0.1:5000/user/user').pipe(take(1)).subscribe(res => {
             this.name = res.username;
         });
     }
 
+    // se déconnecter
     deconnexion() {
         localStorage.removeItem("access_token");
         this.router.navigate(['']);
     }
 
+    // commencer une séance
     commencerSeance() {
         localStorage.removeItem("seanceEnCours");
         localStorage.removeItem("seanceFini");
@@ -158,6 +193,7 @@ export class Accueil {
         this.router.navigate(['/seance-en-cours']);
     }
 
+    // récupérer la streak
     recupStrick() {
         this.http.get('http://127.0.0.1:5000/user/getStreak', {}).subscribe({
 
@@ -173,6 +209,7 @@ export class Accueil {
         });
     }
 
+    // est-ce que la séance est déjà effectuée
     dejaEffectue() {
 
         const d = new Date();
@@ -187,6 +224,7 @@ export class Accueil {
 
     }
 
+    // obtenir la séance du jour
     getSeance() {
         this.http.post('http://127.0.0.1:5000/seance/getSeanceDuJour', {
             routine_id: -1,
