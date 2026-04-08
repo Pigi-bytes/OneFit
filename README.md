@@ -90,3 +90,30 @@ uv run flask [--debug] drop-requestlog
 
 
 ## Frontend
+
+### 1. Prerequis
+- node.js
+-- télechargable depuis le site de  [Node.js](https://nodejs.org/en/) (sélectionner la version de votre os)
+-- vérifier l'installation : 
+```bash
+Node --version
+npm --version
+```
+
+- Angular
+```bash
+npm install -g @angular/cli
+```
+### 2. Lancement du serveur
+
+- déplacement dans le dossier frontend
+```bash
+cd frontend
+```
+
+- lancer le serveur
+```bash
+ng serve
+```
+
+Bravo vous avez lancé la meilleur application de suivit de sport.
