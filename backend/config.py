@@ -22,10 +22,8 @@ class Config:
     FLASK_DEBUG: bool = os.getenv("FLASK_DEBUG", "0") in ("1", "true", "True")
 
     if FLASK_DEBUG:
-        print("Debug")
         SQLALCHEMY_DATABASE_URI = f"sqlite:///{Path(__file__).parent / 'database' / 'app.db'}"
     else:
-        print("Pas debug")
         SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
 
     X_RAPID_API_HOST = os.environ.get("X_RAPID_API_HOST")
