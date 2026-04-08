@@ -4,12 +4,12 @@ Application web de fitness avec un backend Flask (API REST) et un frontend Angul
 
 ## Structure
 
-- `backend/` API Flask, routes, schemas, modeles, config et base
+- `backend/` API Flask, routes, schémas, modèles, configuration et base
 - `frontend/` application Angular
 
 ## Backend
 
-### 1. Prerequis
+### 1. Prérequis
 
 - Python 3.13+
 - `uv`
@@ -24,7 +24,7 @@ Application web de fitness avec un backend Flask (API REST) et un frontend Angul
 
 ### 2. Installation
 
-Depuis le répertoire `backend`, initialisez l''environnement :
+Depuis le répertoire `backend`, initialisez l'environnement :
 
 ```bash
 cd backend
@@ -45,9 +45,9 @@ cp .env.example .env
 Copy-Item .env.example .env
 ```
 
-Remplissez ensuite les valeurs manquantes dans `.env` :
+Remplissez ensuite les valeurs manquantes dans `.env`.
 
-> Ne commitez jamais le fichier `.env` il est (et doit rester) dans le `.gitignore`.
+> Ne commitez jamais le fichier `.env`. Il est (et doit rester) dans le `.gitignore`.
 
 
 ### 3. Lancement de l'API
@@ -67,12 +67,10 @@ uv run flask run
 ```
  
 Depuis `backend/`.
- 
----
- 
+  
 ### 4. Gestion de la base de données
 
-Rajouter le flag debug si vous voulez toucher a la base de donnée Local
+Ajoutez le flag debug si vous voulez toucher à la base de donnée locale.
 
 ```bash
 # Initialiser la base de données
@@ -88,15 +86,14 @@ uv run flask [--debug] drop-requestlog
 
 > Le CORS est configuré pour accepter uniquement les requêtes provenant du frontend Angular sur `http://localhost:4200`.
 
+---
 
 ## Frontend
 
-### 1. Prerequis
-- node.js
--- télechargable depuis le site de  [Node.js](https://nodejs.org/en/) (sélectionner la version de votre os)
--- vérifier l'installation : 
+### 1. Prérequis
+- node.js (Télechargable depuis le site de [Node.js](https://nodejs.org/en/))
 ```bash
-Node --version
+node --version
 npm --version
 ```
 
@@ -106,14 +103,16 @@ npm install -g @angular/cli
 ```
 ### 2. Lancement du serveur
 
-- déplacement dans le dossier frontend
+Depuis le répertoire `frontend`, installez les dépendances :
+
 ```bash
 cd frontend
+npm install
 ```
 
-- lancer le serveur
+Vous pouvez maintenant lancer le serveur :
 ```bash
 ng serve
 ```
 
-Bravo vous avez lancé la meilleur application de suivit de sport.
+Bravo, vous avez lancé la meilleure application de suivi de sport !!!
