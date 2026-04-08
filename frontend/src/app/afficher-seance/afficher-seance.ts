@@ -40,6 +40,9 @@ export class AfficheSeance implements OnInit {
         private erreur: Erreur
     ) { }
 
+    /**
+     * Initialise le composant : configure les abonnements et charge la séance
+     */
     ngOnInit() {
 
         if (isPlatformBrowser(this.platformId) && localStorage.getItem("lastMessage")) {
@@ -83,6 +86,9 @@ export class AfficheSeance implements OnInit {
 
     }
 
+    /**
+     * Charge la séance du jour depuis le backend
+     */
     chargeSeance() {
         this.http.post('http://127.0.0.1:5000/seance/getSeanceDuJour', {
             routine_id: -1,
@@ -115,7 +121,11 @@ export class AfficheSeance implements OnInit {
 
     }
 
-
+    /**
+     * Déplace un exercice dans la liste (haut/bas)
+     * @param id ID de l'exercice
+     * @param sens Direction du déplacement ('up' ou 'down')
+     */
     bouger(id: any, sens: string) {
         const index = this.exercices.findIndex(e => e.seance_exercise_id === id);
 
@@ -149,15 +159,28 @@ export class AfficheSeance implements OnInit {
 
     }
 
-
+    /**
+     * Fonction de tracking pour la liste des exercices
+     */
     trackByExo(index: number, item: any) {
         return item.seance_exercise_id;
     }
 
+    /**
+     * Navigue vers la page d'ajout d'exercices
+     */
     ajouterExo() {
         this.router.navigate(['/exercices']);
     }
 
+    /**
+     * Modifie ou démarre un exercice
+     * @param id ID de l'exercice
+     * @param nbRep Nombre de répétitions
+     * @param nbSet Nombre de séries
+     * @param poid Poids
+     * @param idSequence ID de séquence
+     */
     modifie(id: any, nbRep: any, nbSet: any, poid: any, idSequence: any) {
         if (!this.commencerSeance) {
             this.ei.triggerRefresh([Message.MODIFIER_EXERCICE, id, nbRep, nbSet, poid, idSequence]);
@@ -174,6 +197,9 @@ export class AfficheSeance implements OnInit {
 
     }
 
+    /**
+     * Gère le retour : termine la séance ou navigue vers d'autres pages
+     */
     retour() {
 
         if (this.commencerSeance && !this.seanceRepos) {
@@ -205,6 +231,9 @@ export class AfficheSeance implements OnInit {
 
     }
 
+    /**
+     * Nettoie les abonnements lors de la destruction du composant
+     */
     ngOnDestroy() {
         this.subscriptions.map((sub) => sub.unsubscribe());
 

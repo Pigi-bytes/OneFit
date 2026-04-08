@@ -24,6 +24,9 @@ export class Exercices {
 
     constructor(private etl: EnvoyerElt, private cdr: ChangeDetectorRef) { }
 
+    /**
+     * Initialise le composant : configure l'abonnement pour afficher/configurer les exercices
+     */
     ngOnInit() {
 
         this.subscription = this.etl.afficheExercice$.subscribe((payload) => {

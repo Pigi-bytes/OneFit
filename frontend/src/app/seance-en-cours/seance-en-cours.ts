@@ -16,7 +16,10 @@ export class SeanceEnCours {
     constructor(private router: Router) { }
     private platformId = inject(PLATFORM_ID);
 
-
+    /**
+     * Initialise le composant : vérifie si une séance est en cours
+     * Redirige vers la page d'accueil ou de récapitulatif selon le contexte
+     */
     ngOnInit() {
         if (isPlatformBrowser(this.platformId)) {
             const jour1 = localStorage.getItem("seanceJour");

@@ -25,6 +25,10 @@ export class Connexion {
     constructor(private http: HttpClient, private router: Router, private erreur: Erreur, private cdr: ChangeDetectorRef,
         private not: Notification, private theme: Theme) { }
 
+    /**
+     * Effectue la connexion de l'utilisateur
+     * Envoie les identifiants au backend et stocke le token si réussi
+     */
     login() {
         this.http.post('http://127.0.0.1:5000/auth/login', {
             username: this.username,
@@ -43,10 +47,16 @@ export class Connexion {
         });
     }
 
+    /**
+     * Réinitialise les notifications
+     */
     resetNotif() {
         this.not.reset(this, this.cdr);
     }
 
+    /**
+     * Initialise le composant : vérifie le thème sombre
+     */
     ngOnInit() {
         this.isDark = this.theme.isItDark();
     }

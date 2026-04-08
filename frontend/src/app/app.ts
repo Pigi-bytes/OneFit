@@ -15,6 +15,9 @@ export class App implements OnInit {
     protected readonly title = signal('OneFit');
     showMenu = true;
 
+    /**
+     * Constructeur : surveille les changements de route pour afficher/masquer le menu
+     */
     constructor(private theme: Theme, private router: Router) {
         this.router.events.subscribe(() => {
             let route = this.router.routerState.snapshot.root;
@@ -27,6 +30,9 @@ export class App implements OnInit {
         });
     }
 
+    /**
+     * Initialise le composant : applique le thème sombre si nécessaire
+     */
     ngOnInit() {
         if (this.theme.isItDark()) {
             const page = document.querySelector('.layout');

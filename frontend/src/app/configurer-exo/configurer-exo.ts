@@ -37,6 +37,9 @@ export class ConfigurerExo {
 
     constructor(private ei: EnvoyerElt, private http: HttpClient, private erreur: Erreur, private cdr: ChangeDetectorRef, private not: Notification) { }
 
+    /**
+     * Initialise le composant et s'abonne aux messages pour configurer l'exercice
+     */
     ngOnInit() {
         this.exo = null;
         this.modifie = "a";
@@ -83,6 +86,10 @@ export class ConfigurerExo {
             }
         });
     }
+
+    /**
+     * Charge les détails de l'exercice depuis le backend
+     */
     async chargeExo() {
         if (this.requete && this.idExo) {
             this.http.post('http://127.0.0.1:5000/externe/getExo', {
@@ -102,6 +109,9 @@ export class ConfigurerExo {
         }
     }
 
+    /**
+     * Ajoute ou modifie la configuration de l'exercice dans la séance
+     */
     action() {
         let chemin = "";
         if (!this.modifie) {
@@ -170,10 +180,16 @@ export class ConfigurerExo {
 
     }
 
+    /**
+     * Réinitialise les notifications
+     */
     resetNotif() {
         this.not.reset(this, this.cdr);
     }
 
+    /**
+     * Annule la configuration et retourne à l'affichage de la séance
+     */
     annuler() {
         if (this.modifie === null) {
             this.ei.triggerRefresh([Message.AFFICHER_SEANCE]);
@@ -183,6 +199,9 @@ export class ConfigurerExo {
         }
     }
 
+    /**
+     * Supprime l'exercice de la séance après confirmation
+     */
     supprimer() {
         const confirmAction = confirm("Voulez-vous vraiment supprimer cet exercice de la séance ?");
 
@@ -208,6 +227,9 @@ export class ConfigurerExo {
 
     }
 
+    /**
+     * Nettoie les abonnements lors de la destruction du composant
+     */
     ngOnDestroy() {
         this.subscription?.unsubscribe();
     }
