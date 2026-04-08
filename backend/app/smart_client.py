@@ -18,8 +18,9 @@ api_logger = logging.getLogger("OneFit.ApiCache")
 perf_logger = logging.getLogger("OneFit.Performance")
 db_logger = logging.getLogger("OneFit.Database")
 
-
 class SmartApiClient:
+    """Encapsule les appels GET vers une API externe avec cache et logs"""
+
     def __init__(self, base_url: str, headers: dict):
         self.base_url = base_url.rstrip("/")
         self.headers = headers or {}
@@ -36,12 +37,18 @@ class SmartApiClient:
         return thisDay, thisMonth
 
     def get(self, endpoint: str, params=None, headers=None, useCache=True, **kwargs):
+        """Effectue un GET sur `endpoint` avec gestion simple de cache et quota.
+
+        - `useCache=True` va tenter de retourner une réponse depuis `RequestLog`.
+        - Les paramètres `**kwargs` sont passés à `requests.get` (timeout, etc.).
+        """
         params = params or {}
         headers = {**self.headers, **(headers or {})}
 
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         api_logger.info(f"Tentative d'accès à l'URL : {url}")
-        # Construction de l'URL
+
+        # Préparer l'URL complète et la clé de cache (MD5 de l'URL + params triés)
         try:
             req = requests.PreparedRequest()
             req.prepare_url(url, params)
@@ -53,8 +60,8 @@ class SmartApiClient:
             api_logger.error(f"Erreur lors de la construction de l'URL: {e}")
             return None
 
+        # Lecture cache depuis la BDD si demandé
         if useCache:
-            # Vérification dans la base de donnée
             with QueryTimer("check si cache est présent"):
                 cached_entry = (
                     db.session.query(RequestLog)
@@ -64,26 +71,29 @@ class SmartApiClient:
                 )
 
             if cached_entry and cached_entry.response_body:
+                # Incrémenter le compteur de hits et retourner le JSON stocké
                 db_logger.info(f"Données récupérées depuis la BDD pour {cache_key}")
                 cached_entry.cache_hits += 1
                 db.session.commit()
                 api_logger.info(f"cache_hits incrémenté à {cached_entry.cache_hits}")
                 try:
                     data = json.loads(cached_entry.response_body)
-                    api_logger.debug(f"Réponse: {data}")
+                    api_logger.debug(f"Réponse (cache): {data}")
+                    # Beaucoup d'APIs renvoient un enveloppe {"data": ...}
                     if isinstance(data, dict) and "data" in data:
                         api_logger.info("Retourne data['data']")
                         return data["data"]
                     return data
                 except json.JSONDecodeError:
                     api_logger.warning("Impossible de décoder le JSON du cache. Ignoré.")
-                    pass
 
+        # Vérifier quotas avant d'appeler l'API distante
         today, month = self.getUsageStats()
         if today >= DAILY_LIMIT or month >= MONTHLY_LIMIT:
             api_logger.critical(f"Quota atteint | Jour: {today}/{DAILY_LIMIT} | Mois: {month}/{MONTHLY_LIMIT}")
             return None
 
+        # Appel réel vers l'API distante
         try:
             api_logger.info(f"Envoi requête vers: {full_url}")
             start = time.perf_counter()
@@ -91,9 +101,11 @@ class SmartApiClient:
             duration = time.perf_counter() - start
             api_logger.info(f"Status: {response.status_code} | {(duration * 1000):.1f}ms | URL: {full_url}")
 
+            # Alerter si réponse lente
             if duration > 2.0:
-                perf_logger.warning(f"Apelle lent : {full_url} | {(duration * 1000):.1f}ms")
+                perf_logger.warning(f"Appel lent : {full_url} | {(duration * 1000):.1f}ms")
 
+            # Enregistrer l'appel dans la table RequestLog (pour historique/cache)
             log_entry = RequestLog(
                 cache_key=cache_key,  # type: ignore
                 status_code=response.status_code,  # type: ignore
@@ -103,6 +115,7 @@ class SmartApiClient:
             db.session.commit()
             api_logger.info("Requête enregistrée dans RequestLog")
 
+            # Lever les erreurs HTTP si statut >=400
             response.raise_for_status()
 
             data = response.json()
@@ -113,8 +126,10 @@ class SmartApiClient:
             return data
 
         except requests.RequestException as e:
+            # Erreurs de réseau / HTTP
             api_logger.error(f"RequestException : {str(e)}")
             return None
         except Exception as e:
+            # Erreurs inattendues
             api_logger.critical(f"{type(e).__name__} | Msg: {str(e)}", exc_info=True)
             return None
